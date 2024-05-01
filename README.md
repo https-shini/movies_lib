@@ -16,15 +16,13 @@
 https://movieslib-krd.vercel.app
 
 ## ☆ Tecnologias
-- Frontend:
-  - HTML5
-  - CSS3
-  - JavaScript
-    
-- Backend:
-  - Node.js
-  - WebSocket (ws)
-  - dotenv (para configuração de variáveis de ambiente)
+- HTML
+- CSS
+- JavaScript
+- ReactJS
+- Vite
+- React Router
+- TMDB API
 
 ## ☆ Projeto
 ➜ [Como contribuir?](./read-model/CONTRIBUTING.md) <br>
@@ -32,22 +30,23 @@ https://movieslib-krd.vercel.app
 
 <br>
 
-Este projeto é uma aplicação desenvolvida para permitir a comunicação em tempo real entre usuários através da internet. Esta aplicação oferece uma plataforma intuitiva e acessível para que os usuários possam trocar mensagens de forma rápida e conveniente, sem a necessidade de instalação de softwares adicionais. O Chat Web utiliza tecnologias modernas, como HTML5, CSS3 e JavaScript no frontend, e Node.js no backend, juntamente com o protocolo WebSocket para fornecer uma experiência de chat em tempo real, possibilitando conversas fluidas e interativas entre os usuários.
-
-**Estrutura do Projeto:**
-- **Frontend:** Define a estrutura da página web, formulários de login e envio de mensagens, e área de exibição das mensagens.
-- **Backend:** Gerencia a comunicação entre os clientes, recebendo e enviando mensagens em tempo real.
+Este projeto é uma aplicação para explorar e descobrir filmes, utilizando ReactJS e consumindo a API do TMDB. O aplicativo permite que os usuários busquem por filmes, visualizem detalhes específicos e naveguem entre diferentes páginas.
 
 **Funcionalidades Principais:**
-- **Login de Usuário:** Os usuários podem inserir seus nomes para acessar o chat.
-- **Troca de Mensagens em Tempo Real:** Os usuários podem enviar e receber mensagens em tempo real, com atualizações dinâmicas na interface.
-- **Estilização Dinâmica das Mensagens:** As mensagens podem ser visualmente diferenciadas entre mensagens próprias e de outros usuários.
-- **Responsividade:** A aplicação é responsiva, adaptando-se a diferentes dispositivos e tamanhos de tela.
+- Busca de Filmes: Os usuários podem pesquisar por filmes utilizando o campo de busca.
+- Detalhes do Filme: Os usuários podem clicar em um filme para ver detalhes adicionais, como sinopse, elenco e avaliações.
+- Navegação: O aplicativo utiliza React Router para permitir a navegação entre diferentes páginas, como a página inicial e a página de detalhes do filme.
+
+
+**Estrutura do Projeto:**
+
+- Frontend: Desenvolvido com ReactJS e Vite, o frontend consiste em diferentes componentes para exibir a interface do usuário e interagir com a API do TMDB.
+- API do TMDB: Utilizada para obter informações sobre os filmes, incluindo detalhes, imagens e avaliações.
 
 **Uso do Projeto:**
-- Os usuários acessam a aplicação através de um navegador web.
-- Eles inserem seus nomes no formulário de login e entram no chat.
-- Podem então digitar mensagens no formulário de envio e enviá-las para serem exibidas na área de mensagens.
+- Os usuários acessam o aplicativo através de um navegador web.
+- Eles podem pesquisar por filmes usando o campo de busca.
+- Ao clicar em um filme, podem ver detalhes adicionais na página de detalhes do filme.
 
 ## ☆ Layout
 Obtenha uma perspectiva detalhada do layout do projeto por meio da imagem abaixo.
@@ -63,15 +62,3 @@ Obtenha uma perspectiva detalhada do layout do projeto por meio da imagem abaixo
 
 ## ☆ Licença
 Esse projeto está sob a [licença MIT](/LICENSE).
-
-
-# React + Vite
-
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
--   [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
--   [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-<br>
