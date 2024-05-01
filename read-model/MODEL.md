@@ -15,8 +15,6 @@
 - O projeto Filmes Explorer segue uma arquitetura cliente-servidor, onde o frontend é responsável pela interface do usuário e o backend gerencia a lógica de negócios e a comunicação com a API do TMDB. <br>
 - O uso da API do TMDB permite obter informações sobre os filmes, como títulos, sinopses, elenco e avaliações.
 
-<br>
-
 ## Estrutura do projeto
 
 ➜  **HTML:**
@@ -39,15 +37,6 @@
 ➜  **TMDB API:**
    - O frontend interage com a API do TMDB para obter informações sobre os filmes, como títulos, sinopses, elenco e avaliações.
 
-<br>
-
-## **Funcionamento:**
-
-- Os usuários acessam o aplicativo através de um navegador web.
-- Eles podem pesquisar por filmes usando o campo de busca.
-- Ao clicar em um filme, podem ver detalhes adicionais na página de detalhes do filme.
-- A navegação entre diferentes páginas é realizada utilizando o React Router.
-
 ## **Sobre a API:**
 
 <p>
@@ -57,6 +46,13 @@ Além disso, a API suporta recursos avançados, como pesquisa avançada, filtrag
 <br><br>
 A API do TMDB é amplamente utilizada na indústria do entretenimento e é uma ferramenta essencial para desenvolvedores que desejam criar aplicativos relacionados a filmes e programas de TV, oferecendo uma fonte confiável e abrangente de dados.
 </p>
+
+## **Funcionamento:**
+
+- Os usuários acessam o aplicativo através de um navegador web.
+- Eles podem pesquisar por filmes usando o campo de busca.
+- Ao clicar em um filme, podem ver detalhes adicionais na página de detalhes do filme.
+- A navegação entre diferentes páginas é realizada utilizando o React Router.
 
 <br>
 
