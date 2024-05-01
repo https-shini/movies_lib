@@ -3,7 +3,7 @@
 <p align="center">
   <a href="#pt-br">Português</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
   <a href="#en-us-">English</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-  <a href="https://github.com/https-shini/web-chat">Voltar</a>
+  <a href="https://github.com/https-shini/movies_lib">Voltar</a>
 </p>
 
 <br>
