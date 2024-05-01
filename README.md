@@ -13,7 +13,7 @@
 
 ## ☆ Hospedagem
 - Acesse o link abaixo e veja o código hospedado online.<br>
-https://chat-frontend-g42t.onrender.com
+https://movieslib-krd.vercel.app
 
 ## ☆ Tecnologias
 - Frontend:
