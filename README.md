@@ -21,7 +21,6 @@ https://movieslib-krd.vercel.app
 - JavaScript
 - ReactJS
 - Vite
-- React Router
 - TMDB API
 
 ## ☆ Projeto
