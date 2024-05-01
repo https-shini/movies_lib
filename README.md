@@ -36,11 +36,6 @@ Este projeto é uma aplicação para explorar e descobrir filmes, utilizando Rea
 - Detalhes do Filme: Os usuários podem clicar em um filme para ver detalhes adicionais, como sinopse, elenco e avaliações.
 - Navegação: O aplicativo utiliza React Router para permitir a navegação entre diferentes páginas, como a página inicial e a página de detalhes do filme.
 
-**Sobre a API:**
-<p>
-  A API do The Movie Database (TMDB) é uma ferramenta essencial para desenvolvedores, oferecendo uma extensa gama de dados sobre filmes, programas de TV, elenco, equipes de produção e muito mais. Baseada em RESTful e com uma documentação abrangente, a TMDB permite fácil integração em aplicativos, proporcionando uma experiência completa de descoberta de conteúdo cinematográfico. Com uma comunidade ativa de desenvolvedores e uma variedade de recursos, a API do TMDB é uma fonte valiosa de informações para criar aplicativos envolventes e ricos em recursos relacionados a filmes e programas de TV.
-</p>
-
 **Estrutura do Projeto:**
 
 - Frontend: Desenvolvido com ReactJS e Vite, o frontend consiste em diferentes componentes para exibir a interface do usuário e interagir com a API do TMDB.
