@@ -4,6 +4,7 @@
   <a href="#decisões-arquiteturais">Decisões Arquiteturais</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
   <a href="#estrutura-do-projeto">Estrutura do projeto</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
   <a href="#funcionamento">Funcionamento</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+  <a href="#sobre-a-api">Sobre a API</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
   <a href="https://github.com/https-shini/web-chat">Voltar</a>
 </p>
 
@@ -18,13 +19,13 @@
 
 ## Estrutura do projeto
 
-➜  **HTML (index.html):**
+➜  **HTML:**
    - O frontend inclui arquivos HTML para estruturar o conteúdo da página. O arquivo HTML define os elementos como formulários de entrada de usuário, área de exibição de filmes e detalhes do filme.
 
-➜  **CSS (style.css):**
+➜  **CSS:**
    - O frontend utiliza arquivos CSS para estilizar e projetar a interface do usuário. Os arquivos CSS definem as cores, fontes, layouts e estilos visuais que tornam o aplicativo atraente e fácil de usar.
 
-➜  **JavaScript (script.js):**
+➜  **JavaScript:**
    - O frontend inclui arquivos JavaScript para adicionar interatividade à página. Os arquivos JavaScript manipulam eventos do usuário, como cliques e submissões de formulários, e se comunicam com a API do TMDB para obter informações sobre os filmes. Além disso, o JavaScript é responsável por atualizar dinamicamente a interface do usuário para refletir os resultados da pesquisa e os detalhes do filme.
 
 ➜  **ReactJS:**
@@ -46,6 +47,16 @@
 - Eles podem pesquisar por filmes usando o campo de busca.
 - Ao clicar em um filme, podem ver detalhes adicionais na página de detalhes do filme.
 - A navegação entre diferentes páginas é realizada utilizando o React Router.
+
+## **Sobre a API:**
+
+<p>
+  A API do The Movie Database (TMDB) é uma interface RESTful que fornece acesso a uma vasta quantidade de dados sobre filmes, programas de TV e pessoas relacionadas à indústria do entretenimento. Ela oferece endpoints bem documentados para buscar informações específicas, como detalhes de filmes, imagens, elenco, equipe de produção, avaliações e muito mais.
+<br><br>
+Além disso, a API suporta recursos avançados, como pesquisa avançada, filtragem, classificação e paginação, permitindo aos desenvolvedores personalizar suas consultas de acordo com suas necessidades específicas. A autenticação é necessária para acessar a maioria dos endpoints, sendo suportados os métodos de autenticação por chave de API.
+<br><br>
+A API do TMDB é amplamente utilizada na indústria do entretenimento e é uma ferramenta essencial para desenvolvedores que desejam criar aplicativos relacionados a filmes e programas de TV, oferecendo uma fonte confiável e abrangente de dados.
+</p>
 
 <br>
 
