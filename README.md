@@ -1,4 +1,4 @@
-<h1 align="center">Chat Web</h1>
+<h1 align="center">Filmes Explorer</h1>
 
 <p align="center">
   <a href="#-hospedagem">Hospedagem</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
@@ -9,7 +9,7 @@
 </p>
 <br>
 
-![Preview](./frontend/images/banner.png)
+![Preview](./banner.png)
 
 ## ☆ Hospedagem
 - Acesse o link abaixo e veja o código hospedado online.<br>
