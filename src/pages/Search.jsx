@@ -1,39 +1,29 @@
-import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { fetchTmdb } from "../services/tmdb";
+import { useAsyncData } from "../hooks/useAsyncData";
+import AsyncState from "../components/AsyncState";
 import MovieCard from "../components/MovieCard";
-
-const searchURL = import.meta.env.VITE_SEARCH;
-const apiKey = import.meta.env.VITE_API_KEY;
-
 import "./MoviesGrid.css";
 
 const Search = () => {
   const [searchParams] = useSearchParams();
-
-  const [movies, setMovies] = useState([]);
-  const query = searchParams.get("q");
-
-  const getSearchedMovies = async (url) => {
-    const res = await fetch(url);
-    const data = await res.json();
-    setMovies(data.results);
-  };
-
-  useEffect(() => {
-    const searchWithQueryURL = `${searchURL}?${apiKey}&query=${query}`;
-    getSearchedMovies(searchWithQueryURL);
-  }, [query]);
+  const query = (searchParams.get("q") || "").trim();
+  const { data, isLoading, error } = useAsyncData(
+    (signal) => query ? fetchTmdb(import.meta.env.VITE_SEARCH, { params: { query }, signal }) : Promise.resolve({ results: [] }),
+    [query]
+  );
+  const movies = data?.results ?? [];
 
   return (
-    <div className="container">
-      <h2 className="title">
-        Resultados para: <span className="query-text">{query}</span>
-      </h2>
-      <div className="movies-container">
-        {movies.length > 0 &&
-          movies.map((movie) => <MovieCard key={movie.id} movie={movie} />)}
-      </div>
-    </div>
+    <main className="container">
+      <h1 className="title">{query ? <>Resultados para: <span className="query-text">{query}</span></> : "Buscar filmes"}</h1>
+      <AsyncState isLoading={isLoading} error={error} isEmpty={!query || !movies.length} emptyMessage={query ? "Nenhum filme corresponde à sua busca." : "Digite o nome de um filme na busca."} />
+      {!isLoading && !error && movies.length > 0 && (
+        <section className="movies-container" aria-label="Resultados da busca">
+          {movies.map((movie) => <MovieCard key={movie.id} movie={movie} />)}
+        </section>
+      )}
+    </main>
   );
 };
 
