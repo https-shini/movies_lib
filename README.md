@@ -1,62 +1,89 @@
-<h1 align="center">Filmes Explorer</h1>
+# MoviesLib
 
-<p align="center">
-  <a href="#-hospedagem">Hospedagem</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-  <a href="#-tecnologias">Tecnologias</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-  <a href="#-projeto">Projeto</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-  <a href="#-layout">Layout</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-  <a href="#-licença">Licença</a>&nbsp;&nbsp;&nbsp;
-</p>
-<br>
+Aplicação web para descobrir e pesquisar filmes, consultar informações e explorar títulos usando a API do [The Movie Database (TMDB)](https://www.themoviedb.org/).
 
-![Preview](./dist/banner.png)
+## Tecnologias
 
-## ☆ Hospedagem
-- Acesse o link abaixo e veja o código hospedado online.<br>
-https://movieslib-krd.vercel.app
-
-## ☆ Tecnologias
-- HTML
-- CSS
-- JavaScript
-- ReactJS
+- React 18
 - Vite
+- React Router
+- JavaScript (ES Modules)
+- CSS responsivo
 - TMDB API
 
-## ☆ Projeto
-➜ [Como contribuir?](./read-model/CONTRIBUTING.md) <br>
-➜ [Documentação aprofundada](./read-model/MODEL.md) 
+## Funcionalidades atuais
 
-<br>
+- Catálogo inicial de filmes mais bem avaliados.
+- Pesquisa de filmes por título.
+- Página de detalhes com sinopse, orçamento, receita, duração e avaliação.
+- Estados de carregamento, erro e resultados vazios.
+- Interface responsiva para desktop e dispositivos móveis.
 
-Este projeto é uma aplicação para explorar e descobrir filmes, utilizando ReactJS e consumindo a API do TMDB. O aplicativo permite que os usuários busquem por filmes, visualizem detalhes específicos e naveguem entre diferentes páginas.
+## Requisitos e configuração
 
-**Funcionalidades Principais:**
-- Busca de Filmes: Os usuários podem pesquisar por filmes utilizando o campo de busca.
-- Detalhes do Filme: Os usuários podem clicar em um filme para ver detalhes adicionais, como sinopse, elenco e avaliações.
-- Navegação: O aplicativo utiliza React Router para permitir a navegação entre diferentes páginas, como a página inicial e a página de detalhes do filme.
+- Node.js LTS, npm e uma chave de API do TMDB.
+- Configure as variáveis de ambiente em um arquivo `.env` na raiz do projeto:
 
-**Estrutura do Projeto:**
+```env
+VITE_API=https://api.themoviedb.org/3/movie/
+VITE_SEARCH=https://api.themoviedb.org/3/search/movie
+VITE_IMG=https://image.tmdb.org/t/p/w500
+VITE_API_KEY=api_key=YOUR_TMDB_API_KEY
+```
 
-- Frontend: Desenvolvido com ReactJS e Vite, o frontend consiste em diferentes componentes para exibir a interface do usuário e interagir com a API do TMDB.
-- API do TMDB: Utilizada para obter informações sobre os filmes, incluindo detalhes, imagens e avaliações.
+Instale e execute:
 
-**Uso do Projeto:**
-- Os usuários acessam o aplicativo através de um navegador web.
-- Eles podem pesquisar por filmes usando o campo de busca.
-- Ao clicar em um filme, podem ver detalhes adicionais na página de detalhes do filme.
+```bash
+npm install
+npm run dev
+```
 
-## ☆ Layout
-Obtenha uma perspectiva detalhada do layout do projeto por meio da imagem abaixo.
+Build de produção e pré-visualização:
 
-<div align="center">
+```bash
+npm run build
+npm run preview
+```
 
-<img src="https://raw.githubusercontent.com/https-shini/movies_lib/main/dist/001.png" width=400 heigth=350 />
-<img src="https://raw.githubusercontent.com/https-shini/movies_lib/main/dist/002.png" width=400 heigth=350 />
-<img src="https://raw.githubusercontent.com/https-shini/movies_lib/main/dist/003.png" width=400 heigth=350 />
-<img src="https://raw.githubusercontent.com/https-shini/movies_lib/main/dist/004.png" width=400 heigth=350 />
+## Estrutura atual
 
-</div>
+```text
+src/
+├── components/
+│   ├── AsyncState.jsx
+│   ├── MovieCard.jsx
+│   └── Navbar.jsx
+├── hooks/
+│   └── useAsyncData.js
+├── pages/
+│   ├── Home.jsx
+│   ├── Movie.jsx
+│   └── Search.jsx
+├── services/
+│   └── tmdb.js
+├── App.jsx
+├── App.css
+└── index.css
+```
 
-## ☆ Licença
-Esse projeto está sob a [licença MIT](/LICENSE).
+## Segurança da chave da API
+
+Variáveis com prefixo `VITE_` são incorporadas ao código enviado ao navegador. Portanto, `VITE_API_KEY` não é uma credencial secreta. Para uma implantação pública com proteção adequada, a evolução arquitetural deve introduzir uma API backend ou função serverless que intermedeie as requisições ao TMDB e mantenha credenciais no servidor.
+
+Não envie seu arquivo `.env` ao Git.
+
+## Próximas etapas planejadas
+
+- Migrar gradualmente para TypeScript e uma arquitetura modular.
+- Adicionar testes automatizados e integração contínua.
+- Implementar filtros, gêneros, paginação e descoberta avançada.
+- Criar backend, persistência e autenticação.
+- Adicionar perfis, avaliações, listas e recursos sociais.
+
+## Créditos
+
+Dados e imagens de filmes fornecidos pelo [TMDB](https://www.themoviedb.org/). Este projeto não é endossado nem certificado pelo TMDB.
+
+## Licença
+
+Consulte o arquivo [LICENSE](./LICENSE).
