@@ -61,7 +61,7 @@ export async function fetchTmdb(endpoint, { params = {}, signal } = {}) {
   return data;
 }
 
-export function getPosterUrl(path, size = "w500") {
+export function getPosterUrl(path) {
   const imageBaseUrl = import.meta.env.VITE_IMG;
 
   if (!path || !imageBaseUrl) return null;
