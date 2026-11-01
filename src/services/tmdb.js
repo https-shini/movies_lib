@@ -6,9 +6,15 @@ function appendApiKey(url) {
     throw new Error("A chave do TMDB não foi configurada. Defina VITE_API_KEY no arquivo .env.");
   }
 
-  const keyParams = new URLSearchParams(API_KEY_CONFIG.replace(/^[?&]/, ""));
-  for (const [key, value] of keyParams.entries()) {
-    if (!url.searchParams.has(key)) url.searchParams.set(key, value);
+  const normalizedKey = API_KEY_CONFIG.replace(/^[?&]/, "");
+  const keyParams = new URLSearchParams(normalizedKey);
+
+  if (normalizedKey.includes("=")) {
+    for (const [key, value] of keyParams.entries()) {
+      if (!url.searchParams.has(key)) url.searchParams.set(key, value);
+    }
+  } else if (!url.searchParams.has("api_key")) {
+    url.searchParams.set("api_key", normalizedKey);
   }
 }
 
