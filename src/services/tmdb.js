@@ -3,68 +3,49 @@ const API_KEY_CONFIG = import.meta.env.VITE_API_KEY;
 
 function appendApiKey(url) {
   if (!API_KEY_CONFIG) {
-    throw new Error("A chave da API do TMDB não foi configurada. Defina VITE_API_KEY no arquivo .env.");
+    throw new Error("A chave do TMDB não foi configurada. Defina VITE_API_KEY no arquivo .env.");
   }
 
-  const normalizedKey = API_KEY_CONFIG.replace(/^[?&]/, "");
-  const keyParams = new URLSearchParams(normalizedKey);
-
+  const keyParams = new URLSearchParams(API_KEY_CONFIG.replace(/^[?&]/, ""));
   for (const [key, value] of keyParams.entries()) {
-    if (!url.searchParams.has(key)) {
-      url.searchParams.set(key, value);
-    }
+    if (!url.searchParams.has(key)) url.searchParams.set(key, value);
   }
 }
 
 export async function fetchTmdb(endpoint, { params = {}, signal } = {}) {
-  if (!endpoint) {
-    throw new Error("O endpoint da API do TMDB não foi configurado.");
+  if (!endpoint || !API_BASE_URL) {
+    throw new Error("Configure VITE_API e os endpoints do TMDB no arquivo .env.");
   }
 
   let url;
-
   try {
     url = new URL(endpoint, API_BASE_URL);
   } catch {
-    throw new Error("A URL da API do TMDB é inválida. Verifique as variáveis de ambiente.");
+    throw new Error("A URL do TMDB é inválida. Verifique VITE_API e VITE_SEARCH.");
   }
 
   appendApiKey(url);
-
   Object.entries(params).forEach(([key, value]) => {
-    if (value !== undefined && value !== null && value !== "") {
-      url.searchParams.set(key, String(value));
-    }
+    if (value !== undefined && value !== null && value !== "") url.searchParams.set(key, String(value));
   });
 
   const response = await fetch(url, { signal });
-
   if (!response.ok) {
     let message = `Não foi possível consultar o TMDB (HTTP ${response.status}).`;
-
     try {
-      const errorData = await response.json();
-      if (errorData.status_message) message = errorData.status_message;
-    } catch {
-      // Mantém a mensagem HTTP quando a resposta não contém JSON.
-    }
-
+      const payload = await response.json();
+      if (payload.status_message) message = payload.status_message;
+    } catch { /* Mantém a mensagem HTTP. */ }
     throw new Error(message);
   }
 
   const data = await response.json();
-
-  if (data.success === false) {
-    throw new Error(data.status_message || "O TMDB não conseguiu concluir a solicitação.");
-  }
-
+  if (data.success === false) throw new Error(data.status_message || "O TMDB recusou a solicitação.");
   return data;
 }
 
 export function getPosterUrl(path) {
   const imageBaseUrl = import.meta.env.VITE_IMG;
-
   if (!path || !imageBaseUrl) return null;
-
-  return `${imageBaseUrl.replace(/\/$/, "")}/${size}/${path.replace(/^\//, "")}`;
+  return `${imageBaseUrl.replace(/\/$/, "")}/${path.replace(/^\//, "")}`;
 }
