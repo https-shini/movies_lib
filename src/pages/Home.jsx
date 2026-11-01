@@ -1,36 +1,23 @@
-import { useEffect, useState } from "react";
+import { fetchTmdb } from "../services/tmdb";
+import { useAsyncData } from "../hooks/useAsyncData";
+import AsyncState from "../components/AsyncState";
 import MovieCard from "../components/MovieCard";
-
 import "./MoviesGrid.css";
 
-const moviesURL = import.meta.env.VITE_API;
-const apiKey = import.meta.env.VITE_API_KEY;
-
 const Home = () => {
-  const [topMovies, setTopMovies] = useState([]);
-
-  const getTopRatedMovies = async (url) => {
-    const res = await fetch(url);
-    const data = await res.json();
-    setTopMovies(data.results);
-  };
-
-  useEffect(() => {
-    const topRatedUrl = `${moviesURL}top_rated?${apiKey}`;
-    console.log(topRatedUrl);
-    getTopRatedMovies(topRatedUrl);
-  }, []);
-
-  console.log(topMovies);
+  const { data, isLoading, error } = useAsyncData((signal) => fetchTmdb("top_rated", { signal }), []);
+  const movies = data?.results ?? [];
 
   return (
-    <div className="container">
-      <h2 className="title">Melhores filmes:</h2>
-      <div className="movies-container">
-        {topMovies.length > 0 &&
-          topMovies.map((movie) => <MovieCard key={movie.id} movie={movie} />)}
-      </div>
-    </div>
+    <main className="container">
+      <h1 className="title">Filmes mais bem avaliados</h1>
+      <AsyncState isLoading={isLoading} error={error} isEmpty={!movies.length} emptyMessage="Não encontramos filmes para exibir." />
+      {!isLoading && !error && movies.length > 0 && (
+        <section className="movies-container" aria-label="Filmes mais bem avaliados">
+          {movies.map((movie) => <MovieCard key={movie.id} movie={movie} />)}
+        </section>
+      )}
+    </main>
   );
 };
 
