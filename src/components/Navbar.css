@@ -1,36 +1,9 @@
-#navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 2rem;
-  background-color: #121212;
-}
-
-#navbar h2 a {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-#navbar form {
-  display: flex;
-  gap: 0.5rem;
-}
-
-#navbar input {
-  padding: 0.2rem 0.8rem;
-  border-radius: 4px;
-  border: none;
-}
-
-#navbar form button {
-  background-color: #f7d354;
-  border: 2px solid #f7d354;
-  border-radius: 4px;
-  color: #000;
-  padding: 0.3rem;
-  font-size: 1.3rem;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-}
+.site-header { position: sticky; top: 0; z-index: 10; border-bottom: 1px solid var(--color-border); background: rgb(8 10 15 / 92%); backdrop-filter: blur(16px); }
+#navbar { width: min(100% - 2rem, 1280px); min-height: 76px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; }
+#navbar .brand { display: inline-flex; align-items: center; gap: .6rem; color: var(--color-text); font-family: "Space Grotesk", sans-serif; font-size: 1.35rem; font-weight: 700; letter-spacing: -.04em; }
+#navbar .brand svg { color: var(--color-accent); font-size: 1.7rem; }
+.search-form { display: flex; width: min(100%, 380px); gap: .5rem; }
+.search-form input { width: 100%; min-width: 0; padding: .75rem .9rem; border: 1px solid var(--color-border); border-radius: 9px; color: var(--color-text); background: var(--color-surface); }
+.search-form input::placeholder { color: var(--color-muted); }
+.search-form button { display: grid; width: 44px; flex: 0 0 44px; place-items: center; border: 0; border-radius: 9px; color: #111; background: var(--color-accent); font-size: 1.35rem; }
+@media (max-width: 520px) { #navbar { min-height: 68px; gap: .75rem; } #navbar .brand { font-size: 1.05rem; } #navbar .brand svg { font-size: 1.4rem; } .search-form { width: min(58%, 260px); } .search-form input { padding: .65rem; } }
