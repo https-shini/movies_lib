@@ -18,7 +18,7 @@ React + React Router 7
    |
    +--> Páginas e componentes
    +--> Hooks de estado assíncrono
-   +--> Serviço de integração TMDB
+   +--> Serviços de integração TMDB
               |
               v
           API do TMDB
@@ -33,16 +33,24 @@ React + React Router 7
 - React Router: navegação entre páginas.
 - JavaScript ES Modules: implementação da aplicação.
 - CSS: estilos e responsividade.
-- TMDB API: catálogo e dados de filmes.
+- TMDB API: catálogo, dados de filmes e disponibilidade regional.
 
 ## 3. Organização do código
 
 ```text
 src/
 ├── components/
+│   ├── AsyncState.jsx
+│   ├── WatchProviders.jsx
+│   └── ...
 ├── hooks/
+│   └── useAsyncData.js
 ├── pages/
 ├── services/
+│   ├── discover.js
+│   ├── tmdb.js
+│   ├── tmdbUrl.js
+│   └── watchProviders.js
 ├── utils/
 ├── App.jsx
 ├── App.css
@@ -50,22 +58,26 @@ src/
 └── main.jsx
 
 tests/
+├── discover.test.js
 ├── formatters.test.js
-└── tmdbUrl.test.js
+├── tmdbUrl.test.js
+└── watchProviders.test.js
 ```
 
 ### Responsabilidades
 
-- `components/`: componentes reutilizáveis da interface, incluindo seções de catálogo.
+- `components/`: componentes reutilizáveis da interface, incluindo catálogo e disponibilidade de provedores.
 - `hooks/`: hooks React que encapsulam comportamento compartilhado.
 - `pages/`: componentes associados às rotas.
-- `services/`: comunicação com serviços externos e montagem de requisições.
+- `services/`: comunicação com serviços externos, normalização de respostas e montagem de requisições.
 - `utils/`: funções puras reutilizáveis, sem dependência da interface.
 - `tests/`: testes automatizados das funções utilitárias e regras isoladas.
 
 ## 4. Integração com TMDB
 
-A comunicação é centralizada em `src/services/tmdb.js`. A montagem da URL fica isolada em `src/services/tmdbUrl.js`, permitindo testar parâmetros, autenticação e codificação sem acessar a rede.
+A comunicação geral é centralizada em `src/services/tmdb.js`. A montagem da URL fica isolada em `src/services/tmdbUrl.js`, permitindo testar parâmetros, autenticação e codificação sem acessar a rede.
+
+A disponibilidade por filme é consultada por `src/services/watchProviders.js`, usando o endpoint `/movie/{id}/watch/providers`. A resposta é normalizada por região e separada nas modalidades de assinatura, gratuito, com anúncios, aluguel e compra. A interface atual apresenta a região brasileira (BR), ordena provedores pela prioridade retornada pelo TMDB e oferece o link de consulta da própria fonte quando disponível.
 
 Variáveis utilizadas:
 
@@ -79,17 +91,21 @@ Variáveis utilizadas:
 | `VITE_BACKDROP` | URL base para imagens de fundo |
 | `VITE_API_KEY` | Chave de acesso à API |
 
+A integração de provedores usa a mesma chave e base de API já configuradas, portanto não exige uma nova variável de ambiente.
+
 ### Limitação de segurança conhecida
 
 Variáveis com prefixo `VITE_` são incorporadas ao bundle do frontend e podem ser visualizadas por qualquer pessoa que acesse a aplicação. A chave atual do TMDB não deve ser considerada secreta.
 
 Antes de adicionar autenticação de usuários ou dados privados, a arquitetura deverá introduzir um backend ou função serverless para intermediar chamadas externas e proteger credenciais. A chave eventualmente exposta também deverá ser rotacionada se houver suspeita de uso indevido.
 
-## 5. Descoberta e detalhes de filmes
+## 5. Descoberta, detalhes e disponibilidade de filmes
 
 A página inicial agrega seções de filmes populares, mais bem avaliados e em cartaz. A página de descoberta consulta o endpoint de descoberta do TMDB e permite filtrar por gênero, ano de lançamento e nota mínima, além de ordenar e paginar resultados. Os filtros são refletidos na URL para permitir compartilhamento e navegação pelo histórico.
 
 A página de detalhes solicita informações complementares de elenco, vídeos, recomendações e filmes semelhantes. Exibe pôster, imagem de fundo, sinopse, avaliação, dados financeiros, elenco principal e link para trailer quando disponível.
+
+O componente `WatchProviders` consulta a disponibilidade do filme para o Brasil e apresenta provedores agrupados por modalidade: assinatura, gratuito, com anúncios, aluguel e compra. Quando a região não possui dados, a interface informa que nenhuma opção foi retornada, sem inferir que o filme não esteja disponível em todos os serviços. Preços e condições não são estimados; o usuário é direcionado à fonte para confirmar os detalhes.
 
 ## 6. Estados assíncronos
 
@@ -100,6 +116,7 @@ O componente `AsyncState` apresenta estados de carregamento, erro e ausência de
 ## 7. Testes e qualidade
 
 Os testes utilizam Vitest e cobrem atualmente:
+
 - montagem de URLs do TMDB;
 - resolução de endpoints relativos e absolutos;
 - inclusão e preservação da chave de API;
@@ -107,7 +124,8 @@ Os testes utilizam Vitest e cobrem atualmente:
 - conversão de filtros de descoberta para parâmetros do TMDB;
 - formatação de moeda, duração, notas e datas;
 - seleção de trailers oficiais do YouTube;
-- tratamento de dados ausentes ou inválidos.
+- normalização de provedores por região e modalidade;
+- ordenação e tratamento de provedores ausentes ou inválidos.
 
 Comandos:
 
@@ -126,7 +144,8 @@ O GitHub Actions executa instalação limpa, auditoria de dependências com nív
 - A integração com TMDB ainda ocorre diretamente pelo navegador.
 - A chave do TMDB é pública quando utilizada em uma variável `VITE_`.
 - Não existe backend próprio.
-- A descoberta avançada oferece filtros por gênero, ano, nota mínima, ordenação e paginação.
+- A disponibilidade de provedores está atualmente apresentada para a região brasileira.
+- A API do TMDB pode não retornar provedores para todos os filmes ou regiões.
 - Não existe persistência de usuários, avaliações ou listas.
 - Não existe autenticação.
 - A cobertura de testes ainda é inicial e focada em funções isoladas.
@@ -140,7 +159,7 @@ O GitHub Actions executa instalação limpa, auditoria de dependências com nív
 4. Introduzir PostgreSQL e camada de persistência.
 5. Adicionar autenticação, perfis e preferências.
 6. Implementar avaliações, comentários e listas pessoais.
-7. Adicionar descoberta avançada, recomendações e disponibilidade em streaming.
+7. Ampliar a disponibilidade regional e evoluir recomendações.
 
 A escolha definitiva de framework backend, ORM, banco, hospedagem e provedores de autenticação deverá ser documentada antes da implementação dessa camada.
 
