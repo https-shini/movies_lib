@@ -9,6 +9,8 @@ export function useAsyncData(loader, dependencies = []) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
+  // A lista de dependências é fornecida pelo componente consumidor.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const controller = new AbortController();
     let active = true;
@@ -36,8 +38,6 @@ export function useAsyncData(loader, dependencies = []) {
       active = false;
       controller.abort();
     };
-    // A lista de dependências é definida pelo componente consumidor.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, dependencies);
 
   return { data, isLoading, error };
