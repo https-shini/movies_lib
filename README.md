@@ -15,6 +15,7 @@ O MoviesLib começou como um projeto de exploração de filmes com React e TMDB.
 - Descoberta de filmes com filtros por gênero, ano, nota mínima e ordenação.
 - Paginação dos resultados do catálogo.
 - Página de detalhes com sinopse, orçamento, bilheteria, duração, elenco, trailer e recomendações.
+- Disponibilidade de streaming, aluguel e compra no Brasil, agrupada por modalidade.
 - Estados de carregamento, erro e resultados vazios.
 - Navegação com React Router e página 404.
 - Interface responsiva para desktop e dispositivos móveis.
@@ -113,6 +114,7 @@ src/
 │   ├── AsyncState.jsx
 │   ├── MovieCard.jsx
 │   ├── MovieSection.jsx
+│   ├── WatchProviders.jsx
 │   └── Navbar.jsx
 ├── hooks/
 │   └── useAsyncData.js
@@ -129,7 +131,8 @@ src/
 ├── services/
 │   ├── discover.js
 │   ├── tmdb.js
-│   └── tmdbUrl.js
+│   ├── tmdbUrl.js
+│   └── watchProviders.js
 ├── utils/
 │   └── formatters.js
 ├── App.jsx
@@ -140,7 +143,8 @@ src/
 tests/
 ├── discover.test.js
 ├── formatters.test.js
-└── tmdbUrl.test.js
+├── tmdbUrl.test.js
+└── watchProviders.test.js
 ```
 
 ## Prévia do projeto original
@@ -170,9 +174,9 @@ Não envie seu arquivo `.env` ao Git.
 - Atualizar a cadeia de ferramentas e dependências.
 - Ampliar a análise estática e a cobertura de testes.
 - Implementar descoberta avançada, filtros, gêneros e paginação.
+- Integrar disponibilidade regional de streaming, aluguel e compra.
 - Evoluir para backend, persistência e autenticação.
 - Adicionar perfis, avaliações, comentários, listas e recursos sociais.
-- Integrar disponibilidade de filmes em serviços de streaming.
 
 ## Créditos
 
