@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 /**
  * Centraliza estados de carregamento, erro e cancelamento de requisições.
+ * O consumidor deve informar dependências estáveis para refazer a consulta.
  */
 export function useAsyncData(loader, dependencies = []) {
   const [data, setData] = useState(null);
@@ -15,14 +16,14 @@ export function useAsyncData(loader, dependencies = []) {
     async function execute() {
       setIsLoading(true);
       setError("");
+      setData(null);
 
       try {
         const result = await loader(controller.signal);
         if (active) setData(result);
       } catch (requestError) {
-        if (active && requestError.name !== "AbortError") {
-          setError(requestError.message || "Ocorreu um erro inesperado.");
-          setData(null);
+        if (active && requestError?.name !== "AbortError") {
+          setError(requestError?.message || "Ocorreu um erro inesperado.");
         }
       } finally {
         if (active) setIsLoading(false);
