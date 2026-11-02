@@ -4,13 +4,11 @@
 
 O MoviesLib é uma aplicação web de descoberta e consulta de filmes. A implementação atual utiliza React, Vite, React Router e a API pública do The Movie Database (TMDB).
 
-O projeto está em processo de modernização incremental. Esta documentação diferencia o que já existe do que está planejado para evitar descrever componentes futuros como se já estivessem implementados.
+A modernização é incremental. Esta documentação diferencia o que já existe do que está planejado para evitar descrever componentes futuros como se já estivessem implementados.
 
 ## 2. Arquitetura atualmente implementada
 
-A aplicação atual é um frontend React que consome diretamente a API do TMDB pelo navegador. **Ainda não há um backend próprio, banco de dados ou autenticação implementados nesta versão.**
-
-Fluxo simplificado:
+A aplicação atual é um frontend React que consome diretamente a API do TMDB pelo navegador. **Ainda não há backend próprio, banco de dados ou autenticação implementados nesta versão.**
 
 ```text
 Navegador
@@ -19,46 +17,32 @@ Navegador
 React + React Router
    |
    +--> Páginas e componentes
-   |
    +--> Hooks de estado assíncrono
-   |
    +--> Serviço de integração TMDB
               |
               v
-        API do TMDB
+          API do TMDB
 ```
 
 ### Tecnologias
 
 - React 18: composição da interface.
-- Vite: servidor de desenvolvimento e build.
+- Vite 8: desenvolvimento e build.
+- Vitest 5: testes unitários.
 - React Router: navegação entre páginas.
 - JavaScript ES Modules: implementação da aplicação.
 - CSS: estilos e responsividade.
 - TMDB API: catálogo e dados de filmes.
-- Node.js Test Runner: testes unitários das funções JavaScript independentes.
 
 ## 3. Organização do código
 
 ```text
 src/
 ├── components/
-│   ├── AsyncState.jsx
-│   ├── MovieCard.jsx
-│   └── Navbar.jsx
 ├── hooks/
-│   └── useAsyncData.js
 ├── pages/
-│   ├── Home.jsx
-│   ├── Movie.jsx
-│   ├── MoviesGrid.css
-│   ├── NotFound.jsx
-│   └── Search.jsx
 ├── services/
-│   ├── tmdb.js
-│   └── tmdbUrl.js
 ├── utils/
-│   └── formatters.js
 ├── App.jsx
 ├── App.css
 ├── index.css
@@ -82,7 +66,7 @@ tests/
 
 A comunicação é centralizada em `src/services/tmdb.js`. A montagem da URL fica isolada em `src/services/tmdbUrl.js`, permitindo testar parâmetros, autenticação e codificação sem acessar a rede.
 
-A aplicação utiliza as variáveis de ambiente:
+Variáveis utilizadas:
 
 | Variável | Responsabilidade |
 |---|---|
@@ -99,18 +83,19 @@ Antes de adicionar autenticação de usuários ou dados privados, a arquitetura 
 
 ## 5. Estados assíncronos
 
-O hook `useAsyncData` padroniza:
-
-- carregamento;
-- resultado;
-- erro;
-- cancelamento da requisição anterior quando as dependências mudam.
+O hook `useAsyncData` padroniza carregamento, resultado, erro e cancelamento da requisição anterior quando as dependências mudam.
 
 O componente `AsyncState` apresenta estados de carregamento, erro e ausência de resultados.
 
 ## 6. Testes e qualidade
 
-Os testes atuais utilizam o executor nativo `node:test`, sem adicionar dependências ao projeto.
+Os testes utilizam Vitest e cobrem atualmente:
+- montagem de URLs do TMDB;
+- resolução de endpoints relativos e absolutos;
+- inclusão e preservação da chave de API;
+- codificação de parâmetros de pesquisa;
+- formatação de moeda, duração e notas;
+- tratamento de dados ausentes ou inválidos.
 
 Comandos:
 
@@ -121,7 +106,7 @@ npm run build
 npm run check
 ```
 
-O GitHub Actions executa instalação limpa, testes e build em cada atualização da branch e pull request para a branch principal.
+O GitHub Actions sincroniza o lockfile e executa instalação limpa, testes e build nos eventos configurados.
 
 ## 7. Limitações atuais
 
@@ -130,14 +115,12 @@ O GitHub Actions executa instalação limpa, testes e build em cada atualizaçã
 - Não existe backend próprio.
 - Não existe persistência de usuários, avaliações ou listas.
 - Não existe autenticação.
-- A cobertura de testes ainda é inicial e focada em funções puras.
-- A cadeia de ferramentas e dependências ainda precisa ser atualizada para versões suportadas.
+- A cobertura de testes ainda é inicial e focada em funções isoladas.
+- A análise estática com lint ainda precisa ser adicionada.
 
 ## 8. Evolução arquitetural planejada
 
-A arquitetura deverá evoluir por etapas, sem introduzir complexidade antes de existir necessidade funcional:
-
-1. Atualizar dependências, padronizar lint e ampliar testes.
+1. Adicionar lint, análise de dependências e ampliar testes.
 2. Evoluir a organização do frontend para módulos por domínio.
 3. Criar backend com API própria e validação de entrada.
 4. Introduzir PostgreSQL e camada de persistência.
@@ -151,6 +134,6 @@ A escolha definitiva de framework backend, ORM, banco, hospedagem e provedores d
 
 - [Documentação do React](https://react.dev/)
 - [Documentação do Vite](https://vite.dev/)
+- [Documentação do Vitest](https://vitest.dev/)
 - [Documentação do React Router](https://reactrouter.com/)
 - [Documentação da API do TMDB](https://developer.themoviedb.org/docs)
-- [Node.js Test Runner](https://nodejs.org/api/test.html)
