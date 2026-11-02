@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { BsGraphUp, BsWallet2, BsHourglassSplit, BsFillFileEarmarkTextFill } from "react-icons/bs";
 import { fetchTmdb } from "../services/tmdb";
@@ -9,7 +10,8 @@ import "./Movie.css";
 
 const Movie = () => {
   const { id } = useParams();
-  const { data: movie, isLoading, error } = useAsyncData((signal) => fetchTmdb(id, { signal }), [id]);
+  const loadMovie = useCallback((signal) => fetchTmdb(id, { signal }), [id]);
+  const { data: movie, isLoading, error } = useAsyncData(loadMovie);
 
   return (
     <main className="movie-page">
