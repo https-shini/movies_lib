@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { fetchTmdb } from "../services/tmdb";
 import { useAsyncData } from "../hooks/useAsyncData";
 import MovieSection from "../components/MovieSection";
