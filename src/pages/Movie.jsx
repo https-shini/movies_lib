@@ -12,6 +12,7 @@ import {
 } from "../utils/formatters";
 import AsyncState from "../components/AsyncState";
 import MovieCard from "../components/MovieCard";
+import WatchProviders from "../components/WatchProviders";
 import "./Movie.css";
 
 const Movie = () => {
@@ -97,6 +98,8 @@ const Movie = () => {
         <div className="movie-fact"><BsGraphUp /><span>Bilheteria</span><strong>{formatCurrency(movie.revenue)}</strong></div>
         <div className="movie-fact"><BsHourglassSplit /><span>Duração</span><strong>{formatRuntime(movie.runtime)}</strong></div>
       </section>
+
+      <WatchProviders movieId={id} />
 
       {cast.length > 0 && (
         <section className="movie-section">
