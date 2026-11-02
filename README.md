@@ -2,48 +2,93 @@
 
 Aplicação web para descobrir e pesquisar filmes, consultar informações e explorar títulos usando a API do [The Movie Database (TMDB)](https://www.themoviedb.org/).
 
+**Aplicação publicada:** https://movieslib-krd.vercel.app
+
+## Visão geral
+
+O MoviesLib começou como um projeto de exploração de filmes com React e TMDB. A modernização está sendo feita incrementalmente, preservando as funcionalidades existentes e preparando a aplicação para evoluir para uma plataforma de catálogo, descoberta e acompanhamento de filmes.
+
+## Funcionalidades atuais
+
+- Catálogo inicial de filmes mais bem avaliados.
+- Pesquisa de filmes por título.
+- Página de detalhes com sinopse, orçamento, receita e duração.
+- Estados de carregamento, erro e resultados vazios.
+- Navegação com React Router e página 404.
+- Interface responsiva para desktop e dispositivos móveis.
+
 ## Tecnologias
 
 - React 18
 - Vite
 - React Router
 - JavaScript (ES Modules)
-- CSS responsivo
+- CSS
 - TMDB API
+- Node.js Test Runner
 
-## Funcionalidades atuais
+## Requisitos
 
-- Catálogo inicial de filmes mais bem avaliados.
-- Pesquisa de filmes por título.
-- Página de detalhes com sinopse, orçamento, receita, duração e avaliação.
-- Estados de carregamento, erro e resultados vazios.
-- Interface responsiva para desktop e dispositivos móveis.
+- Node.js 24 ou superior.
+- npm 10 ou superior.
+- Chave de API do TMDB.
 
-## Requisitos e configuração
+## Configuração local
 
-- Node.js LTS, npm e uma chave de API do TMDB.
-- Configure as variáveis de ambiente em um arquivo `.env` na raiz do projeto:
+1. Clone o repositório.
+2. Instale as dependências:
 
-```env
-VITE_API=https://api.themoviedb.org/3/movie/
-VITE_SEARCH=https://api.themoviedb.org/3/search/movie
-VITE_IMG=https://image.tmdb.org/t/p/w500
-VITE_API_KEY=api_key=YOUR_TMDB_API_KEY
-```
+   ```bash
+   npm ci
+   ```
 
-Instale e execute:
+3. Crie seu arquivo de ambiente a partir do modelo:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+   No Windows PowerShell, utilize:
+
+   ```powershell
+   Copy-Item .env.example .env
+   ```
+
+4. Edite o arquivo `.env` e informe sua chave do TMDB em `VITE_API_KEY`.
+5. Inicie o servidor local:
+
+   ```bash
+   npm run dev
+   ```
+
+## Verificações
+
+Execute os testes unitários:
 
 ```bash
-npm install
-npm run dev
+npm test
 ```
 
-Build de produção e pré-visualização:
+Execute testes em modo de observação:
+
+```bash
+npm run test:watch
+```
+
+Execute a verificação completa, incluindo testes e build:
+
+```bash
+npm run check
+```
+
+Para gerar e visualizar a versão de produção:
 
 ```bash
 npm run build
 npm run preview
 ```
+
+O GitHub Actions executa automaticamente a instalação limpa das dependências, os testes unitários e o build em pushes e pull requests direcionados à branch principal.
 
 ## Estrutura atual
 
@@ -58,27 +103,54 @@ src/
 ├── pages/
 │   ├── Home.jsx
 │   ├── Movie.jsx
+│   ├── MoviesGrid.css
+│   ├── NotFound.jsx
 │   └── Search.jsx
 ├── services/
-│   └── tmdb.js
+│   ├── tmdb.js
+│   └── tmdbUrl.js
+├── utils/
+│   └── formatters.js
 ├── App.jsx
 ├── App.css
-└── index.css
+├── index.css
+└── main.jsx
+
+tests/
+├── formatters.test.js
+└── tmdbUrl.test.js
 ```
 
-## Segurança da chave da API
+## Prévia do projeto original
 
-Variáveis com prefixo `VITE_` são incorporadas ao código enviado ao navegador. Portanto, `VITE_API_KEY` não é uma credencial secreta. Para uma implantação pública com proteção adequada, a evolução arquitetural deve introduzir uma API backend ou função serverless que intermedeie as requisições ao TMDB e mantenha credenciais no servidor.
+As imagens abaixo registram a versão anterior do MoviesLib e serão atualizadas conforme a reformulação visual avançar.
+
+<div align="center">
+  <img src="https://raw.githubusercontent.com/https-shini/movies_lib/feature/foundation-modernization/dist/001.png" width="400" alt="Tela inicial da versão original do MoviesLib" />
+  <img src="https://raw.githubusercontent.com/https-shini/movies_lib/feature/foundation-modernization/dist/002.png" width="400" alt="Tela de pesquisa da versão original do MoviesLib" />
+  <img src="https://raw.githubusercontent.com/https-shini/movies_lib/feature/foundation-modernization/dist/003.png" width="400" alt="Tela de detalhes da versão original do MoviesLib" />
+  <img src="https://raw.githubusercontent.com/https-shini/movies_lib/feature/foundation-modernization/dist/004.png" width="400" alt="Outra tela da versão original do MoviesLib" />
+</div>
+
+## Segurança
+
+Variáveis com prefixo `VITE_` são incorporadas ao código enviado ao navegador. Portanto, `VITE_API_KEY` não é uma credencial secreta. Para proteger a integração em uma implantação pública, a próxima evolução arquitetural deverá introduzir uma API backend ou função serverless que intermedeie as requisições ao TMDB e mantenha credenciais no servidor.
 
 Não envie seu arquivo `.env` ao Git.
 
-## Próximas etapas planejadas
+## Documentação e contribuição
 
-- Migrar gradualmente para TypeScript e uma arquitetura modular.
-- Adicionar testes automatizados e integração contínua.
-- Implementar filtros, gêneros, paginação e descoberta avançada.
-- Criar backend, persistência e autenticação.
-- Adicionar perfis, avaliações, listas e recursos sociais.
+- [Documentação técnica](./read-model/MODEL.md)
+- [Como contribuir](./read-model/CONTRIBUTING.md)
+
+## Roadmap
+
+- Atualizar a cadeia de ferramentas e dependências.
+- Ampliar a cobertura de testes e adicionar análise estática.
+- Implementar descoberta avançada, filtros, gêneros e paginação.
+- Evoluir para backend, persistência e autenticação.
+- Adicionar perfis, avaliações, comentários, listas e recursos sociais.
+- Integrar disponibilidade de filmes em serviços de streaming.
 
 ## Créditos
 
@@ -86,4 +158,4 @@ Dados e imagens de filmes fornecidos pelo [TMDB](https://www.themoviedb.org/). E
 
 ## Licença
 
-Consulte o arquivo [LICENSE](./LICENSE).
+Este projeto está sob a [licença MIT](./LICENSE).
