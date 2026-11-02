@@ -22,6 +22,7 @@ O MoviesLib começou como um projeto de exploração de filmes com React e TMDB.
 - React 18
 - Vite 8
 - Vitest 5
+- ESLint 10 com regras para React Hooks
 - React Router
 - JavaScript (ES Modules)
 - CSS
@@ -63,6 +64,12 @@ O MoviesLib começou como um projeto de exploração de filmes com React e TMDB.
 
 ## Verificações
 
+Execute a análise estática do código:
+
+\`\`\`bash
+npm run lint
+\`\`\`
+
 Execute os testes unitários:
 
 ```bash
@@ -75,7 +82,7 @@ Execute os testes em modo de observação:
 npm run test:watch
 ```
 
-Execute a verificação completa, incluindo testes e build:
+Execute a verificação completa, incluindo lint, testes e build:
 
 ```bash
 npm run check
@@ -146,7 +153,7 @@ Não envie seu arquivo `.env` ao Git.
 ## Roadmap
 
 - Atualizar a cadeia de ferramentas e dependências.
-- Adicionar análise estática e ampliar a cobertura de testes.
+- Ampliar a análise estática e a cobertura de testes.
 - Implementar descoberta avançada, filtros, gêneros e paginação.
 - Evoluir para backend, persistência e autenticação.
 - Adicionar perfis, avaliações, comentários, listas e recursos sociais.
