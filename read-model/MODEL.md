@@ -57,7 +57,6 @@ tests/
 ### Responsabilidades
 
 - `components/`: componentes reutilizáveis da interface, incluindo seções de catálogo.
-- `pages/`: componentes associados às rotas.
 - `hooks/`: hooks React que encapsulam comportamento compartilhado.
 - `pages/`: componentes associados às rotas.
 - `services/`: comunicação com serviços externos e montagem de requisições.
@@ -105,7 +104,9 @@ Os testes utilizam Vitest e cobrem atualmente:
 - resolução de endpoints relativos e absolutos;
 - inclusão e preservação da chave de API;
 - codificação de parâmetros de pesquisa;
-- formatação de moeda, duração e notas;
+- conversão de filtros de descoberta para parâmetros do TMDB;
+- formatação de moeda, duração, notas e datas;
+- seleção de trailers oficiais do YouTube;
 - tratamento de dados ausentes ou inválidos.
 
 Comandos:
