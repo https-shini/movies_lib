@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import AsyncState from "./AsyncState";
 import MovieCard from "./MovieCard";
 
