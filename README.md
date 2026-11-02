@@ -88,7 +88,7 @@ npm run build
 npm run preview
 ```
 
-O GitHub Actions sincroniza o lockfile nas atualizações da branch de desenvolvimento e executa a instalação limpa, os testes unitários e o build nos pull requests e na branch principal.
+O GitHub Actions regenera o lockfile quando a cadeia de ferramentas muda e executa a instalação limpa, os testes unitários e o build nos pull requests e na branch principal.
 
 ## Estrutura atual
 
