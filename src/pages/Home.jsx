@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { fetchTmdb } from "../services/tmdb";
 import { useAsyncData } from "../hooks/useAsyncData";
 import AsyncState from "../components/AsyncState";
@@ -5,7 +6,8 @@ import MovieCard from "../components/MovieCard";
 import "./MoviesGrid.css";
 
 const Home = () => {
-  const { data, isLoading, error } = useAsyncData((signal) => fetchTmdb("top_rated", { signal }), []);
+  const loadMovies = useCallback((signal) => fetchTmdb("top_rated", { signal }), []);
+  const { data, isLoading, error } = useAsyncData(loadMovies);
   const movies = data?.results ?? [];
 
   return (
