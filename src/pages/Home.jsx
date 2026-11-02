@@ -1,24 +1,64 @@
 import { useCallback } from "react";
+import { Link } from "react-router-dom";
 import { fetchTmdb } from "../services/tmdb";
 import { useAsyncData } from "../hooks/useAsyncData";
-import AsyncState from "../components/AsyncState";
-import MovieCard from "../components/MovieCard";
+import MovieSection from "../components/MovieSection";
 import "./MoviesGrid.css";
+import "./Home.css";
 
 const Home = () => {
-  const loadMovies = useCallback((signal) => fetchTmdb("top_rated", { signal }), []);
-  const { data, isLoading, error } = useAsyncData(loadMovies);
-  const movies = data?.results ?? [];
+  const loadPopular = useCallback(
+    (signal) => fetchTmdb("popular", { params: { language: "pt-BR", region: "BR" }, signal }),
+    [],
+  );
+  const loadTopRated = useCallback(
+    (signal) => fetchTmdb("top_rated", { params: { language: "pt-BR" }, signal }),
+    [],
+  );
+  const loadNowPlaying = useCallback(
+    (signal) => fetchTmdb("now_playing", { params: { language: "pt-BR", region: "BR" }, signal }),
+    [],
+  );
+
+  const popular = useAsyncData(loadPopular);
+  const topRated = useAsyncData(loadTopRated);
+  const nowPlaying = useAsyncData(loadNowPlaying);
 
   return (
-    <main className="container">
-      <h1 className="title">Filmes mais bem avaliados</h1>
-      <AsyncState isLoading={isLoading} error={error} isEmpty={!movies.length} emptyMessage="Não encontramos filmes para exibir." />
-      {!isLoading && !error && movies.length > 0 && (
-        <section className="movies-container" aria-label="Filmes mais bem avaliados">
-          {movies.map((movie) => <MovieCard key={movie.id} movie={movie} />)}
-        </section>
-      )}
+    <main className="container home-page">
+      <section className="home-hero">
+        <p className="eyebrow">Seu próximo filme começa aqui</p>
+        <h1>Histórias que merecem ser descobertas.</h1>
+        <p>Explore novidades, encontre grandes clássicos e descubra filmes que combinam com seu momento.</p>
+        <Link to="/discover" className="home-hero__cta">Explorar filmes</Link>
+      </section>
+
+      <MovieSection
+        title="Em alta"
+        description="Os filmes que estão chamando atenção agora."
+        movies={popular.data?.results}
+        isLoading={popular.isLoading}
+        error={popular.error}
+        discoverUrl="/discover?sort=popularity.desc"
+      />
+
+      <MovieSection
+        title="Mais bem avaliados"
+        description="Títulos que conquistaram as melhores avaliações."
+        movies={topRated.data?.results}
+        isLoading={topRated.isLoading}
+        error={topRated.error}
+        discoverUrl="/discover?sort=vote_average.desc"
+      />
+
+      <MovieSection
+        title="Nos cinemas"
+        description="Filmes em exibição nos cinemas brasileiros."
+        movies={nowPlaying.data?.results}
+        isLoading={nowPlaying.isLoading}
+        error={nowPlaying.error}
+        discoverUrl="/discover?sort=primary_release_date.desc"
+      />
     </main>
   );
 };
