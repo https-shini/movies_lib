@@ -29,6 +29,7 @@ React + React Router
 - React 18: composição da interface.
 - Vite 8: desenvolvimento e build.
 - Vitest 5: testes unitários.
+- ESLint 10: análise estática e regras para React Hooks.
 - React Router: navegação entre páginas.
 - JavaScript ES Modules: implementação da aplicação.
 - CSS: estilos e responsividade.
@@ -100,6 +101,7 @@ Os testes utilizam Vitest e cobrem atualmente:
 Comandos:
 
 ```bash
+npm run lint
 npm test
 npm run test:watch
 npm run build
@@ -116,7 +118,7 @@ O GitHub Actions sincroniza o lockfile e executa instalação limpa, testes e bu
 - Não existe persistência de usuários, avaliações ou listas.
 - Não existe autenticação.
 - A cobertura de testes ainda é inicial e focada em funções isoladas.
-- A análise estática com lint ainda precisa ser adicionada.
+- A análise estática já está configurada com ESLint; a cobertura de regras e testes deverá crescer conforme novos módulos forem adicionados.
 
 ## 8. Evolução arquitetural planejada
 
