@@ -119,7 +119,7 @@ npm run build
 npm run check
 ```
 
-O GitHub Actions sincroniza o lockfile e executa instalação limpa, testes e build nos eventos configurados.
+O GitHub Actions executa instalação limpa, auditoria de dependências com nível mínimo moderado, ESLint, testes e build.
 
 ## 8. Limitações atuais
 
@@ -130,7 +130,7 @@ O GitHub Actions sincroniza o lockfile e executa instalação limpa, testes e bu
 - Não existe persistência de usuários, avaliações ou listas.
 - Não existe autenticação.
 - A cobertura de testes ainda é inicial e focada em funções isoladas.
-- A análise estática já está configurada com ESLint; a cobertura de regras e testes deverá crescer conforme novos módulos forem adicionados.
+- A análise estática está configurada com ESLint. O relatório de auditoria atual não identifica vulnerabilidades conhecidas nas dependências.
 
 ## 9. Evolução arquitetural planejada
 
