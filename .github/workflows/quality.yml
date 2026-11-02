@@ -8,6 +8,9 @@ on:
 
 jobs:
   sync-lockfile:
+    concurrency:
+      group: lockfile-sync-${{ github.ref }}
+      cancel-in-progress: true
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/heads/feature/')
     runs-on: ubuntu-latest
     permissions:
