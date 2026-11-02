@@ -75,7 +75,8 @@ Variáveis utilizadas:
 | `VITE_SEARCH` | Endpoint de pesquisa |
 | `VITE_DISCOVER` | Endpoint de descoberta e filtros |
 | `VITE_GENRES` | Endpoint de gêneros |
-| `VITE_IMG` | URL base para imagens |
+| `VITE_IMG` | URL base para pôsteres e perfis |
+| `VITE_BACKDROP` | URL base para imagens de fundo |
 | `VITE_API_KEY` | Chave de acesso à API |
 
 ### Limitação de segurança conhecida
@@ -84,13 +85,19 @@ Variáveis com prefixo `VITE_` são incorporadas ao bundle do frontend e podem s
 
 Antes de adicionar autenticação de usuários ou dados privados, a arquitetura deverá introduzir um backend ou função serverless para intermediar chamadas externas e proteger credenciais. A chave eventualmente exposta também deverá ser rotacionada se houver suspeita de uso indevido.
 
-## 5. Estados assíncronos
+## 5. Descoberta e detalhes de filmes
+
+A página de descoberta consulta o endpoint de descoberta do TMDB e permite filtrar por gênero, ano de lançamento e nota mínima, além de ordenar e paginar resultados. Os filtros são refletidos na URL para permitir compartilhamento e navegação pelo histórico.
+
+A página de detalhes solicita informações complementares de elenco, vídeos, recomendações e filmes semelhantes. Exibe pôster, imagem de fundo, sinopse, avaliação, dados financeiros, elenco principal e link para trailer quando disponível.
+
+## 6. Estados assíncronos
 
 O hook `useAsyncData` padroniza carregamento, resultado, erro e cancelamento da requisição anterior quando as dependências mudam.
 
 O componente `AsyncState` apresenta estados de carregamento, erro e ausência de resultados.
 
-## 6. Testes e qualidade
+## 7. Testes e qualidade
 
 Os testes utilizam Vitest e cobrem atualmente:
 - montagem de URLs do TMDB;
@@ -112,7 +119,7 @@ npm run check
 
 O GitHub Actions sincroniza o lockfile e executa instalação limpa, testes e build nos eventos configurados.
 
-## 7. Limitações atuais
+## 8. Limitações atuais
 
 - A integração com TMDB ainda ocorre diretamente pelo navegador.
 - A chave do TMDB é pública quando utilizada em uma variável `VITE_`.
@@ -123,7 +130,7 @@ O GitHub Actions sincroniza o lockfile e executa instalação limpa, testes e bu
 - A cobertura de testes ainda é inicial e focada em funções isoladas.
 - A análise estática já está configurada com ESLint; a cobertura de regras e testes deverá crescer conforme novos módulos forem adicionados.
 
-## 8. Evolução arquitetural planejada
+## 9. Evolução arquitetural planejada
 
 1. Ampliar testes de componentes e fluxos de interface.
 2. Evoluir a organização do frontend para módulos por domínio.
@@ -135,7 +142,7 @@ O GitHub Actions sincroniza o lockfile e executa instalação limpa, testes e bu
 
 A escolha definitiva de framework backend, ORM, banco, hospedagem e provedores de autenticação deverá ser documentada antes da implementação dessa camada.
 
-## 9. Referências
+## 10. Referências
 
 - [Documentação do React](https://react.dev/)
 - [Documentação do Vite](https://vite.dev/)
