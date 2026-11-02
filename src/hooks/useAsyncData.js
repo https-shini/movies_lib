@@ -2,15 +2,13 @@ import { useEffect, useState } from "react";
 
 /**
  * Centraliza estados de carregamento, erro e cancelamento de requisições.
- * O consumidor deve informar dependências estáveis para refazer a consulta.
+ * A função loader deve ser estabilizada pelo consumidor com useCallback.
  */
-export function useAsyncData(loader, dependencies = []) {
+export function useAsyncData(loader) {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // A lista de dependências é fornecida pelo componente consumidor.
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const controller = new AbortController();
     let active = true;
@@ -38,7 +36,7 @@ export function useAsyncData(loader, dependencies = []) {
       active = false;
       controller.abort();
     };
-  }, dependencies);
+  }, [loader]);
 
   return { data, isLoading, error };
 }
