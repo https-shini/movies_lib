@@ -20,12 +20,12 @@ O MoviesLib começou como um projeto de exploração de filmes com React e TMDB.
 ## Tecnologias
 
 - React 18
-- Vite
+- Vite 8
+- Vitest 5
 - React Router
 - JavaScript (ES Modules)
 - CSS
 - TMDB API
-- Node.js Test Runner
 
 ## Requisitos
 
@@ -48,7 +48,7 @@ O MoviesLib começou como um projeto de exploração de filmes com React e TMDB.
    cp .env.example .env
    ```
 
-   No Windows PowerShell, utilize:
+   No Windows PowerShell:
 
    ```powershell
    Copy-Item .env.example .env
@@ -69,7 +69,7 @@ Execute os testes unitários:
 npm test
 ```
 
-Execute testes em modo de observação:
+Execute os testes em modo de observação:
 
 ```bash
 npm run test:watch
@@ -88,7 +88,7 @@ npm run build
 npm run preview
 ```
 
-O GitHub Actions executa automaticamente a instalação limpa das dependências, os testes unitários e o build em pushes e pull requests direcionados à branch principal.
+O GitHub Actions sincroniza o lockfile nas atualizações da branch de desenvolvimento e executa a instalação limpa, os testes unitários e o build nos pull requests e na branch principal.
 
 ## Estrutura atual
 
@@ -146,7 +146,7 @@ Não envie seu arquivo `.env` ao Git.
 ## Roadmap
 
 - Atualizar a cadeia de ferramentas e dependências.
-- Ampliar a cobertura de testes e adicionar análise estática.
+- Adicionar análise estática e ampliar a cobertura de testes.
 - Implementar descoberta avançada, filtros, gêneros e paginação.
 - Evoluir para backend, persistência e autenticação.
 - Adicionar perfis, avaliações, comentários, listas e recursos sociais.
