@@ -73,6 +73,8 @@ Variáveis utilizadas:
 |---|---|
 | `VITE_API` | URL base dos endpoints de filmes |
 | `VITE_SEARCH` | Endpoint de pesquisa |
+| `VITE_DISCOVER` | Endpoint de descoberta e filtros |
+| `VITE_GENRES` | Endpoint de gêneros |
 | `VITE_IMG` | URL base para imagens |
 | `VITE_API_KEY` | Chave de acesso à API |
 
@@ -115,6 +117,7 @@ O GitHub Actions sincroniza o lockfile e executa instalação limpa, testes e bu
 - A integração com TMDB ainda ocorre diretamente pelo navegador.
 - A chave do TMDB é pública quando utilizada em uma variável `VITE_`.
 - Não existe backend próprio.
+- A descoberta avançada oferece filtros por gênero, ano, nota mínima, ordenação e paginação.
 - Não existe persistência de usuários, avaliações ou listas.
 - Não existe autenticação.
 - A cobertura de testes ainda é inicial e focada em funções isoladas.
@@ -122,7 +125,7 @@ O GitHub Actions sincroniza o lockfile e executa instalação limpa, testes e bu
 
 ## 8. Evolução arquitetural planejada
 
-1. Adicionar lint, análise de dependências e ampliar testes.
+1. Ampliar testes de componentes e fluxos de interface.
 2. Evoluir a organização do frontend para módulos por domínio.
 3. Criar backend com API própria e validação de entrada.
 4. Introduzir PostgreSQL e camada de persistência.
