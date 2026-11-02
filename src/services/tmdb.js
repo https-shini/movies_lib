@@ -40,3 +40,10 @@ export function getPosterUrl(path) {
 
   return `${imageBaseUrl.replace(/\/$/, "")}/${path.replace(/^\//, "")}`;
 }
+
+export function getBackdropUrl(path) {
+  const imageBaseUrl = import.meta.env.VITE_BACKDROP;
+  if (!path || !imageBaseUrl) return null;
+
+  return `${imageBaseUrl.replace(/\/$/, "")}/${path.replace(/^\//, "")}`;
+}
