@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { formatCurrency, formatRating, formatRuntime } from "../src/utils/formatters.js";
+import { formatCurrency, formatRating, formatReleaseDate, formatRuntime, getYouTubeTrailer } from "../src/utils/formatters.js";
 
 describe("formatCurrency", () => {
   it("formats positive amounts as USD using pt-BR locale", () => {
@@ -37,5 +37,36 @@ describe("formatRating", () => {
 
   it.each([-1, 10.1, Number.NaN])("rejects values outside the TMDB range: %s", (rating) => {
     expect(formatRating(rating)).toBe("N/A");
+  });
+});
+
+describe("formatReleaseDate", () => {
+  it("formats valid release dates in Portuguese", () => {
+    expect(formatReleaseDate("2024-05-20")).toBe("20 de maio de 2024");
+  });
+
+  it.each(["", "2024-13-40", "20/05/2024", null])("handles invalid dates: %s", (value) => {
+    expect(formatReleaseDate(value)).toBe("Não informada");
+  });
+});
+
+describe("getYouTubeTrailer", () => {
+  it("prefers an official YouTube trailer", () => {
+    const videos = [
+      { site: "Vimeo", type: "Trailer", key: "vimeo-key", official: true },
+      { site: "YouTube", type: "Teaser", key: "teaser-key", official: true },
+      { site: "YouTube", type: "Trailer", key: "official-key", official: true },
+    ];
+
+    expect(getYouTubeTrailer(videos)).toBe("https://www.youtube.com/watch?v=official-key");
+  });
+
+  it("falls back to a non-official YouTube trailer and safely encodes the key", () => {
+    expect(getYouTubeTrailer([{ site: "YouTube", type: "Trailer", key: "trailer key" }]))
+      .toBe("https://www.youtube.com/watch?v=trailer%20key");
+  });
+
+  it("returns null when no YouTube trailer exists", () => {
+    expect(getYouTubeTrailer([{ site: "YouTube", type: "Teaser", key: "teaser" }])).toBeNull();
   });
 });
