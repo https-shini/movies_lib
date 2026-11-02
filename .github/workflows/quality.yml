@@ -1,5 +1,9 @@
 name: Quality checks
 
+concurrency:
+  group: quality-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 on:
   push:
     branches: [main, "feature/**"]
