@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router";
 import { fetchTmdb } from "../services/tmdb";
 import { buildDiscoverParams } from "../services/discover";
 import { useAsyncData } from "../hooks/useAsyncData";
