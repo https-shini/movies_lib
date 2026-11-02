@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { FaStar } from "react-icons/fa";
 import { getPosterUrl } from "../services/tmdb";
 import { formatRating } from "../utils/formatters";
