@@ -72,6 +72,12 @@ Execute a análise estática do código:
 npm run lint
 ```
 
+Verifique vulnerabilidades conhecidas nas dependências:
+
+```bash
+npm audit
+```
+
 Execute os testes unitários:
 
 ```bash
@@ -97,7 +103,7 @@ npm run build
 npm run preview
 ```
 
-O GitHub Actions regenera o lockfile quando a cadeia de ferramentas muda e executa a instalação limpa, os testes unitários e o build nos pull requests e na branch principal.
+O GitHub Actions executa instalação limpa, auditoria de dependências, ESLint, testes unitários e build nos pushes e pull requests.
 
 ## Estrutura atual
 
