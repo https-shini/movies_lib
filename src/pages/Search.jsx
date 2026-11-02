@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import { fetchTmdb } from "../services/tmdb";
 import { useAsyncData } from "../hooks/useAsyncData";
@@ -8,10 +9,13 @@ import "./MoviesGrid.css";
 const Search = () => {
   const [searchParams] = useSearchParams();
   const query = (searchParams.get("q") || "").trim();
-  const { data, isLoading, error } = useAsyncData(
-    (signal) => query ? fetchTmdb(import.meta.env.VITE_SEARCH, { params: { query }, signal }) : Promise.resolve({ results: [] }),
-    [query]
+  const loadResults = useCallback(
+    (signal) => query
+      ? fetchTmdb(import.meta.env.VITE_SEARCH, { params: { query }, signal })
+      : Promise.resolve({ results: [] }),
+    [query],
   );
+  const { data, isLoading, error } = useAsyncData(loadResults);
   const movies = data?.results ?? [];
 
   return (
