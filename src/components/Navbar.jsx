@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router";
 import { BiCameraMovie, BiSearchAlt2, BiCompass } from "react-icons/bi";
 import "./Navbar.css";
 
