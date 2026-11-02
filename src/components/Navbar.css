@@ -1,9 +1,24 @@
 .site-header { position: sticky; top: 0; z-index: 10; border-bottom: 1px solid var(--color-border); background: rgb(8 10 15 / 92%); backdrop-filter: blur(16px); }
-#navbar { width: min(100% - 2rem, 1280px); min-height: 76px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; }
-#navbar .brand { display: inline-flex; align-items: center; gap: .6rem; color: var(--color-text); font-family: "Space Grotesk", sans-serif; font-size: 1.35rem; font-weight: 700; letter-spacing: -.04em; }
+#navbar { width: min(100% - 2rem, 1280px); min-height: 76px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+#navbar .brand { display: inline-flex; flex: 0 0 auto; align-items: center; gap: .6rem; color: var(--color-text); font-family: "Space Grotesk", sans-serif; font-size: 1.35rem; font-weight: 700; letter-spacing: -.04em; }
 #navbar .brand svg { color: var(--color-accent); font-size: 1.7rem; }
-.search-form { display: flex; width: min(100%, 380px); gap: .5rem; }
+.nav-actions { display: flex; min-width: 0; align-items: center; justify-content: flex-end; gap: .9rem; }
+.discover-link { display: inline-flex; flex: 0 0 auto; align-items: center; gap: .4rem; color: var(--color-muted); font-size: .9rem; font-weight: 600; transition: color .2s ease; }
+.discover-link:hover, .discover-link:focus-visible { color: var(--color-accent); }
+.discover-link svg { font-size: 1.25rem; }
+.search-form { display: flex; width: clamp(140px, 30vw, 380px); gap: .5rem; }
 .search-form input { width: 100%; min-width: 0; padding: .75rem .9rem; border: 1px solid var(--color-border); border-radius: 9px; color: var(--color-text); background: var(--color-surface); }
 .search-form input::placeholder { color: var(--color-muted); }
 .search-form button { display: grid; width: 44px; flex: 0 0 44px; place-items: center; border: 0; border-radius: 9px; color: #111; background: var(--color-accent); font-size: 1.35rem; }
-@media (max-width: 520px) { #navbar { min-height: 68px; gap: .75rem; } #navbar .brand { font-size: 1.05rem; } #navbar .brand svg { font-size: 1.4rem; } .search-form { width: min(58%, 260px); } .search-form input { padding: .65rem; } }
+@media (max-width: 520px) {
+  #navbar { min-height: 68px; gap: .6rem; }
+  #navbar .brand { gap: .4rem; font-size: 1.05rem; }
+  #navbar .brand svg { font-size: 1.4rem; }
+  .nav-actions { gap: .55rem; }
+  .discover-link { width: 32px; height: 40px; justify-content: center; }
+  .discover-link span { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+  .discover-link svg { font-size: 1.35rem; }
+  .search-form { width: clamp(120px, 43vw, 220px); gap: .35rem; }
+  .search-form input { padding: .65rem; }
+  .search-form button { width: 40px; flex-basis: 40px; }
+}
