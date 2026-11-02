@@ -56,7 +56,8 @@ tests/
 
 ### Responsabilidades
 
-- `components/`: componentes reutilizáveis da interface.
+- `components/`: componentes reutilizáveis da interface, incluindo seções de catálogo.
+- `pages/`: componentes associados às rotas.
 - `hooks/`: hooks React que encapsulam comportamento compartilhado.
 - `pages/`: componentes associados às rotas.
 - `services/`: comunicação com serviços externos e montagem de requisições.
@@ -87,7 +88,7 @@ Antes de adicionar autenticação de usuários ou dados privados, a arquitetura 
 
 ## 5. Descoberta e detalhes de filmes
 
-A página de descoberta consulta o endpoint de descoberta do TMDB e permite filtrar por gênero, ano de lançamento e nota mínima, além de ordenar e paginar resultados. Os filtros são refletidos na URL para permitir compartilhamento e navegação pelo histórico.
+A página inicial agrega seções de filmes populares, mais bem avaliados e em cartaz. A página de descoberta consulta o endpoint de descoberta do TMDB e permite filtrar por gênero, ano de lançamento e nota mínima, além de ordenar e paginar resultados. Os filtros são refletidos na URL para permitir compartilhamento e navegação pelo histórico.
 
 A página de detalhes solicita informações complementares de elenco, vídeos, recomendações e filmes semelhantes. Exibe pôster, imagem de fundo, sinopse, avaliação, dados financeiros, elenco principal e link para trailer quando disponível.
 
