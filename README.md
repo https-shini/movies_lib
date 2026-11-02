@@ -114,11 +114,14 @@ src/
 │   ├── Home.jsx
 │   ├── Home.css
 │   ├── Movie.jsx
+│   ├── Movie.css
 │   ├── Discover.jsx
+│   ├── Discover.css
 │   ├── MoviesGrid.css
 │   ├── NotFound.jsx
 │   └── Search.jsx
 ├── services/
+│   ├── discover.js
 │   ├── tmdb.js
 │   └── tmdbUrl.js
 ├── utils/
@@ -129,6 +132,7 @@ src/
 └── main.jsx
 
 tests/
+├── discover.test.js
 ├── formatters.test.js
 └── tmdbUrl.test.js
 ```
