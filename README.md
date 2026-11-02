@@ -25,7 +25,7 @@ O MoviesLib começou como um projeto de exploração de filmes com React e TMDB.
 - Vite 8
 - Vitest 5
 - ESLint 10 com regras para React Hooks
-- React Router
+- React Router 7
 - JavaScript (ES Modules)
 - CSS
 - TMDB API
