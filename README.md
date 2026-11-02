@@ -66,9 +66,9 @@ O MoviesLib começou como um projeto de exploração de filmes com React e TMDB.
 
 Execute a análise estática do código:
 
-\`\`\`bash
+```bash
 npm run lint
-\`\`\`
+```
 
 Execute os testes unitários:
 
