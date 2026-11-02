@@ -15,7 +15,7 @@
 .movie-overview h2 { margin: 1.2rem 0 .45rem; font-size: 1rem; }
 .movie-overview p { max-width: 68ch; margin: 0; color: #c2cad7; line-height: 1.75; }
 .trailer-link { display: inline-flex; align-items: center; gap: .55rem; margin-top: 1.3rem; padding: .75rem 1rem; border-radius: 9px; color: #111; background: var(--color-accent); font-weight: 800; }
-.movie-facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .9rem; margin: 1.25rem 0 3rem; }
+.movie-facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .9rem; margin: 1.25rem 0 2rem; }
 .movie-fact { display: grid; grid-template-columns: auto 1fr; align-items: center; column-gap: .65rem; row-gap: .25rem; padding: 1rem; border: 1px solid var(--color-border); border-radius: 12px; background: var(--color-surface); }
 .movie-fact svg { grid-row: span 2; color: var(--color-accent); font-size: 1.15rem; }
 .movie-fact span { color: var(--color-muted); font-size: .75rem; }
@@ -31,4 +31,4 @@
 .cast-card strong { overflow: hidden; font-size: .85rem; text-overflow: ellipsis; white-space: nowrap; }
 .cast-card span { overflow: hidden; color: var(--color-muted); font-size: .75rem; text-overflow: ellipsis; white-space: nowrap; }
 @media (max-width: 800px) { .movie-hero__content { grid-template-columns: 190px minmax(0, 1fr); } .movie-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); } .cast-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
-@media (max-width: 560px) { .movie-page { width: min(100% - 1.25rem, 1280px); margin-top: 1.25rem; } .movie-hero__content { grid-template-columns: 1fr; gap: 1.25rem; padding: 1rem; } .movie-hero__poster { width: min(58%, 210px); margin: 0 auto; } .movie-hero__details h1 { font-size: 2rem; } .movie-facts { gap: .6rem; margin-bottom: 2rem; } .movie-fact { padding: .75rem; } .movie-fact strong { font-size: .8rem; } .movie-section__heading { align-items: flex-start; flex-direction: column; gap: .35rem; } .cast-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem; } }
+@media (max-width: 560px) { .movie-page { width: min(100% - 1.25rem, 1280px); margin-top: 1.25rem; } .movie-hero__content { grid-template-columns: 1fr; gap: 1.25rem; padding: 1rem; } .movie-hero__poster { width: min(58%, 210px); margin: 0 auto; } .movie-hero__details h1 { font-size: 2rem; } .movie-facts { gap: .6rem; margin-bottom: 1.5rem; } .movie-fact { padding: .75rem; } .movie-fact strong { font-size: .8rem; } .movie-section__heading { align-items: flex-start; flex-direction: column; gap: .35rem; } .cast-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem; } }
