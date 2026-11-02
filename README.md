@@ -12,6 +12,8 @@ O MoviesLib começou como um projeto de exploração de filmes com React e TMDB.
 
 - Catálogo inicial de filmes mais bem avaliados.
 - Pesquisa de filmes por título.
+- Descoberta de filmes com filtros por gênero, ano, nota mínima e ordenação.
+- Paginação dos resultados do catálogo.
 - Página de detalhes com sinopse, orçamento, receita e duração.
 - Estados de carregamento, erro e resultados vazios.
 - Navegação com React Router e página 404.
@@ -110,6 +112,7 @@ src/
 ├── pages/
 │   ├── Home.jsx
 │   ├── Movie.jsx
+│   ├── Discover.jsx
 │   ├── MoviesGrid.css
 │   ├── NotFound.jsx
 │   └── Search.jsx
