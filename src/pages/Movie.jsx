@@ -1,32 +1,129 @@
 import { useCallback } from "react";
 import { useParams } from "react-router-dom";
-import { BsGraphUp, BsWallet2, BsHourglassSplit, BsFillFileEarmarkTextFill } from "react-icons/bs";
-import { fetchTmdb } from "../services/tmdb";
+import { BsGraphUp, BsWallet2, BsHourglassSplit, BsCalendar3, BsCameraVideo } from "react-icons/bs";
+import { fetchTmdb, getBackdropUrl, getPosterUrl } from "../services/tmdb";
 import { useAsyncData } from "../hooks/useAsyncData";
-import { formatCurrency, formatRuntime } from "../utils/formatters";
+import {
+  formatCurrency,
+  formatRating,
+  formatReleaseDate,
+  formatRuntime,
+  getYouTubeTrailer,
+} from "../utils/formatters";
 import AsyncState from "../components/AsyncState";
 import MovieCard from "../components/MovieCard";
 import "./Movie.css";
 
 const Movie = () => {
   const { id } = useParams();
-  const loadMovie = useCallback((signal) => fetchTmdb(id, { signal }), [id]);
+  const loadMovie = useCallback(
+    (signal) => fetchTmdb(id, {
+      params: {
+        language: "pt-BR",
+        append_to_response: "credits,videos,recommendations,similar",
+      },
+      signal,
+    }),
+    [id],
+  );
   const { data: movie, isLoading, error } = useAsyncData(loadMovie);
+
+  if (isLoading || error || !movie) {
+    return (
+      <main className="movie-page">
+        <AsyncState isLoading={isLoading} error={error} isEmpty={!movie} emptyMessage="Não foi possível localizar este filme." />
+      </main>
+    );
+  }
+
+  const backdrop = getBackdropUrl(movie.backdrop_path);
+  const poster = getPosterUrl(movie.poster_path);
+  const trailerUrl = getYouTubeTrailer(movie.videos?.results ?? []);
+  const cast = movie.credits?.cast?.slice(0, 8) ?? [];
+  const recommendations = movie.recommendations?.results?.slice(0, 6)
+    ?? movie.similar?.results?.slice(0, 6)
+    ?? [];
+  const releaseYear = movie.release_date?.slice(0, 4);
 
   return (
     <main className="movie-page">
-      <AsyncState isLoading={isLoading} error={error} isEmpty={!movie} emptyMessage="Não foi possível localizar este filme." />
-      {movie && (
-        <>
-          <MovieCard movie={movie} showLink={false} />
-          {movie.tagline && <p className="tagline">{movie.tagline}</p>}
-          <section className="movie-information" aria-label="Informações do filme">
-            <div className="info"><h2><BsWallet2 /> Orçamento</h2><p>{formatCurrency(movie.budget)}</p></div>
-            <div className="info"><h2><BsGraphUp /> Receita</h2><p>{formatCurrency(movie.revenue)}</p></div>
-            <div className="info"><h2><BsHourglassSplit /> Duração</h2><p>{formatRuntime(movie.runtime)}</p></div>
-            <div className="info description"><h2><BsFillFileEarmarkTextFill /> Sinopse</h2><p>{movie.overview || "Sinopse indisponível."}</p></div>
-          </section>
-        </>
+      <section
+        className={`movie-hero ${backdrop ? "movie-hero--backdrop" : ""}`}
+        style={backdrop ? { backgroundImage: `linear-gradient(90deg, rgba(8,10,15,.98) 0%, rgba(8,10,15,.88) 48%, rgba(8,10,15,.45) 100%), url("${backdrop}")` } : undefined}
+      >
+        <div className="movie-hero__content">
+          {poster ? (
+            <img className="movie-hero__poster" src={poster} alt={`Pôster de ${movie.title}`} />
+          ) : (
+            <div className="movie-hero__poster movie-hero__poster--empty">Pôster indisponível</div>
+          )}
+
+          <div className="movie-hero__details">
+            <p className="movie-eyebrow">
+              {releaseYear || "Ano não informado"}
+              {movie.runtime ? ` • ${formatRuntime(movie.runtime)}` : ""}
+            </p>
+            <h1>{movie.title}</h1>
+
+            <div className="movie-tags">
+              {movie.genres?.map((genre) => <span key={genre.id}>{genre.name}</span>)}
+            </div>
+
+            <div className="movie-score">
+              <span className="movie-score__value">{formatRating(Number(movie.vote_average))}</span>
+              <span> / 10</span>
+              {movie.vote_count > 0 && <small>{movie.vote_count.toLocaleString("pt-BR")} avaliações</small>}
+            </div>
+
+            {movie.tagline && <p className="movie-tagline">{movie.tagline}</p>}
+
+            <div className="movie-overview">
+              <h2>Sinopse</h2>
+              <p>{movie.overview || "Sinopse indisponível."}</p>
+            </div>
+
+            {trailerUrl && (
+              <a className="trailer-link" href={trailerUrl} target="_blank" rel="noopener noreferrer">
+                <BsCameraVideo aria-hidden="true" /> Assistir trailer
+              </a>
+            )}
+          </div>
+        </div>
+      </section>
+
+      <section className="movie-facts" aria-label="Informações do filme">
+        <div className="movie-fact"><BsCalendar3 /><span>Lançamento</span><strong>{formatReleaseDate(movie.release_date)}</strong></div>
+        <div className="movie-fact"><BsWallet2 /><span>Orçamento</span><strong>{formatCurrency(movie.budget)}</strong></div>
+        <div className="movie-fact"><BsGraphUp /><span>Bilheteria</span><strong>{formatCurrency(movie.revenue)}</strong></div>
+        <div className="movie-fact"><BsHourglassSplit /><span>Duração</span><strong>{formatRuntime(movie.runtime)}</strong></div>
+      </section>
+
+      {cast.length > 0 && (
+        <section className="movie-section">
+          <div className="movie-section__heading"><h2>Elenco principal</h2><span>Conheça quem dá vida à história</span></div>
+          <div className="cast-grid">
+            {cast.map((person) => (
+              <article className="cast-card" key={person.cast_id ?? person.credit_id}>
+                {person.profile_path
+                  ? <img src={getPosterUrl(person.profile_path)} alt={person.name} loading="lazy" />
+                  : <div className="cast-card__placeholder" aria-hidden="true">{person.name?.slice(0, 1) ?? "?"}</div>}
+                <strong>{person.name}</strong>
+                <span>{person.character || "Personagem não informado"}</span>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {recommendations.length > 0 && (
+        <section className="movie-section">
+          <div className="movie-section__heading"><h2>Você também pode gostar</h2><span>Mais filmes para continuar explorando</span></div>
+          <div className="movies-container">
+            {recommendations.map((recommendedMovie) => (
+              <MovieCard key={recommendedMovie.id} movie={recommendedMovie} />
+            ))}
+          </div>
+        </section>
       )}
     </main>
   );
