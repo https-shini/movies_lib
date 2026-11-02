@@ -26,12 +26,21 @@ const Discover = () => {
   }));
 
   useEffect(() => {
-    setFilters({
+    const nextFilters = {
       genre: searchParams.get("genre") || "",
       sort: searchParams.get("sort") || DEFAULT_FILTERS.sort,
       year: searchParams.get("year") || "",
       minRating: searchParams.get("minRating") || "",
-    });
+    };
+
+    setFilters((current) => (
+      current.genre === nextFilters.genre
+      && current.sort === nextFilters.sort
+      && current.year === nextFilters.year
+      && current.minRating === nextFilters.minRating
+        ? current
+        : nextFilters
+    ));
   }, [searchParams]);
 
   const loadGenres = useCallback(
