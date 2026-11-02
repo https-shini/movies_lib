@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router";
 import { BsGraphUp, BsWallet2, BsHourglassSplit, BsCalendar3, BsCameraVideo } from "react-icons/bs";
 import { fetchTmdb, getBackdropUrl, getPosterUrl } from "../services/tmdb";
 import { useAsyncData } from "../hooks/useAsyncData";
