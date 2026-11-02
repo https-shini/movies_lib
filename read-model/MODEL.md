@@ -14,7 +14,7 @@ A aplicação atual é um frontend React que consome diretamente a API do TMDB p
 Navegador
    |
    v
-React + React Router
+React + React Router 7
    |
    +--> Páginas e componentes
    +--> Hooks de estado assíncrono
