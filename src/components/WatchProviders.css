@@ -1,0 +1,17 @@
+.watch-providers { margin: 2rem 0 3rem; padding: clamp(1rem, 3vw, 1.5rem); border: 1px solid var(--color-border); border-radius: 14px; background: var(--color-surface); }
+.watch-providers__heading { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.4rem; }
+.watch-providers__eyebrow { margin: 0 0 .3rem; color: var(--color-accent); font-size: .7rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+.watch-providers__heading h2 { margin: 0; font-family: "Space Grotesk", sans-serif; font-size: clamp(1.15rem, 3vw, 1.5rem); }
+.watch-providers__region { display: grid; width: 2.5rem; aspect-ratio: 1; place-items: center; border: 1px solid var(--color-border); border-radius: 50%; color: var(--color-accent); font-size: .75rem; font-weight: 800; }
+.watch-providers__groups { display: grid; gap: 1.2rem; }
+.watch-providers__group h3 { margin: 0 0 .65rem; color: var(--color-muted); font-size: .8rem; font-weight: 700; }
+.watch-providers__list { display: flex; flex-wrap: wrap; gap: .65rem; }
+.watch-provider { display: flex; min-width: 125px; align-items: center; gap: .6rem; padding: .55rem .7rem; border: 1px solid var(--color-border); border-radius: 10px; background: rgb(255 255 255 / 2%); }
+.watch-provider img, .watch-provider__fallback { width: 2rem; height: 2rem; flex: 0 0 2rem; border-radius: 7px; object-fit: cover; }
+.watch-provider__fallback { display: grid; place-items: center; color: var(--color-accent); background: #202735; font-weight: 800; }
+.watch-provider > span:last-child { font-size: .8rem; font-weight: 650; }
+.watch-providers__source { display: inline-flex; align-items: center; gap: .4rem; margin-top: 1.2rem; color: var(--color-accent); font-size: .8rem; font-weight: 700; }
+.watch-providers__empty { margin: 0; padding: 1rem; border: 1px dashed var(--color-border); border-radius: 10px; color: var(--color-muted); font-size: .9rem; line-height: 1.6; }
+.watch-providers__disclaimer { margin: 1.2rem 0 .6rem; color: var(--color-muted); font-size: .75rem; line-height: 1.6; }
+.watch-providers__attribution { display: inline-flex; align-items: center; gap: .4rem; color: var(--color-muted); font-size: .7rem; }
+.watch-providers__attribution svg { color: var(--color-accent); }
