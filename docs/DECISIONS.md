@@ -56,7 +56,8 @@ Cada decisão tem: contexto, decisão e consequência. As decisões D-01 a D-11 
 
 - **Contexto:** a arquitetura-alvo prevê `api/tmdb/[...path].ts`. A documentação da Vercel não confirma rota coringa automática em `api/` fora do Next.js.
 - **Decisão:** implementar `api/tmdb/[...path].ts` e validar num Preview. Se a Vercel não rotear, voltar ao formato atual (`/api/tmdb?path=`).
-- **Consequência:** o resultado da validação no Preview fica registrado abaixo.
+- **Resultado da validação no Preview (Fase 3):** a Vercel só roteou `api/tmdb/[...path].ts` para caminhos de um segmento (`/api/tmdb/genre` chegou à função); com mais segmentos (`/api/tmdb/genre/movie/list`) respondeu `NOT_FOUND`, sem chamar a função.
+- **Decisão final:** função única em `api/tmdb.ts` e uma regra no `vercel.json` que reescreve `/api/tmdb/:path+` para `/api/tmdb?path=:path+`. O cliente continua chamando `/api/tmdb/<endpoint>`; o proxy aceita os dois formatos, então funciona qualquer que seja a URL recebida pela função.
 
 ## D-09. Fonte do título no card
 
