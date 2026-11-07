@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 import { PiArrowUpRight } from "react-icons/pi";
-import { getBackdropUrl, getPosterUrl } from "../../services/tmdb";
-import { getReleaseYear } from "../../utils/formatters";
+import { getReleaseYear } from "../../lib/format";
+import { getBackdropUrl, getPosterUrl } from "../../lib/images";
 import Rating from "../ui/Rating";
 import { getMovieTitle } from "./PosterCard";
 import "./FeaturedHero.css";
@@ -13,7 +13,11 @@ import "./FeaturedHero.css";
 const FeaturedHero = ({ movie, genresById, isLoading }) => {
   if (isLoading || !movie) {
     return (
-      <section className="featured featured--loading" aria-busy="true" aria-label="Carregando destaque">
+      <section
+        className="featured featured--loading"
+        aria-busy="true"
+        aria-label="Carregando destaque"
+      >
         <div className="featured__media skeleton" />
         <div className="featured__content shell">
           <span className="skeleton skeleton--text" style={{ width: "9rem" }} />
@@ -26,7 +30,7 @@ const FeaturedHero = ({ movie, genresById, isLoading }) => {
 
   const title = getMovieTitle(movie);
   const backdrop = getBackdropUrl(movie.backdrop_path);
-  const poster = getPosterUrl(movie.poster_path);
+  const poster = getPosterUrl(movie.poster_path, "w500");
   const year = getReleaseYear(movie.release_date);
   const genres = (movie.genre_ids ?? [])
     .map((id) => genresById?.get(id))
@@ -49,18 +53,26 @@ const FeaturedHero = ({ movie, genresById, isLoading }) => {
           <span className="featured__live" aria-hidden="true" />
           Em alta agora
         </p>
-        <h1 id="featured-title" className="featured__title display">{title}</h1>
+        <h1 id="featured-title" className="featured__title display">
+          {title}
+        </h1>
         <p className="featured__meta">
           {year && <span className="mono">{year}</span>}
           <Rating value={movie.vote_average} />
-          {genres.map((genre) => <span key={genre} className="featured__genre">{genre}</span>)}
+          {genres.map((genre) => (
+            <span key={genre} className="featured__genre">
+              {genre}
+            </span>
+          ))}
         </p>
         {movie.overview && <p className="featured__overview">{movie.overview}</p>}
         <div className="featured__actions">
           <Link to={`/movie/${movie.id}`} className="btn btn--primary">
             Ver detalhes <PiArrowUpRight aria-hidden="true" />
           </Link>
-          <Link to="/discover" className="btn btn--ghost">Explorar catálogo</Link>
+          <Link to="/discover" className="btn btn--ghost">
+            Explorar catálogo
+          </Link>
         </div>
       </div>
     </section>

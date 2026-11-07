@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, NavLink, useLocation, useNavigate } from "react-router";
 import { PiMagnifyingGlass } from "react-icons/pi";
-import { BRAND } from "../../config/brand";
+import { messages } from "../../i18n";
 import BrandMark from "./BrandMark";
 import "./AppHeader.css";
 
@@ -24,7 +24,9 @@ const HeaderSearch = () => {
 
   return (
     <form className="header-search" role="search" onSubmit={handleSubmit}>
-      <label className="sr-only" htmlFor="header-search-input">Buscar filmes</label>
+      <label className="sr-only" htmlFor="header-search-input">
+        Buscar filmes
+      </label>
       <PiMagnifyingGlass className="header-search__icon" aria-hidden="true" />
       <input
         id="header-search-input"
@@ -47,7 +49,11 @@ const AppHeader = () => {
   return (
     <header className="app-header">
       <div className="app-header__inner shell">
-        <Link to="/" className="app-header__brand" aria-label={`${BRAND.name}, página inicial`}>
+        <Link
+          to="/"
+          className="app-header__brand"
+          aria-label={`${messages.brand.name}, página inicial`}
+        >
           <BrandMark />
         </Link>
 
@@ -61,7 +67,11 @@ const AppHeader = () => {
 
         <div className="app-header__actions">
           {!isSearchPage && <HeaderSearch />}
-          <Link to="/search" className="icon-btn app-header__search-link" aria-label="Buscar filmes">
+          <Link
+            to="/search"
+            className="icon-btn app-header__search-link"
+            aria-label="Buscar filmes"
+          >
             <PiMagnifyingGlass aria-hidden="true" />
           </Link>
         </div>

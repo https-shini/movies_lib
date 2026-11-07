@@ -41,10 +41,22 @@ export const RailControls = ({ railRef, label }) => {
 
   return (
     <div className="rail-controls">
-      <button type="button" className="icon-btn" onClick={() => scrollByPage(-1)} disabled={edges.start} aria-label={`Voltar em ${label}`}>
+      <button
+        type="button"
+        className="icon-btn"
+        onClick={() => scrollByPage(-1)}
+        disabled={edges.start}
+        aria-label={`Voltar em ${label}`}
+      >
         <PiCaretLeft aria-hidden="true" />
       </button>
-      <button type="button" className="icon-btn" onClick={() => scrollByPage(1)} disabled={edges.end} aria-label={`Avançar em ${label}`}>
+      <button
+        type="button"
+        className="icon-btn"
+        onClick={() => scrollByPage(1)}
+        disabled={edges.end}
+        aria-label={`Avançar em ${label}`}
+      >
         <PiCaretRight aria-hidden="true" />
       </button>
     </div>

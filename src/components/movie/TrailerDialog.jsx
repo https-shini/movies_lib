@@ -1,5 +1,5 @@
 import { PiArrowUpRight } from "react-icons/pi";
-import { getYouTubeEmbedUrl } from "../../utils/formatters";
+import { getYouTubeEmbedUrl } from "../../lib/movie";
 import Dialog from "../ui/Dialog";
 
 /**
@@ -15,16 +15,18 @@ const TrailerDialog = ({ open, onClose, videoKey, title }) => {
       onClose={onClose}
       variant="media"
       title={`Trailer: ${title}`}
-      footer={videoKey && (
-        <a
-          className="btn btn--quiet"
-          href={`https://www.youtube.com/watch?v=${encodeURIComponent(videoKey)}`}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Abrir no YouTube <PiArrowUpRight aria-hidden="true" />
-        </a>
-      )}
+      footer={
+        videoKey && (
+          <a
+            className="btn btn--quiet"
+            href={`https://www.youtube.com/watch?v=${encodeURIComponent(videoKey)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Abrir no YouTube <PiArrowUpRight aria-hidden="true" />
+          </a>
+        )
+      }
     >
       {embedUrl && (
         <div className="trailer-frame">

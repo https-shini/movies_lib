@@ -18,17 +18,28 @@ const PosterGrid = ({
   if (isLoading) {
     return (
       <div className="poster-grid" aria-busy="true" aria-label="Carregando filmes">
-        {Array.from({ length: skeletonCount }, (_, index) => <PosterCardSkeleton key={index} />)}
+        {Array.from({ length: skeletonCount }, (_, index) => (
+          <PosterCardSkeleton key={index} />
+        ))}
       </div>
     );
   }
 
   if (error) {
-    return <StateMessage tone="error" title="Não foi possível carregar" message={error} onRetry={onRetry} />;
+    return (
+      <StateMessage
+        tone="error"
+        title="Não foi possível carregar"
+        message={error}
+        onRetry={onRetry}
+      />
+    );
   }
 
   if (!movies?.length) {
-    return <StateMessage tone="empty" title={emptyTitle} message={emptyMessage} action={emptyAction} />;
+    return (
+      <StateMessage tone="empty" title={emptyTitle} message={emptyMessage} action={emptyAction} />
+    );
   }
 
   return (

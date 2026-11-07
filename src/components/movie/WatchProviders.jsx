@@ -1,11 +1,7 @@
-import { useCallback } from "react";
 import { PiArrowUpRight } from "react-icons/pi";
-import { useAsyncData } from "../../hooks/useAsyncData";
-import {
-  fetchMovieWatchProviders,
-  getProviderLogoUrl,
-  getWatchProvidersForRegion,
-} from "../../services/watchProviders";
+import { useWatchProviders } from "../../hooks/useWatchProviders";
+import { getLogoUrl } from "../../lib/images";
+import { getWatchProvidersForRegion } from "../../lib/watchProviders";
 import StateMessage from "../ui/StateMessage";
 import "./WatchProviders.css";
 
@@ -15,7 +11,9 @@ const ProviderSkeleton = () => (
       <div key={group} className="providers__group">
         <span className="skeleton skeleton--text" style={{ width: "6rem" }} />
         <div className="providers__list">
-          {[0, 1, 2].map((item) => <span key={item} className="skeleton providers__logo" />)}
+          {[0, 1, 2].map((item) => (
+            <span key={item} className="skeleton providers__logo" />
+          ))}
         </div>
       </div>
     ))}
@@ -23,17 +21,21 @@ const ProviderSkeleton = () => (
 );
 
 const WatchProviders = ({ movieId, region = "BR" }) => {
-  const loadProviders = useCallback(
-    (signal) => fetchMovieWatchProviders(movieId, { signal }),
-    [movieId],
-  );
-  const { data, isLoading, error, reload } = useAsyncData(loadProviders);
+  const { data, isLoading, error, reload } = useWatchProviders(movieId);
   const availability = getWatchProvidersForRegion(data, region);
 
   if (isLoading) return <ProviderSkeleton />;
 
   if (error) {
-    return <StateMessage tone="error" compact title="Não foi possível consultar onde assistir" message={error} onRetry={reload} />;
+    return (
+      <StateMessage
+        tone="error"
+        compact
+        title="Não foi possível consultar onde assistir"
+        message={error}
+        onRetry={reload}
+      />
+    );
   }
 
   if (!availability.groups.length) {
@@ -54,13 +56,20 @@ const WatchProviders = ({ movieId, region = "BR" }) => {
             <h3 className="providers__label mono">{group.label}</h3>
             <ul className="providers__list" role="list">
               {group.providers.map((provider) => {
-                const logo = getProviderLogoUrl(provider.logo_path);
+                const logo = getLogoUrl(provider.logo_path);
                 return (
-                  <li key={provider.provider_id} className="provider" title={provider.provider_name}>
+                  <li
+                    key={provider.provider_id}
+                    className="provider"
+                    title={provider.provider_name}
+                  >
                     {logo ? (
                       <img className="providers__logo" src={logo} alt="" loading="lazy" />
                     ) : (
-                      <span className="providers__logo providers__logo--fallback" aria-hidden="true">
+                      <span
+                        className="providers__logo providers__logo--fallback"
+                        aria-hidden="true"
+                      >
                         {provider.provider_name.slice(0, 1)}
                       </span>
                     )}
@@ -78,7 +87,12 @@ const WatchProviders = ({ movieId, region = "BR" }) => {
         {availability.link && (
           <>
             {" "}
-            <a className="text-link" href={availability.link} target="_blank" rel="noopener noreferrer">
+            <a
+              className="text-link"
+              href={availability.link}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               Ver no TMDB <PiArrowUpRight aria-hidden="true" />
             </a>
           </>
