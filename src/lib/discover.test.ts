@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-
 import {
   buildDiscoverParams,
   MIN_VOTES_FOR_RATING_FILTER,
@@ -7,34 +6,27 @@ import {
   readDiscoverFilters,
   sanitizeDiscoverFilters,
   toDiscoverSearchParams,
-} from "../src/services/discover.js";
+} from "./discover";
 
 const today = new Date(2026, 10, 7, 12);
 
 describe("buildDiscoverParams", () => {
-  it("uses Portuguese language, excludes adult titles and applies default sorting", () => {
-    expect(buildDiscoverParams({}, { today })).toEqual({
-      language: "pt-BR",
+  it("exclui conteúdo adulto e usa a ordenação padrão", () => {
+    expect(buildDiscoverParams({}, 1, { today })).toEqual({
       include_adult: false,
       sort_by: "popularity.desc",
       page: 1,
     });
   });
 
-  it("maps the selected filters to TMDB query parameters", () => {
+  it("converte os filtros em parâmetros do TMDB", () => {
     expect(
       buildDiscoverParams(
-        {
-          genre: "28",
-          sort: "revenue.desc",
-          year: "2024",
-          minRating: "7.5",
-          page: "3",
-        },
+        { genre: "28", sort: "revenue.desc", year: "2024", minRating: "7.5" },
+        "3",
         { today },
       ),
     ).toEqual({
-      language: "pt-BR",
       include_adult: false,
       sort_by: "revenue.desc",
       with_genres: "28",
@@ -45,26 +37,28 @@ describe("buildDiscoverParams", () => {
     });
   });
 
-  it("requires a minimum number of votes when sorting by rating", () => {
-    const params = buildDiscoverParams({ sort: "vote_average.desc", minRating: "8" }, { today });
+  it("exige um mínimo de votos ao ordenar por nota", () => {
+    const params = buildDiscoverParams({ sort: "vote_average.desc", minRating: "8" }, 1, { today });
     expect(params["vote_count.gte"]).toBe(MIN_VOTES_FOR_RATING_SORT);
   });
 
-  it("limits recent releases to titles already released", () => {
-    const params = buildDiscoverParams({ sort: "primary_release_date.desc" }, { today });
+  it("limita lançamentos recentes a filmes já lançados", () => {
+    const params = buildDiscoverParams({ sort: "primary_release_date.desc" }, 1, { today });
     expect(params["primary_release_date.lte"]).toBe("2026-11-07");
   });
 
-  it("normalizes invalid, lower-than-one and out-of-range page values", () => {
-    expect(buildDiscoverParams({ page: "invalid" }).page).toBe(1);
-    expect(buildDiscoverParams({ page: "0" }).page).toBe(1);
-    expect(buildDiscoverParams({ page: "-4" }).page).toBe(1);
-    expect(buildDiscoverParams({ page: "9999" }).page).toBe(500);
+  it.each([
+    ["invalid", 1],
+    ["0", 1],
+    ["-4", 1],
+    ["9999", 500],
+  ])("normaliza a página %s para %i", (page, expected) => {
+    expect(buildDiscoverParams({}, page).page).toBe(expected);
   });
 });
 
 describe("sanitizeDiscoverFilters", () => {
-  it("discards unknown sort values, malformed genres and years", () => {
+  it("descarta ordenação desconhecida, gênero e ano malformados", () => {
     expect(
       sanitizeDiscoverFilters({
         genre: "28;drop",
@@ -75,20 +69,20 @@ describe("sanitizeDiscoverFilters", () => {
     ).toEqual({ genre: "", sort: "popularity.desc", year: "", minRating: "" });
   });
 
-  it("clamps ratings, accepts comma decimals and ignores zero", () => {
+  it("limita a nota, aceita vírgula e ignora zero", () => {
     expect(sanitizeDiscoverFilters({ minRating: "15" }).minRating).toBe("10");
     expect(sanitizeDiscoverFilters({ minRating: "7,5" }).minRating).toBe("7.5");
     expect(sanitizeDiscoverFilters({ minRating: "0" }).minRating).toBe("");
   });
 
-  it("rejects years outside the supported range", () => {
+  it("rejeita anos fora do intervalo", () => {
     expect(sanitizeDiscoverFilters({ year: "1850" }).year).toBe("");
     expect(sanitizeDiscoverFilters({ year: "1994" }).year).toBe("1994");
   });
 });
 
-describe("URL helpers", () => {
-  it("reads sanitized filters from URL search params", () => {
+describe("filtros na URL", () => {
+  it("lê filtros sanitizados da URL", () => {
     const params = new URLSearchParams(
       "genre=18&sort=vote_average.desc&year=1994&minRating=8&page=2",
     );
@@ -100,7 +94,7 @@ describe("URL helpers", () => {
     });
   });
 
-  it("omits default and empty values when writing filters to the URL", () => {
+  it("omite valores padrão e vazios ao escrever na URL", () => {
     expect(
       toDiscoverSearchParams({
         genre: "",

@@ -1,9 +1,15 @@
-import { useCallback, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Link, useParams } from "react-router";
 import { PiArrowDown, PiPlayFill, PiUser } from "react-icons/pi";
-import { fetchTmdb, getBackdropUrl, getPosterUrl } from "../services/tmdb";
-import { MAX_CAST, pickDirectors, pickRelatedMovies, pickWriters } from "../services/movieDetails";
-import { useAsyncData } from "../hooks/useAsyncData";
+import { getBackdropUrl, getProfileUrl } from "../lib/images";
+import {
+  getYouTubeTrailerKey,
+  MAX_CAST,
+  pickDirectors,
+  pickRelatedMovies,
+  pickWriters,
+} from "../lib/movie";
+import { useMovie } from "../hooks/useMovie";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
 import {
   formatCompactNumber,
@@ -13,8 +19,7 @@ import {
   formatReleaseDate,
   formatRuntime,
   getReleaseYear,
-  getYouTubeTrailerKey,
-} from "../utils/formatters";
+} from "../lib/format";
 import MovieRail from "../components/movie/MovieRail";
 import { Poster } from "../components/movie/PosterCard";
 import TrailerDialog from "../components/movie/TrailerDialog";
@@ -55,7 +60,7 @@ const CastRail = ({ cast }) => {
       />
       <Rail railRef={railRef} label="Elenco principal" className="rail--wide">
         {cast.map((person) => {
-          const photo = getPosterUrl(person.profile_path);
+          const photo = getProfileUrl(person.profile_path);
           return (
             <li key={person.cast_id ?? person.credit_id} className="cast-card">
               <div className="cast-card__photo">
@@ -77,20 +82,7 @@ const CastRail = ({ cast }) => {
 
 const MovieDetails = ({ id }) => {
   const [trailerOpen, setTrailerOpen] = useState(false);
-  const loadMovie = useCallback(
-    (signal) =>
-      fetchTmdb(`movie/${id}`, {
-        params: {
-          language: "pt-BR",
-          // Sem este parâmetro o TMDB só retorna vídeos em pt-BR, e muitos filmes ficam sem trailer.
-          include_video_language: "pt,en,null",
-          append_to_response: "credits,videos,recommendations,similar",
-        },
-        signal,
-      }),
-    [id],
-  );
-  const { data: movie, isLoading, error, reload } = useAsyncData(loadMovie);
+  const { data: movie, isLoading, error, reload } = useMovie(id);
   useDocumentTitle(movie?.title || (isLoading ? "Carregando filme" : "Filme"));
 
   if (isLoading) return <MovieSkeleton />;
@@ -117,14 +109,14 @@ const MovieDetails = ({ id }) => {
 
   const title = movie.title || "Título não informado";
   const backdrop = getBackdropUrl(movie.backdrop_path);
-  const trailerKey = getYouTubeTrailerKey(movie.videos?.results ?? []);
+  const trailerKey = getYouTubeTrailerKey(movie.videos?.results);
   const cast = movie.credits?.cast?.slice(0, MAX_CAST) ?? [];
   const related = pickRelatedMovies(movie);
   const directors = pickDirectors(movie.credits);
   const writers = pickWriters(movie.credits);
   const year = getReleaseYear(movie.release_date);
-  const rating = formatRating(Number(movie.vote_average));
-  const hasRating = rating !== "N/A" && movie.vote_count > 0;
+  const rating = formatRating(movie.vote_average);
+  const hasRating = rating !== null && movie.vote_count > 0;
 
   const facts = [
     directors.length && { label: "Direção", value: directors.join(", ") },
@@ -144,7 +136,13 @@ const MovieDetails = ({ id }) => {
         </div>
 
         <div className="shell movie-hero__inner reveal">
-          <Poster path={movie.poster_path} title={title} className="movie-hero__poster" eager />
+          <Poster
+            path={movie.poster_path}
+            title={title}
+            className="movie-hero__poster"
+            size="w500"
+            eager
+          />
 
           <div className="movie-hero__info">
             <p className="movie-hero__kicker mono">

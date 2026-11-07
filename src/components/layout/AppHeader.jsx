@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, NavLink, useLocation, useNavigate } from "react-router";
 import { PiMagnifyingGlass } from "react-icons/pi";
-import { BRAND } from "../../config/brand";
+import { messages } from "../../i18n";
 import BrandMark from "./BrandMark";
 import "./AppHeader.css";
 
@@ -49,7 +49,11 @@ const AppHeader = () => {
   return (
     <header className="app-header">
       <div className="app-header__inner shell">
-        <Link to="/" className="app-header__brand" aria-label={`${BRAND.name}, página inicial`}>
+        <Link
+          to="/"
+          className="app-header__brand"
+          aria-label={`${messages.brand.name}, página inicial`}
+        >
           <BrandMark />
         </Link>
 

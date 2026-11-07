@@ -4,6 +4,8 @@
  */
 
 export const TMDB_API_BASE_URL = "https://api.themoviedb.org/3/";
+/** Prefixo público do proxy. O endpoint do TMDB vem logo depois: /api/tmdb/movie/550 */
+export const PROXY_PREFIX = "/api/tmdb";
 const UPSTREAM_TIMEOUT_MS = 8000;
 
 /** Somente os endpoints usados pela aplicação podem ser acessados pelo proxy. */
@@ -93,7 +95,7 @@ export function buildUpstreamRequest({
   if (!apiKey) {
     throw new TmdbProxyError(
       500,
-      "missing_api_key",
+      "missing_server_key",
       "TMDB_API_KEY não está configurada no servidor.",
     );
   }
@@ -122,6 +124,26 @@ export function buildUpstreamRequest({
   return { url, headers, maxAge: route.maxAge };
 }
 
+/**
+ * Endpoint do TMDB pedido pelo cliente. Formato principal: /api/tmdb/movie/550.
+ * Também aceita /api/tmdb?path=movie/550 (formato anterior).
+ */
+export function extractTmdbPath(url: URL): string | null {
+  const prefix = `${PROXY_PREFIX}/`;
+  if (url.pathname.startsWith(prefix)) {
+    try {
+      return url.pathname
+        .slice(prefix.length)
+        .split("/")
+        .map((segment) => decodeURIComponent(segment))
+        .join("/");
+    } catch {
+      return null;
+    }
+  }
+  return url.searchParams.get("path");
+}
+
 function json(body: unknown, status: number, extraHeaders: Record<string, string> = {}): Response {
   return new Response(JSON.stringify(body), {
     status,
@@ -134,7 +156,7 @@ interface ProxyOptions {
   fetchImpl?: typeof fetch;
 }
 
-/** Atende GET /api/tmdb?path=<endpoint>&<parâmetros>. */
+/** Atende GET /api/tmdb/<endpoint>?<parâmetros>. */
 export async function handleTmdbProxy(
   request: Request,
   { apiKey, fetchImpl = fetch }: ProxyOptions,
@@ -147,7 +169,7 @@ export async function handleTmdbProxy(
 
   const requestUrl = new URL(request.url);
   const searchParams = new URLSearchParams(requestUrl.searchParams);
-  const path = searchParams.get("path");
+  const path = extractTmdbPath(requestUrl);
   searchParams.delete("path");
 
   let upstream: UpstreamRequest;

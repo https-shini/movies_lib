@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { getReleaseYear } from "../../utils/formatters";
+import { getReleaseYear } from "../../lib/format";
 import StateMessage from "../ui/StateMessage";
 import Rating from "../ui/Rating";
 import { getMovieTitle, Poster } from "./PosterCard";

@@ -1,11 +1,7 @@
-import { useCallback } from "react";
 import { PiArrowUpRight } from "react-icons/pi";
-import { useAsyncData } from "../../hooks/useAsyncData";
-import {
-  fetchMovieWatchProviders,
-  getProviderLogoUrl,
-  getWatchProvidersForRegion,
-} from "../../services/watchProviders";
+import { useWatchProviders } from "../../hooks/useWatchProviders";
+import { getLogoUrl } from "../../lib/images";
+import { getWatchProvidersForRegion } from "../../lib/watchProviders";
 import StateMessage from "../ui/StateMessage";
 import "./WatchProviders.css";
 
@@ -25,11 +21,7 @@ const ProviderSkeleton = () => (
 );
 
 const WatchProviders = ({ movieId, region = "BR" }) => {
-  const loadProviders = useCallback(
-    (signal) => fetchMovieWatchProviders(movieId, { signal }),
-    [movieId],
-  );
-  const { data, isLoading, error, reload } = useAsyncData(loadProviders);
+  const { data, isLoading, error, reload } = useWatchProviders(movieId);
   const availability = getWatchProvidersForRegion(data, region);
 
   if (isLoading) return <ProviderSkeleton />;
@@ -64,7 +56,7 @@ const WatchProviders = ({ movieId, region = "BR" }) => {
             <h3 className="providers__label mono">{group.label}</h3>
             <ul className="providers__list" role="list">
               {group.providers.map((provider) => {
-                const logo = getProviderLogoUrl(provider.logo_path);
+                const logo = getLogoUrl(provider.logo_path);
                 return (
                   <li
                     key={provider.provider_id}

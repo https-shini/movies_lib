@@ -1,10 +1,8 @@
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { useSearchParams } from "react-router";
 import { PiMagnifyingGlass, PiX } from "react-icons/pi";
-import { fetchTmdb } from "../services/tmdb";
-import { buildSearchParams } from "../services/search";
-import { getTotalPages, normalizePage } from "../services/pagination";
-import { useAsyncData } from "../hooks/useAsyncData";
+import { normalizePage } from "../lib/pagination";
+import { useMovies } from "../hooks/useMovies";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
 import PosterGrid from "../components/movie/PosterGrid";
 import SectionHeader from "../components/ui/SectionHeader";
@@ -59,12 +57,10 @@ const SearchBox = ({ initialQuery, onSearch }) => {
   );
 };
 
+const POPULAR = { kind: "list", list: "popular" };
+
 const Suggestions = () => {
-  const loadPopular = useCallback(
-    (signal) => fetchTmdb("movie/popular", { params: { language: "pt-BR", region: "BR" }, signal }),
-    [],
-  );
-  const { data, isLoading, error, reload } = useAsyncData(loadPopular);
+  const { movies, isLoading, error, reload } = useMovies(POPULAR);
 
   return (
     <section className="section search-suggestions" aria-labelledby="suggestions-title">
@@ -75,7 +71,7 @@ const Suggestions = () => {
       />
       <PosterGrid
         label="Filmes populares"
-        movies={data?.results?.slice(0, 12)}
+        movies={movies.slice(0, 12)}
         isLoading={isLoading}
         error={error}
         onRetry={reload}
@@ -92,16 +88,10 @@ const Search = () => {
 
   useDocumentTitle(query ? `Busca: ${query}` : "Buscar filmes");
 
-  const loadResults = useCallback(
-    (signal) =>
-      query
-        ? fetchTmdb("search/movie", { params: buildSearchParams({ query, page }), signal })
-        : Promise.resolve(null),
-    [query, page],
-  );
-  const { data, isLoading, error, reload } = useAsyncData(loadResults);
-  const movies = data?.results ?? [];
-  const totalPages = getTotalPages(data);
+  // Paginação numerada por URL até a Fase 5, quando entra o "Carregar mais".
+  const results = useMovies(query ? { kind: "search", query } : null, { initialPage: page });
+  const { movies, isLoading, error, reload, totalResults } = results;
+  const totalPages = results.totalPages;
 
   const search = (nextQuery) => {
     setSearchParams(nextQuery ? new URLSearchParams({ q: nextQuery }) : new URLSearchParams());
@@ -138,7 +128,7 @@ const Search = () => {
                 ? "Buscando…"
                 : error
                   ? ""
-                  : `${(data?.total_results ?? 0).toLocaleString("pt-BR")} resultados`}
+                  : `${totalResults.toLocaleString("pt-BR")} resultados`}
             </p>
             <PosterGrid
               label="Resultados da busca"

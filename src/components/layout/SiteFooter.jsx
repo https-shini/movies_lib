@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { BRAND } from "../../config/brand";
+import { messages } from "../../i18n";
 import BrandMark from "./BrandMark";
 import "./SiteFooter.css";
 
@@ -8,7 +8,7 @@ const SiteFooter = () => (
     <div className="shell site-footer__inner">
       <div className="site-footer__brand">
         <BrandMark />
-        <p>{BRAND.description}</p>
+        <p>{messages.brand.tagline}</p>
       </div>
 
       <nav className="site-footer__nav" aria-label="Rodapé">

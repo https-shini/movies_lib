@@ -1,18 +1,17 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router";
 import { PiSlidersHorizontal, PiX } from "react-icons/pi";
-import { fetchTmdb } from "../services/tmdb";
 import {
-  buildDiscoverParams,
   DEFAULT_DISCOVER_FILTERS,
   DISCOVER_SORT_OPTIONS,
   MAX_YEAR,
   MIN_YEAR,
   readDiscoverFilters,
   toDiscoverSearchParams,
-} from "../services/discover";
-import { getTotalPages, normalizePage } from "../services/pagination";
-import { useAsyncData } from "../hooks/useAsyncData";
+} from "../lib/discover";
+import { normalizePage } from "../lib/pagination";
+import { useGenres } from "../hooks/useGenres";
+import { useMovies } from "../hooks/useMovies";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
 import PosterGrid from "../components/movie/PosterGrid";
 import Dialog from "../components/ui/Dialog";
@@ -93,12 +92,8 @@ const Discover = () => {
 
   useDocumentTitle("Descobrir filmes");
 
-  const loadGenres = useCallback(
-    (signal) => fetchTmdb("genre/movie/list", { params: { language: "pt-BR" }, signal }),
-    [],
-  );
-  const genresState = useAsyncData(loadGenres);
-  const genres = genresState.data?.genres ?? [];
+  const genresState = useGenres();
+  const genres = genresState.data ?? [];
   const genreListRef = useRef(null);
   const genresLoaded = genres.length > 0;
 
@@ -111,17 +106,11 @@ const Discover = () => {
     list.scrollTo({ left: Math.max(0, offset), behavior: "smooth" });
   }, [genre, genresLoaded]);
 
-  const loadMovies = useCallback(
-    (signal) =>
-      fetchTmdb("discover/movie", {
-        params: buildDiscoverParams({ genre, sort, year, minRating, page }),
-        signal,
-      }),
-    [genre, sort, year, minRating, page],
+  // Paginação numerada por URL até a Fase 5.
+  const { movies, totalPages, totalResults, isLoading, error, reload } = useMovies(
+    { kind: "discover", filters: { genre, sort, year, minRating } },
+    { initialPage: page },
   );
-  const { data, isLoading, error, reload } = useAsyncData(loadMovies);
-  const movies = data?.results ?? [];
-  const totalPages = getTotalPages(data);
 
   const applyFilters = (changes) => {
     setSearchParams(toDiscoverSearchParams({ ...applied, ...changes }));
@@ -243,7 +232,7 @@ const Discover = () => {
               ? "Buscando…"
               : error
                 ? ""
-                : `${(data?.total_results ?? 0).toLocaleString("pt-BR")} filmes`}
+                : `${totalResults.toLocaleString("pt-BR")} filmes`}
           </p>
           {activeChips.length > 0 && (
             <ul className="discover-status__chips" role="list" aria-label="Filtros ativos">

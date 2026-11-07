@@ -1,5 +1,5 @@
 import { PiArrowUpRight } from "react-icons/pi";
-import { getYouTubeEmbedUrl } from "../../utils/formatters";
+import { getYouTubeEmbedUrl } from "../../lib/movie";
 import Dialog from "../ui/Dialog";
 
 /**

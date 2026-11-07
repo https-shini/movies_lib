@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 import { PiArrowUpRight } from "react-icons/pi";
-import { getBackdropUrl, getPosterUrl } from "../../services/tmdb";
-import { getReleaseYear } from "../../utils/formatters";
+import { getReleaseYear } from "../../lib/format";
+import { getBackdropUrl, getPosterUrl } from "../../lib/images";
 import Rating from "../ui/Rating";
 import { getMovieTitle } from "./PosterCard";
 import "./FeaturedHero.css";
@@ -30,7 +30,7 @@ const FeaturedHero = ({ movie, genresById, isLoading }) => {
 
   const title = getMovieTitle(movie);
   const backdrop = getBackdropUrl(movie.backdrop_path);
-  const poster = getPosterUrl(movie.poster_path);
+  const poster = getPosterUrl(movie.poster_path, "w500");
   const year = getReleaseYear(movie.release_date);
   const genres = (movie.genre_ids ?? [])
     .map((id) => genresById?.get(id))

@@ -56,7 +56,7 @@ Cada decisão tem: contexto, decisão e consequência. As decisões D-01 a D-11 
 
 - **Contexto:** a arquitetura-alvo prevê `api/tmdb/[...path].ts`. A documentação da Vercel não confirma rota coringa automática em `api/` fora do Next.js.
 - **Decisão:** implementar `api/tmdb/[...path].ts` e validar num Preview. Se a Vercel não rotear, voltar ao formato atual (`/api/tmdb?path=`).
-- **Consequência:** o resultado da validação será registrado aqui.
+- **Consequência:** o resultado da validação no Preview fica registrado abaixo.
 
 ## D-09. Fonte do título no card
 
@@ -90,7 +90,31 @@ Cada decisão tem: contexto, decisão e consequência. As decisões D-01 a D-11 
 - **Contexto:** as versões exigidas aumentaram o JavaScript inicial de 90,7 KB para 114,5 KB (gzip). Pelo mapa de origem, `react-dom` 19 ocupa 202 KB minificados (56% do bundle) e `react-router` 8 ocupa 96 KB (27%); o código do projeto ocupa 41 KB (11%).
 - **Decisão:** aceitar o aumento, que vem das versões exigidas pelo prompt, e reduzir o carregamento inicial na Fase 5 com carregamento das páginas sob demanda (`lazy` nas rotas).
 
-## D-15. Extensão explícita nos imports do servidor
+## D-15. Extensões nos imports do servidor (corrigida na Fase 3)
 
-- **Contexto:** o Vite avisa que o carregador de configuração nativo, que será o padrão numa próxima versão, não aceita imports sem extensão a partir de `vite.config.ts`.
-- **Decisão:** usar a extensão `.ts` nos imports de `vite.config.ts`, `server/` e `api/` (`allowImportingTsExtensions` no `tsconfig.node.json`).
+- **Contexto:** o Vite avisa que o carregador de configuração nativo, que será o padrão numa próxima versão, não aceita imports sem extensão a partir de `vite.config.ts`. Na Fase 2 foi adotada a extensão `.ts` em todos os imports do servidor.
+- **Problema encontrado:** no Preview, a função falhou com `ERR_MODULE_NOT_FOUND: Cannot find module '/var/task/server/tmdbProxy.ts'`. A Vercel compila `api/` e `server/` para `.js`, mas mantém o caminho do import como está.
+- **Decisão:**
+  - a função da Vercel (`api/`) importa com extensão **`.js`**, convenção do TypeScript para ESM no Node (o TypeScript resolve para o `.ts` na verificação de tipos);
+  - a cadeia usada só pelo Vite (`vite.config.ts` → `server/viteTmdbProxy.ts` → `server/tmdbProxy.ts`) mantém a extensão `.ts`.
+- **Consequência:** a validação no Preview está registrada em D-08.
+
+## D-16. Módulos além da arquitetura-alvo
+
+- **Contexto:** a arquitetura-alvo lista `lib/format.ts`, `lib/images.ts` e os hooks `useMovies`, `useMovie` e `useDocumentTitle`. As funcionalidades mantidas por D-03 precisam de mais regras e dados.
+- **Decisão:** módulos adicionais, todos puros ou finos e cobertos por testes:
+  - `lib/discover.ts` (filtros de Descobrir), `lib/pagination.ts`, `lib/movie.ts` (equipe, recomendações e trailer), `lib/watchProviders.ts`;
+  - `hooks/useAsync.ts` (base dos hooks), `hooks/useGenres.ts`, `hooks/useWatchProviders.ts`;
+  - `i18n/index.ts` (idioma ativo e interpolação);
+  - `src/test/fetch.ts` (utilitário de testes).
+- **Consequência:** `services/tmdb.ts` continua sendo a única porta de saída para a API.
+
+## D-17. Formato da nota
+
+- **Contexto:** a identidade (4.5 e 12.3) define uma casa decimal com ponto (`8.7`, via `toFixed(1)`); a versão anterior usava vírgula (`8,7`).
+- **Decisão:** seguir a identidade: `8.7`.
+
+## D-18. Paginação durante a transição
+
+- **Contexto:** o "Carregar mais" do prompt depende dos componentes da Fase 5.
+- **Decisão:** o hook `useMovies` já oferece `loadMore` (Fase 3). Até a Fase 5, Busca e Descobrir continuam com a paginação numerada pela URL, usando `useMovies` com `initialPage`.
