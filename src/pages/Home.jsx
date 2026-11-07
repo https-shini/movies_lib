@@ -2,11 +2,14 @@ import { useCallback } from "react";
 import { Link } from "react-router";
 import { fetchTmdb } from "../services/tmdb";
 import { useAsyncData } from "../hooks/useAsyncData";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
 import MovieSection from "../components/MovieSection";
 import "./MoviesGrid.css";
 import "./Home.css";
 
 const Home = () => {
+  useDocumentTitle("");
+
   const loadPopular = useCallback(
     (signal) => fetchTmdb("popular", { params: { language: "pt-BR", region: "BR" }, signal }),
     [],
