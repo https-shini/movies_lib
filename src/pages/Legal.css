@@ -1,0 +1,63 @@
+/* Páginas de texto (Sobre e Privacidade): leitura confortável, mesma identidade. */
+.legal__inner {
+  max-width: 760px;
+}
+
+.legal__section {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-3);
+  padding-block: var(--space-6);
+  border-top: 1px solid var(--line);
+}
+
+.legal__title {
+  font-size: var(--text-xl);
+}
+
+.legal__section p,
+.legal__list {
+  max-width: 65ch;
+  color: var(--paper-dim);
+}
+
+.legal__list {
+  display: grid;
+  gap: var(--space-2);
+  padding-left: var(--space-5);
+  list-style: disc;
+}
+
+.legal__logo {
+  width: auto;
+  height: 18px;
+}
+
+.legal__notice {
+  display: grid;
+  gap: var(--space-2);
+  margin: var(--space-2) 0;
+  padding: var(--space-4);
+  border-left: 2px solid var(--accent);
+  background: var(--ink-1);
+}
+
+.legal__notice figcaption {
+  color: var(--paper-faint);
+  font-size: var(--text-sm);
+}
+
+.legal__notice blockquote {
+  margin: 0;
+}
+
+.legal__notice blockquote p {
+  color: var(--paper);
+  font-weight: 600;
+}
+
+.legal__footer {
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--line);
+  color: var(--paper-faint);
+}

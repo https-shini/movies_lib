@@ -2,6 +2,7 @@ import { PiArrowUpRight } from "react-icons/pi";
 import { useWatchProviders } from "../../hooks/useWatchProviders";
 import { getLogoUrl } from "../../lib/images";
 import { getWatchProvidersForRegion } from "../../lib/watchProviders";
+import { messages } from "../../i18n";
 import StateMessage from "../ui/StateMessage";
 import "./WatchProviders.css";
 
@@ -97,6 +98,17 @@ const WatchProviders = ({ movieId, region = "BR" }) => {
             </a>
           </>
         )}
+      </p>
+      <p className="providers__note providers__credit">
+        {messages.watchProvidersCredit.source}{" "}
+        <a
+          className="text-link"
+          href="https://www.justwatch.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {messages.watchProvidersCredit.justWatch} <PiArrowUpRight aria-hidden="true" />
+        </a>
       </p>
     </div>
   );

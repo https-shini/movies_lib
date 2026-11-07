@@ -119,3 +119,62 @@ Cada decisão tem: contexto, decisão e consequência. As decisões D-01 a D-11 
 
 - **Contexto:** o "Carregar mais" do prompt depende dos componentes da Fase 5.
 - **Decisão:** o hook `useMovies` já oferece `loadMore` (Fase 3). Até a Fase 5, Busca e Descobrir continuam com a paginação numerada pela URL, usando `useMovies` com `initialPage`.
+
+---
+
+## Pré-lançamento: Bloco A
+
+## D-19. Cache na borda do proxy (C1)
+
+- **Valores anteriores:** listas 900 s, descoberta 900 s, detalhes 3600 s, onde assistir 3600 s, busca 300 s, gêneros 86400 s; `stale-while-revalidate` igual ao `s-maxage`; navegador com `max-age=60`; erros com `no-store`.
+- **Valores atuais** (`CACHE_SECONDS` em `server/tmdbProxy.ts`):
+
+  | Dado | `s-maxage` e `stale-while-revalidate` |
+  |---|---|
+  | Gêneros (referência) | 24 h (86400 s) |
+  | Listas e descoberta | 1 h (3600 s) |
+  | Detalhes e onde assistir | 6 h (21600 s) |
+  | Busca | 10 min (600 s) |
+
+- **Mantido:** `max-age=60` no navegador e `no-store` em qualquer erro (inclusive 401, 429 e 5xx).
+- **Observação:** a CDN da Vercel consome o `s-maxage` e não o repassa ao navegador (o cliente vê `public, max-age=60`). A evidência fica nos testes do proxy e nos cabeçalhos `x-vercel-cache` e `age` das respostas.
+- **Configuração do TMDB:** o projeto ainda não consulta `/configuration`; quando consultar, usar a faixa de 24 h.
+
+## D-20. `robots.txt` e `sitemap.xml` (C3)
+
+- **Rotas:** o prompt cita `/descobrir` e `/buscar`, mas as rotas reais são `/discover` e `/search`, e a regra do bloco proíbe mudar a estrutura de rotas. O sitemap lista `/`, `/discover`, `/search`, `/sobre` e `/privacidade`.
+- **Domínio:** o sitemap exige URLs absolutas e `cinelux.app` ainda não está ativo; foi usado o domínio de produção atual, `movies-lib-vite.vercel.app`. **Trocar quando o domínio mudar** (ação manual listada no PR).
+- `robots.txt` permite tudo, bloqueia `/api/` e aponta o sitemap.
+
+## D-21. Página `/sobre` e atribuição ao TMDB
+
+- **Aviso:** o §3 dos termos traz um modelo em inglês ("This [website, program, service, application, product] uses TMDB…"). A página mostra o texto exato com "product", seguido de uma tradução para o português.
+- **Logo:** variante oficial "Primary long (blue)" da página de logos do TMDB, salva sem alterações em `public/tmdb-logo.svg` (inspecionada: só formas e gradiente, sem scripts nem referências externas). Exibida com 18 px de altura, menos destacada que a marca do Cinelux.
+- **JustWatch:** crédito com link em "Onde assistir", na página `/sobre` e no rodapé.
+
+## D-22. Página `/privacidade` (C4)
+
+- **Sentry:** o prompt pede a página explicando Web Analytics, Speed Insights e Sentry, mas o Sentry só entra no Bloco D. Para a página descrever o que acontece de fato, o parágrafo do Sentry será acrescentado no Bloco D, junto com a instalação.
+- **Conteúdo de terceiros:** a página também informa o carregamento de imagens do TMDB, fontes do Google Fonts (até o item 2 do Bloco C) e o trailer do YouTube, porque esses serviços recebem o IP do visitante.
+- **Termo de busca:** removido das URLs enviadas ao Web Analytics e ao Speed Insights (`beforeSend` em `src/lib/analytics.ts`), porque pode conter texto pessoal.
+- **Pendência:** a LGPD pede a identificação do controlador e um canal de contato. Esses dados dependem do responsável pelo produto.
+
+## D-23. Web Analytics e Speed Insights
+
+- Componentes `@vercel/analytics/react` e `@vercel/speed-insights/react` (versões 2.0.1 e 2.1.0), em `src/components/layout/Observability.tsx`.
+- `route` informado manualmente (`/movie/[id]`), porque fora do Next.js os pacotes não conhecem as rotas dinâmicas.
+- Os dois recursos precisam ser **ativados no painel da Vercel** para começar a coletar (ação manual).
+
+## D-24. Prioridade da imagem do LCP (C2)
+
+- Início e Filme já usavam `fetchpriority="high"` sem `loading="lazy"` na imagem principal, e `preconnect` para `image.tmdb.org`.
+- Faltava nas grades (Busca e Descobrir): o primeiro pôster carregava com `loading="lazy"`. Agora o primeiro card da grade usa `priority` (`loading="eager"` e `fetchpriority="high"`); os demais continuam preguiçosos.
+
+## D-25. Fontes na identidade visual (C5)
+
+- `docs/Cinelux_Identidade_Visual.md` atualizado para a versão 3.1.0 com Instrument Sans e IBM Plex Mono nas seções 2, 4, 6 e 12.1. Não existe `typography.css` no projeto, então não havia arquivo de código a ajustar.
+- **Divergência restante:** o código usa o token `--font-ui`; a identidade usa `--font-sans`. A unificação dos nomes de tokens fica para a Fase 4 do Cinelux.
+
+## D-26. Branch base do Bloco A
+
+- `chore/pre-launch-compliance` foi criada a partir de `feature/cinelux` (que contém `DECISIONS.md`, o arquivo central de textos e a identidade citados no prompt). O PR é empilhado: `chore/pre-launch-compliance` → `feature/cinelux` → `feature/foundation-modernization` → `main`.

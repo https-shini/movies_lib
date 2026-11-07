@@ -90,9 +90,42 @@ describe("handleTmdbProxy", () => {
 
     expect(response.status).toBe(200);
     expect(await response.json()).toEqual({ results: [{ id: 1 }] });
-    expect(response.headers.get("Cache-Control")).toContain("s-maxage=900");
+    expect(response.headers.get("Cache-Control")).toBe(
+      "public, max-age=60, s-maxage=3600, stale-while-revalidate=3600",
+    );
     const [upstream] = fetchImpl.mock.calls[0] ?? [];
     expect(urlOf(upstream)).toContain("/3/movie/popular");
+  });
+
+  it.each([
+    ["/api/tmdb/genre/movie/list", 86400],
+    ["/api/tmdb/movie/top_rated", 3600],
+    ["/api/tmdb/discover/movie", 3600],
+    ["/api/tmdb/movie/550", 21600],
+    ["/api/tmdb/movie/550/watch/providers", 21600],
+    ["/api/tmdb/search/movie?query=duna", 600],
+  ])("define s-maxage e stale-while-revalidate por tipo de dado: %s", async (path, seconds) => {
+    const fetchImpl = fetchStub().mockResolvedValue(okResponse());
+    const response = await handleTmdbProxy(request(path), { apiKey: "key", fetchImpl });
+    const header = response.headers.get("Cache-Control") ?? "";
+
+    expect(header).toContain(`s-maxage=${String(seconds)}`);
+    expect(header).toContain(`stale-while-revalidate=${String(seconds)}`);
+  });
+
+  it.each([
+    [401, '{"status_code":7}'],
+    [429, '{"status_code":25}'],
+    [503, '{"status_code":9}'],
+  ])("nunca guarda erros em cache (HTTP %i)", async (status, body) => {
+    const fetchImpl = fetchStub().mockResolvedValue(new Response(body, { status }));
+    const response = await handleTmdbProxy(request("/api/tmdb/movie/popular"), {
+      apiKey: "key",
+      fetchImpl,
+    });
+
+    expect(response.status).toBe(status);
+    expect(response.headers.get("Cache-Control")).toBe("no-store");
   });
 
   it("informa a chave ausente sem chamar o TMDB", async () => {

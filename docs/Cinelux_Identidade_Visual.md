@@ -1,7 +1,8 @@
 # Cinelux · Identidade Visual e Tipografia
 
 > Documento definitivo de marca e interface do projeto Cinelux (antigo `movies_lib`).
-> Versão 3.0.0 · Domínio: `cinelux.app` · Complementa `tokens.css` (sistema cromático).
+> Versão 3.1.0 · Domínio: `cinelux.app` · Complementa `tokens.css` (sistema cromático).
+> 3.1.0: famílias de interface e de dados atualizadas para as fontes em produção (Instrument Sans e IBM Plex Mono), já validadas com acessibilidade 100.
 
 ---
 
@@ -89,7 +90,7 @@ Ser um acervo de cinema elegante e direto: encontrar um filme, entender do que s
 O logo separa visualmente as duas partes do nome:
 
 - **"Cine"** em serifa de alto contraste (Fraunces), marfim: cinema, cartaz clássico, letreiro.
-- **"lux"** em monoespaçada (JetBrains Mono), dourada: a luz, o dado preciso, o catálogo.
+- **"lux"** em monoespaçada (IBM Plex Mono), dourada: a luz, o dado preciso, o catálogo.
 
 Entre as duas, um **ponto dourado** representa a fonte de luz do projetor. A leitura continua sendo uma palavra só: **Cine·lux**.
 
@@ -106,7 +107,7 @@ O **monograma** é um quadro na proporção de pôster (2:3) com "C" serifado e 
         fill="#f5f2ea">Cine</text>
   <circle cx="76" cy="28" r="3.5" fill="#d9b25e"/>
   <text x="86" y="34"
-        font-family="'JetBrains Mono', ui-monospace, monospace"
+        font-family="'IBM Plex Mono', ui-monospace, monospace"
         font-size="24" font-weight="500"
         fill="#d9b25e">lux</text>
 </svg>
@@ -210,8 +211,8 @@ O dourado perde valor se aparecer em todo lugar. Regra prática: **no máximo um
 | Papel | Família | Por quê |
 |---|---|---|
 | **Display** (títulos, nome de filme, logo) | **Fraunces** | Serifa de alto contraste com eixo óptico: em tamanho grande fica refinada como cartaz de cinema; em tamanho médio continua legível. |
-| **Interface** (texto, botões, navegação) | **Manrope** | Sans geométrica humanista, limpa e moderna, com ótima leitura em fundo escuro e personalidade suficiente para não parecer genérica. |
-| **Dados** (nota, duração, ano, valores, "lux" do logo) | **JetBrains Mono** | Números de largura fixa alinham listas e valores; reforça o lado "catálogo" da marca. |
+| **Interface** (texto, botões, navegação) | **Instrument Sans** | Sans contemporânea, limpa e de ótima leitura em fundo escuro, com personalidade suficiente para não parecer genérica. |
+| **Dados** (nota, duração, ano, valores, "lux" do logo) | **IBM Plex Mono** | Números de largura fixa alinham listas e valores; reforça o lado "catálogo" da marca. |
 
 Todas são gratuitas (Google Fonts, licença OFL).
 
@@ -219,8 +220,8 @@ Todas são gratuitas (Google Fonts, licença OFL).
 
 ```css
 --font-display: "Fraunces", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
---font-sans:    "Manrope", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
---font-mono:    "JetBrains Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+--font-sans:    "Instrument Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+--font-mono:    "IBM Plex Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
 ```
 
 ### 4.3 Pesos permitidos
@@ -228,8 +229,8 @@ Todas são gratuitas (Google Fonts, licença OFL).
 | Família | Pesos | Uso |
 |---|---|---|
 | Fraunces | 500, 600, 700 | 600 padrão de títulos; 700 só no hero e no logo |
-| Manrope | 400, 500, 600, 700 | 400 texto; 500 navegação e labels; 600 botões e subtítulos; 700 ênfase rara |
-| JetBrains Mono | 400, 500 | 400 dados; 500 nota em destaque |
+| Instrument Sans | 400, 500, 600, 700 | 400 texto; 500 navegação e labels; 600 botões e subtítulos; 700 ênfase rara |
+| IBM Plex Mono | 400, 500 | 400 dados; 500 nota em destaque |
 
 Nada de itálico sintético. Se precisar de itálico em Fraunces (tagline do filme), carregue o itálico real.
 
@@ -254,7 +255,7 @@ Base 16 px, razão **1.25 (terça maior)**. Tamanhos a partir de `2xl` são flui
 ### 4.5 Regras de composição
 
 - **Comprimento de linha:** sinopse e textos longos com `max-width: 65ch`.
-- **Números:** sempre `font-variant-numeric: tabular-nums` em dados (mono já é tabular; em Manrope, aplique a classe).
+- **Números:** sempre `font-variant-numeric: tabular-nums` em dados (mono já é tabular; em Instrument Sans, aplique a classe).
 - **Nota do filme:** uma casa decimal (`8.7`, não `8.712`), mono 500, acompanhada de ícone de estrela.
 - **Caixa alta:** só em `--text-xs` (rótulos), sempre com tracking 0.08em. Nunca em títulos.
 - **Títulos de filme:** Fraunces sempre. Truncar no card com duas linhas (`line-clamp: 2`), nunca reduzir o tamanho.
@@ -268,8 +269,8 @@ Base 16 px, razão **1.25 (terça maior)**. Tamanhos a partir de `2xl` são flui
 :root {
   /* Famílias */
   --font-display: "Fraunces", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
-  --font-sans:    "Manrope", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --font-mono:    "JetBrains Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+  --font-sans:    "Instrument Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono:    "IBM Plex Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
 
   /* Pesos */
   --weight-regular:  400;
@@ -469,7 +470,7 @@ Usar os tokens de `tokens.css`: `--elevation-1` (cards), `--elevation-2` (hover,
 
 ## 6. Iconografia
 
-- **Biblioteca:** `react-icons`, já instalada. Usar **um único conjunto**: Lucide (`react-icons/lu`). Traço uniforme combina com Manrope.
+- **Biblioteca:** `react-icons`, já instalada. Usar **um único conjunto**: Lucide (`react-icons/lu`). Traço uniforme combina com Instrument Sans.
 - **Tamanhos:** 16 px (inline com texto), 20 px (botões e navbar), 24 px (destaques).
 - **Traço:** padrão do conjunto (2 px). Não misturar ícones preenchidos e de contorno, com uma exceção: a **estrela da nota é preenchida e dourada**.
 - **Cor:** herda `currentColor`. Ícones decorativos com `aria-hidden="true"`; ícones sozinhos em botão exigem `aria-label`.
@@ -633,7 +634,7 @@ Regras:
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500..700;1,9..144,500&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400..700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,400..700,50;1,9..144,400..700,50&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:wght@400..700&display=swap"
     />
 
     <link rel="preconnect" href="https://image.tmdb.org" />
