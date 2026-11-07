@@ -11,13 +11,14 @@ O MoviesLib começou como um projeto de exploração de filmes com React e TMDB.
 ## Funcionalidades atuais
 
 - Página inicial com seções de filmes em alta, mais bem avaliados e em cartaz.
-- Pesquisa de filmes por título.
-- Descoberta de filmes com filtros por gênero, ano, nota mínima e ordenação.
-- Paginação dos resultados do catálogo.
-- Página de detalhes com sinopse, orçamento, bilheteria, duração, elenco, trailer e recomendações.
+- Pesquisa de filmes por título, com resultados em português e paginação.
+- Descoberta de filmes com filtros por gênero, ano, nota mínima e ordenação. Os filtros só são aplicados ao enviar o formulário e ficam registrados na URL.
+- Paginação dos resultados do catálogo e da busca.
+- Página de detalhes com título original, sinopse, orçamento, bilheteria, duração, elenco, trailer (priorizando versões oficiais em português) e recomendações, com filmes semelhantes como alternativa.
 - Disponibilidade de streaming, aluguel e compra no Brasil, agrupada por modalidade.
-- Estados de carregamento, erro e resultados vazios.
-- Navegação com React Router e página 404.
+- Estados de carregamento, erro e resultados vazios, com mensagens de erro em português.
+- Navegação com React Router (modo data router), restauração de rolagem, título da aba por página, página 404 e tela de erro para falhas inesperadas.
+- Acessibilidade: link para pular ao conteúdo, foco visível, rótulos descritivos e suporte a `prefers-reduced-motion`.
 - Interface responsiva para desktop e dispositivos móveis.
 
 ## Tecnologias
@@ -58,7 +59,7 @@ O MoviesLib começou como um projeto de exploração de filmes com React e TMDB.
    Copy-Item .env.example .env
    ```
 
-4. Edite o arquivo `.env` e informe sua chave do TMDB em `VITE_API_KEY`.
+4. Edite o arquivo `.env` e informe sua chave da API v3 do TMDB em `VITE_API_KEY`. É a única variável obrigatória: os endereços da API e das imagens usam os valores públicos do TMDB quando não são definidos.
 5. Inicie o servidor local:
 
    ```bash
@@ -106,6 +107,10 @@ npm run preview
 
 O GitHub Actions executa instalação limpa, auditoria de dependências, ESLint, testes unitários e build nos pushes e pull requests.
 
+## Implantação
+
+O arquivo `vercel.json` redireciona todas as rotas para `index.html`, permitindo abrir diretamente endereços como `/movie/550` ou `/discover?genre=18` na Vercel. Configure `VITE_API_KEY` nas variáveis de ambiente do projeto antes do build.
+
 ## Estrutura atual
 
 ```text
@@ -114,38 +119,45 @@ src/
 │   ├── AsyncState.jsx
 │   ├── MovieCard.jsx
 │   ├── MovieSection.jsx
-│   ├── WatchProviders.jsx
-│   └── Navbar.jsx
+│   ├── Navbar.jsx
+│   ├── Pagination.jsx
+│   └── WatchProviders.jsx
 ├── hooks/
-│   └── useAsyncData.js
+│   ├── useAsyncData.js
+│   └── useDocumentTitle.js
 ├── pages/
-│   ├── Home.jsx
-│   ├── Home.css
-│   ├── Movie.jsx
-│   ├── Movie.css
 │   ├── Discover.jsx
-│   ├── Discover.css
-│   ├── MoviesGrid.css
+│   ├── Home.jsx
+│   ├── Movie.jsx
 │   ├── NotFound.jsx
+│   ├── RouteError.jsx
 │   └── Search.jsx
 ├── services/
 │   ├── discover.js
+│   ├── movieDetails.js
+│   ├── pagination.js
+│   ├── search.js
 │   ├── tmdb.js
+│   ├── tmdbErrors.js
 │   ├── tmdbUrl.js
 │   └── watchProviders.js
 ├── utils/
 │   └── formatters.js
 ├── App.jsx
-├── App.css
 ├── index.css
 └── main.jsx
 
 tests/
 ├── discover.test.js
 ├── formatters.test.js
+├── movieDetails.test.js
+├── pagination.test.js
+├── tmdb.test.js
 ├── tmdbUrl.test.js
 └── watchProviders.test.js
 ```
+
+Os arquivos `.css` ficam ao lado do componente ou da página que estilizam.
 
 ## Prévia do projeto original
 

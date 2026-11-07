@@ -14,8 +14,9 @@ A aplicação atual é um frontend React que consome diretamente a API do TMDB p
 Navegador
    |
    v
-React + React Router 7
+React + React Router 7 (data router)
    |
+   +--> Layout (App), ScrollRestoration e tela de erro de rota
    +--> Páginas e componentes
    +--> Hooks de estado assíncrono
    +--> Serviços de integração TMDB
@@ -39,30 +40,28 @@ React + React Router 7
 
 ```text
 src/
-├── components/
-│   ├── AsyncState.jsx
-│   ├── WatchProviders.jsx
-│   └── ...
-├── hooks/
-│   └── useAsyncData.js
-├── pages/
-├── services/
-│   ├── discover.js
-│   ├── tmdb.js
-│   ├── tmdbUrl.js
-│   └── watchProviders.js
-├── utils/
-├── App.jsx
-├── App.css
-├── index.css
-└── main.jsx
+├── components/   AsyncState, MovieCard, MovieSection, Navbar, Pagination, WatchProviders
+├── hooks/        useAsyncData, useDocumentTitle
+├── pages/        Home, Discover, Search, Movie, NotFound, RouteError
+├── services/     tmdb, tmdbUrl, tmdbErrors, discover, search, pagination, movieDetails, watchProviders
+├── utils/        formatters
+├── App.jsx       layout com navegação, rodapé e ScrollRestoration
+└── main.jsx      definição das rotas (createBrowserRouter)
 
-tests/
-├── discover.test.js
-├── formatters.test.js
-├── tmdbUrl.test.js
-└── watchProviders.test.js
+tests/            testes unitários de serviços, formatadores e regras isoladas
 ```
+
+### Rotas
+
+| Rota | Página | Observações |
+|---|---|---|
+| `/` | Home | Seções Em alta, Mais bem avaliados e Nos cinemas |
+| `/discover` | Discover | Filtros `genre`, `sort`, `year`, `minRating` e `page` na URL |
+| `/search?q=` | Search | Busca por título com `page` na URL |
+| `/movie/:id` | Movie | IDs não numéricos exibem a página 404 sem consultar a API |
+| `*` | NotFound | Página 404 dentro do layout |
+
+Erros inesperados de renderização são capturados por `RouteError` (`errorElement`), mantendo a navegação disponível.
 
 ### Responsabilidades
 
@@ -79,6 +78,10 @@ A comunicação geral é centralizada em `src/services/tmdb.js`. A montagem da U
 
 A disponibilidade por filme é consultada por `src/services/watchProviders.js`, usando o endpoint `/movie/{id}/watch/providers`. A resposta é normalizada por região e separada nas modalidades de assinatura, gratuito, com anúncios, aluguel e compra. A interface atual apresenta a região brasileira (BR), ordena provedores pela prioridade retornada pelo TMDB e oferece o link de consulta da própria fonte quando disponível.
 
+Somente `VITE_API_KEY` é obrigatória. As demais variáveis são opcionais e, quando ausentes, usam os endereços públicos do TMDB definidos em `src/services/tmdb.js`.
+
+Erros HTTP e de rede são convertidos em mensagens em português por `src/services/tmdbErrors.js` (401, 404, 422, 429, 5xx e falhas de conexão). Requisições canceladas (`AbortError`) são propagadas sem alteração.
+
 Variáveis utilizadas:
 
 | Variável | Responsabilidade |
@@ -89,7 +92,7 @@ Variáveis utilizadas:
 | `VITE_GENRES` | Endpoint de gêneros |
 | `VITE_IMG` | URL base para pôsteres e perfis |
 | `VITE_BACKDROP` | URL base para imagens de fundo |
-| `VITE_API_KEY` | Chave de acesso à API |
+| `VITE_API_KEY` | Chave de acesso à API (obrigatória) |
 
 A integração de provedores usa a mesma chave e base de API já configuradas, portanto não exige uma nova variável de ambiente.
 
@@ -101,9 +104,11 @@ Antes de adicionar autenticação de usuários ou dados privados, a arquitetura 
 
 ## 5. Descoberta, detalhes e disponibilidade de filmes
 
-A página inicial agrega seções de filmes populares, mais bem avaliados e em cartaz. A página de descoberta consulta o endpoint de descoberta do TMDB e permite filtrar por gênero, ano de lançamento e nota mínima, além de ordenar e paginar resultados. Os filtros são refletidos na URL para permitir compartilhamento e navegação pelo histórico.
+A página inicial agrega seções de filmes populares, mais bem avaliados e em cartaz. A página de descoberta consulta o endpoint de descoberta do TMDB e permite filtrar por gênero, ano de lançamento e nota mínima, além de ordenar e paginar resultados. A URL é a fonte dos filtros aplicados; o formulário mantém um rascunho próprio e só dispara a consulta ao ser enviado. Valores da URL são validados (ordenações permitidas, ano entre 1900 e 2100, nota entre 0 e 10, página entre 1 e 500, limite aceito pelo TMDB).
 
-A página de detalhes solicita informações complementares de elenco, vídeos, recomendações e filmes semelhantes. Exibe pôster, imagem de fundo, sinopse, avaliação, dados financeiros, elenco principal e link para trailer quando disponível.
+Para evitar resultados pouco representativos, a ordenação por nota exige ao menos 200 votos e o filtro de nota mínima exige ao menos 50 votos. A ordenação por lançamentos recentes considera apenas filmes com data de lançamento até o dia atual.
+
+A página de detalhes solicita informações complementares de elenco, vídeos, recomendações e filmes semelhantes. Exibe pôster, imagem de fundo, título original, sinopse, avaliação, dados financeiros, elenco principal e link para trailer quando disponível. Os vídeos são solicitados em português, inglês e sem idioma (`include_video_language`), priorizando trailers oficiais em português. Quando não há recomendações, são exibidos filmes semelhantes.
 
 O componente `WatchProviders` consulta a disponibilidade do filme para o Brasil e apresenta provedores agrupados por modalidade: assinatura, gratuito, com anúncios, aluguel e compra. Quando a região não possui dados, a interface informa que nenhuma opção foi retornada, sem inferir que o filme não esteja disponível em todos os serviços. Preços e condições não são estimados; o usuário é direcionado à fonte para confirmar os detalhes.
 
@@ -113,6 +118,8 @@ O hook `useAsyncData` padroniza carregamento, resultado, erro e cancelamento da 
 
 O componente `AsyncState` apresenta estados de carregamento, erro e ausência de resultados.
 
+O hook `useDocumentTitle` atualiza o título da aba conforme a página e o filme exibido.
+
 ## 7. Testes e qualidade
 
 Os testes utilizam Vitest e cobrem atualmente:
@@ -121,9 +128,13 @@ Os testes utilizam Vitest e cobrem atualmente:
 - resolução de endpoints relativos e absolutos;
 - inclusão e preservação da chave de API;
 - codificação de parâmetros de pesquisa;
-- conversão de filtros de descoberta para parâmetros do TMDB;
+- conversão e validação de filtros de descoberta, incluindo leitura e escrita na URL;
+- parâmetros de busca e normalização de paginação;
+- requisições ao TMDB com valores padrão, mensagens de erro em português e cancelamento;
+- seleção de recomendações com alternativa para filmes semelhantes;
+- formatação do título da aba;
 - formatação de moeda, duração, notas e datas;
-- seleção de trailers oficiais do YouTube;
+- seleção de trailers do YouTube, priorizando versões oficiais em português;
 - normalização de provedores por região e modalidade;
 - ordenação e tratamento de provedores ausentes ou inválidos.
 
