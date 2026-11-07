@@ -30,13 +30,15 @@ Cada decisão tem: contexto, decisão e consequência. As decisões D-01 a D-11 
 - **Decisão:** manter o player na página (YouTube sem cookies) e incluir o link "Abrir no YouTube".
 - **Consequência:** atende ao prompt sem remover a funcionalidade existente.
 
-## D-05. Versões de TypeScript e ESLint
+## D-05. Versões de TypeScript e ESLint (revisada na Fase 2)
 
 - **Contexto:** as versões estáveis atuais são TypeScript 7.0.2 e ESLint 10.14.0, mas:
   - `typescript-eslint` 8.72.1 aceita TypeScript `>=4.8.4 <6.1.0`;
-  - `eslint-plugin-jsx-a11y` 6.10.2 (a mais recente) aceita ESLint até a 9.
-- **Decisão:** usar **TypeScript 6.0.3** e **ESLint 9.39.5** (com `@eslint/js` 9.39.5).
-- **Consequência:** lint de TypeScript e regras de acessibilidade funcionam. Revisar quando os plugins suportarem TypeScript 7 e ESLint 10.
+  - `eslint-plugin-jsx-a11y` 6.10.2 (sem versão nova desde outubro de 2024) aceita ESLint só até a 9.
+- **Decisão aprovada na Fase 0:** TypeScript 6.0.3 e ESLint 9.39.5.
+- **Revisão na Fase 2:** ao instalar, o npm informou que **o ESLint 9.39.5 não tem mais suporte** ("This version is no longer supported"). Foi adotado o **ESLint 10.14.0** com **`eslint-plugin-jsx-a11y-x` 0.2.0**, fork mantido pelo es-tooling (atualizado em maio de 2026) que aceita ESLint 9 e 10 e oferece as mesmas regras (36, incluindo `alt-text`, `label-has-associated-control`, `anchor-is-valid` e `control-has-associated-label`).
+- **TypeScript:** mantido em **6.0.3**, por causa do `typescript-eslint`.
+- **Consequência:** todas as ferramentas em versões com suporte. Revisar o TypeScript quando o `typescript-eslint` aceitar a versão 7.
 
 ## D-06. Colunas da grade de pôsteres
 
@@ -71,3 +73,24 @@ Cada decisão tem: contexto, decisão e consequência. As decisões D-01 a D-11 
 
 - **Contexto:** os documentos estavam em `read-model/`; a arquitetura-alvo usa `docs/`.
 - **Decisão:** mover `MODEL.md`, `CONTRIBUTING.md` e `ROADMAP.md` para `docs/`, e as imagens do README de `docs/screenshots/` para `docs/images/`.
+
+## D-12. `role="list"` explícito
+
+- **Contexto:** a regra `no-redundant-roles` do plugin de acessibilidade aponta `role="list"` em `<ul>` e `<ol>` como redundante.
+- **Decisão:** permitir a exceção na configuração do ESLint. O papel explícito é intencional: o Safari/VoiceOver remove a semântica de lista quando o CSS usa `list-style: none`, e `role="list"` a restaura.
+
+## D-13. Migração gradual para TypeScript
+
+- **Contexto:** todo o código de interface será reescrito nas Fases 3 e 5. Tipar agora arquivos que serão substituídos seria trabalho descartado.
+- **Decisão:** TypeScript `strict` ativo desde a Fase 2, com `allowJs` temporário. Arquivos de configuração, entrada (`main.tsx`, `App.tsx`), função da Vercel e proxy já são TypeScript. Os módulos de dados migram na Fase 3; componentes e páginas, na Fase 5.
+- **Consequência:** ao fim da Fase 5, `allowJs` é removido e não resta nenhum `.js`/`.jsx` em `src`, `api` ou `server`.
+
+## D-14. Tamanho do bundle após React 19 e React Router 8
+
+- **Contexto:** as versões exigidas aumentaram o JavaScript inicial de 90,7 KB para 114,5 KB (gzip). Pelo mapa de origem, `react-dom` 19 ocupa 202 KB minificados (56% do bundle) e `react-router` 8 ocupa 96 KB (27%); o código do projeto ocupa 41 KB (11%).
+- **Decisão:** aceitar o aumento, que vem das versões exigidas pelo prompt, e reduzir o carregamento inicial na Fase 5 com carregamento das páginas sob demanda (`lazy` nas rotas).
+
+## D-15. Extensão explícita nos imports do servidor
+
+- **Contexto:** o Vite avisa que o carregador de configuração nativo, que será o padrão numa próxima versão, não aceita imports sem extensão a partir de `vite.config.ts`.
+- **Decisão:** usar a extensão `.ts` nos imports de `vite.config.ts`, `server/` e `api/` (`allowImportingTsExtensions` no `tsconfig.node.json`).

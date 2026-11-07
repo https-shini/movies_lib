@@ -29,6 +29,9 @@ const Dialog = ({ open, onClose, title, description, variant = "sheet", footer, 
   };
 
   return (
+    // O clique no fundo é só um atalho de mouse: pelo teclado o diálogo fecha com Esc
+    // (evento cancel) e pelo botão "Fechar", então não há perda de acesso.
+    // eslint-disable-next-line jsx-a11y-x/click-events-have-key-events, jsx-a11y-x/no-noninteractive-element-interactions
     <dialog
       ref={ref}
       className={`dialog dialog--${variant}`}

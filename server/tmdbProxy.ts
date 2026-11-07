@@ -7,7 +7,13 @@ export const TMDB_API_BASE_URL = "https://api.themoviedb.org/3/";
 const UPSTREAM_TIMEOUT_MS = 8000;
 
 /** Somente os endpoints usados pela aplicação podem ser acessados pelo proxy. */
-const ROUTES = [
+interface ProxyRoute {
+  pattern: RegExp;
+  /** Tempo de cache na CDN, em segundos. */
+  maxAge: number;
+}
+
+const ROUTES: readonly ProxyRoute[] = [
   { pattern: /^movie\/(popular|top_rated|now_playing)$/, maxAge: 900 },
   { pattern: /^movie\/\d{1,10}$/, maxAge: 3600 },
   { pattern: /^movie\/\d{1,10}\/watch\/providers$/, maxAge: 3600 },
@@ -37,27 +43,41 @@ const ALLOWED_APPENDS = new Set(["credits", "videos", "recommendations", "simila
 const MAX_PARAM_LENGTH = 200;
 
 export class TmdbProxyError extends Error {
-  constructor(status, code, message) {
+  readonly status: number;
+  readonly code: string;
+
+  constructor(status: number, code: string, message: string) {
     super(message);
     this.status = status;
     this.code = code;
   }
 }
 
-function findRoute(path) {
+export interface UpstreamRequest {
+  url: URL;
+  headers: Record<string, string>;
+  maxAge: number;
+}
+
+function findRoute(path: string): ProxyRoute | null {
   return ROUTES.find(({ pattern }) => pattern.test(path)) ?? null;
 }
 
-function isBearerToken(apiKey) {
+function isBearerToken(apiKey: string): boolean {
   return /^eyJ[\w-]*\.[\w-]+\.[\w-]+$/.test(apiKey);
 }
 
-/**
- * Valida a requisição recebida e monta a chamada ao TMDB.
- * @returns {{ url: URL, headers: Record<string, string>, maxAge: number }}
- */
-export function buildUpstreamRequest({ path, searchParams, apiKey }) {
-  const normalizedPath = String(path ?? "").replace(/^\/+|\/+$/g, "");
+/** Valida a requisição recebida e monta a chamada ao TMDB. */
+export function buildUpstreamRequest({
+  path,
+  searchParams,
+  apiKey,
+}: {
+  path: string | null | undefined;
+  searchParams: URLSearchParams;
+  apiKey: string | undefined;
+}): UpstreamRequest {
+  const normalizedPath = (path ?? "").replace(/^\/+|\/+$/g, "");
   const route = findRoute(normalizedPath);
 
   if (!route) {
@@ -81,8 +101,8 @@ export function buildUpstreamRequest({ path, searchParams, apiKey }) {
     url.searchParams.set(key, value);
   }
 
-  const headers = { Accept: "application/json" };
-  const key = String(apiKey).trim();
+  const headers: Record<string, string> = { Accept: "application/json" };
+  const key = apiKey.trim();
   if (isBearerToken(key)) {
     headers.Authorization = `Bearer ${key}`;
   } else {
@@ -92,18 +112,23 @@ export function buildUpstreamRequest({ path, searchParams, apiKey }) {
   return { url, headers, maxAge: route.maxAge };
 }
 
-function json(body, status, extraHeaders = {}) {
+function json(body: unknown, status: number, extraHeaders: Record<string, string> = {}): Response {
   return new Response(JSON.stringify(body), {
     status,
     headers: { "Content-Type": "application/json; charset=utf-8", ...extraHeaders },
   });
 }
 
-/**
- * Atende GET /api/tmdb?path=<endpoint>&<parâmetros>.
- * @param {Request} request
- */
-export async function handleTmdbProxy(request, { apiKey, fetchImpl = fetch } = {}) {
+interface ProxyOptions {
+  apiKey: string | undefined;
+  fetchImpl?: typeof fetch;
+}
+
+/** Atende GET /api/tmdb?path=<endpoint>&<parâmetros>. */
+export async function handleTmdbProxy(
+  request: Request,
+  { apiKey, fetchImpl = fetch }: ProxyOptions,
+): Promise<Response> {
   if (request.method !== "GET") {
     return json({ code: "method_not_allowed", status_message: "Método não permitido." }, 405, { Allow: "GET" });
   }
@@ -113,7 +138,7 @@ export async function handleTmdbProxy(request, { apiKey, fetchImpl = fetch } = {
   const path = searchParams.get("path");
   searchParams.delete("path");
 
-  let upstream;
+  let upstream: UpstreamRequest;
   try {
     upstream = buildUpstreamRequest({ path, searchParams, apiKey });
   } catch (error) {
@@ -123,7 +148,7 @@ export async function handleTmdbProxy(request, { apiKey, fetchImpl = fetch } = {
     throw error;
   }
 
-  let response;
+  let response: Response;
   try {
     response = await fetchImpl(upstream.url, {
       headers: upstream.headers,

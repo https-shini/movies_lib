@@ -28,9 +28,13 @@ jobs:
         run: npm ci
       - name: Audit dependencies
         run: npm audit --audit-level=moderate
+      - name: Check formatting
+        run: npm run format:check
       - name: Run ESLint
         run: npm run lint
-      - name: Run unit tests
+      - name: Type check
+        run: npm run typecheck
+      - name: Run tests
         run: npm test
       - name: Build application
         run: npm run build
