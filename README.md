@@ -158,10 +158,10 @@ Os arquivos `.css` ficam ao lado do componente ou da página que estilizam.
 As imagens abaixo registram a versão anterior do MoviesLib e serão atualizadas conforme a reformulação visual avançar.
 
 <div align="center">
-  <img src="./docs/screenshots/001.png" width="400" alt="Tela inicial da versão original do MoviesLib" />
-  <img src="./docs/screenshots/002.png" width="400" alt="Tela de pesquisa da versão original do MoviesLib" />
-  <img src="./docs/screenshots/003.png" width="400" alt="Tela de detalhes da versão original do MoviesLib" />
-  <img src="./docs/screenshots/004.png" width="400" alt="Outra tela da versão original do MoviesLib" />
+  <img src="./docs/images/001.png" width="400" alt="Tela inicial da versão original do MoviesLib" />
+  <img src="./docs/images/002.png" width="400" alt="Tela de pesquisa da versão original do MoviesLib" />
+  <img src="./docs/images/003.png" width="400" alt="Tela de detalhes da versão original do MoviesLib" />
+  <img src="./docs/images/004.png" width="400" alt="Outra tela da versão original do MoviesLib" />
 </div>
 
 ## Identidade visual
@@ -197,13 +197,13 @@ Não envie seu arquivo `.env` ao Git.
 
 ## Documentação e contribuição
 
-- [Documentação técnica](./read-model/MODEL.md)
-- [Roadmap de evolução](./read-model/ROADMAP.md)
-- [Como contribuir](./read-model/CONTRIBUTING.md)
+- [Documentação técnica](./docs/MODEL.md)
+- [Roadmap de evolução](./docs/ROADMAP.md)
+- [Como contribuir](./docs/CONTRIBUTING.md)
 
 ## Roadmap
 
-O plano de evolução completo está em [read-model/ROADMAP.md](./read-model/ROADMAP.md): diagnóstico, recursos da API do TMDB, 25 iniciativas priorizadas com status e o plano por fases.
+O plano de evolução completo está em [docs/ROADMAP.md](./docs/ROADMAP.md): diagnóstico, recursos da API do TMDB, 25 iniciativas priorizadas com status e o plano por fases.
 
 | Fase | Foco |
 |---|---|
