@@ -152,10 +152,10 @@ tests/
 As imagens abaixo registram a versão anterior do MoviesLib e serão atualizadas conforme a reformulação visual avançar.
 
 <div align="center">
-  <img src="https://raw.githubusercontent.com/https-shini/movies_lib/main/dist/001.png" width="400" alt="Tela inicial da versão original do MoviesLib" />
-  <img src="https://raw.githubusercontent.com/https-shini/movies_lib/main/dist/002.png" width="400" alt="Tela de pesquisa da versão original do MoviesLib" />
-  <img src="https://raw.githubusercontent.com/https-shini/movies_lib/main/dist/003.png" width="400" alt="Tela de detalhes da versão original do MoviesLib" />
-  <img src="https://raw.githubusercontent.com/https-shini/movies_lib/main/dist/004.png" width="400" alt="Outra tela da versão original do MoviesLib" />
+  <img src="./docs/screenshots/001.png" width="400" alt="Tela inicial da versão original do MoviesLib" />
+  <img src="./docs/screenshots/002.png" width="400" alt="Tela de pesquisa da versão original do MoviesLib" />
+  <img src="./docs/screenshots/003.png" width="400" alt="Tela de detalhes da versão original do MoviesLib" />
+  <img src="./docs/screenshots/004.png" width="400" alt="Outra tela da versão original do MoviesLib" />
 </div>
 
 ## Segurança

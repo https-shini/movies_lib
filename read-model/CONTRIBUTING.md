@@ -56,11 +56,11 @@ Ao seguir estas etapas, você estará contribuindo com o projeto e enviando suas
 5. Push to the branch: `git push origin my-new-feature`
 6. Submit a pull request
 
-- Add a title os a description that let clear your suggestion :).
+- Add a title and a clear description of your suggestion.
 
 **After your pull request is merged** 
 
 > After your pull request is merged, you can safely delete your branch.
 
 > [!NOTE]
-> Don't forget to favorite the project!.
+> Don't forget to star the project!
