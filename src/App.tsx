@@ -1,6 +1,7 @@
 import { Outlet, ScrollRestoration } from "react-router";
 import AppHeader from "./components/layout/AppHeader";
 import MobileTabBar from "./components/layout/MobileTabBar";
+import Observability from "./components/layout/Observability";
 import SiteFooter from "./components/layout/SiteFooter";
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
       <SiteFooter />
       <MobileTabBar />
       <ScrollRestoration />
+      <Observability />
     </div>
   );
 }

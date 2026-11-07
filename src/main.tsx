@@ -15,6 +15,8 @@ import Search from "./pages/Search";
 import Discover from "./pages/Discover";
 import NotFound from "./pages/NotFound";
 import RouteError from "./pages/RouteError";
+import About from "./pages/About";
+import Privacy from "./pages/Privacy";
 
 const router = createBrowserRouter([
   {
@@ -29,6 +31,8 @@ const router = createBrowserRouter([
           { path: "discover", element: <Discover /> },
           { path: "movie/:id", element: <Movie /> },
           { path: "search", element: <Search /> },
+          { path: "sobre", element: <About /> },
+          { path: "privacidade", element: <Privacy /> },
           { path: "*", element: <NotFound /> },
         ],
       },

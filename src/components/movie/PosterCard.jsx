@@ -7,13 +7,30 @@ import "./PosterCard.css";
 
 export const getMovieTitle = (movie) => movie?.title || movie?.name || "Título não informado";
 
-export const Poster = ({ path, title, className = "", eager = false, size = "w342" }) => {
+/**
+ * `eager` carrega sem esperar a rolagem; `priority` também pede prioridade alta
+ * (use só na imagem principal da página, candidata ao LCP).
+ */
+export const Poster = ({
+  path,
+  title,
+  className = "",
+  eager = false,
+  priority = false,
+  size = "w342",
+}) => {
   const src = getPosterUrl(path, size);
 
   return (
     <div className={`poster ${className}`}>
       {src ? (
-        <img src={src} alt="" loading={eager ? "eager" : "lazy"} decoding="async" />
+        <img
+          src={src}
+          alt=""
+          loading={eager || priority ? "eager" : "lazy"}
+          decoding="async"
+          {...(priority ? { fetchPriority: "high" } : {})}
+        />
       ) : (
         <div className="poster__fallback" aria-hidden="true">
           <PiFilmSlate />
@@ -25,14 +42,14 @@ export const Poster = ({ path, title, className = "", eager = false, size = "w34
 };
 
 /** Card de filme: o pôster é o protagonista; o card inteiro é um link. */
-const PosterCard = ({ movie, eager = false }) => {
+const PosterCard = ({ movie, eager = false, priority = false }) => {
   const title = getMovieTitle(movie);
   const year = getReleaseYear(movie.release_date);
 
   return (
     <Link to={`/movie/${movie.id}`} className="poster-card">
       <div className="poster-card__media">
-        <Poster path={movie.poster_path} title={title} eager={eager} />
+        <Poster path={movie.poster_path} title={title} eager={eager} priority={priority} />
         <Rating value={movie.vote_average} className="poster-card__rating" />
       </div>
       <h3 className="poster-card__title">{title}</h3>
