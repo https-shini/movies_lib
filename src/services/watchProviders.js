@@ -1,4 +1,4 @@
-import { fetchTmdb } from "./tmdb.js";
+import { fetchTmdb, getLogoUrl } from "./tmdb.js";
 
 const PROVIDER_GROUPS = [
   { key: "flatrate", label: "Assinatura" },
@@ -39,6 +39,5 @@ export function getWatchProvidersForRegion(payload, region = "BR") {
 }
 
 export function getProviderLogoUrl(path) {
-  if (!path) return null;
-  return `https://image.tmdb.org/t/p/w92/${path.replace(/^\//, "")}`;
+  return getLogoUrl(path);
 }

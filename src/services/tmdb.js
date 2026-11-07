@@ -1,49 +1,76 @@
 import { buildTmdbUrl } from "./tmdbUrl.js";
+import { getTmdbErrorMessage, NETWORK_ERROR_MESSAGE } from "./tmdbErrors.js";
 
-const API_BASE_URL = import.meta.env.VITE_API;
-const API_KEY = import.meta.env.VITE_API_KEY;
+/**
+ * Endereços públicos do TMDB. As variáveis de ambiente continuam aceitas para
+ * permitir outro proxy/base, mas apenas VITE_API_KEY é obrigatória.
+ */
+const DEFAULT_ENDPOINTS = {
+  movie: "https://api.themoviedb.org/3/movie/",
+  search: "https://api.themoviedb.org/3/search/movie",
+  discover: "https://api.themoviedb.org/3/discover/movie",
+  genres: "https://api.themoviedb.org/3/genre/movie/list",
+  poster: "https://image.tmdb.org/t/p/w500",
+  backdrop: "https://image.tmdb.org/t/p/w1280",
+  logo: "https://image.tmdb.org/t/p/w92",
+};
+
+const env = import.meta.env;
+
+export const TMDB_ENDPOINTS = Object.freeze({
+  movie: env.VITE_API || DEFAULT_ENDPOINTS.movie,
+  search: env.VITE_SEARCH || DEFAULT_ENDPOINTS.search,
+  discover: env.VITE_DISCOVER || DEFAULT_ENDPOINTS.discover,
+  genres: env.VITE_GENRES || DEFAULT_ENDPOINTS.genres,
+});
+
+const IMAGE_BASE_URLS = Object.freeze({
+  poster: env.VITE_IMG || DEFAULT_ENDPOINTS.poster,
+  backdrop: env.VITE_BACKDROP || DEFAULT_ENDPOINTS.backdrop,
+  logo: DEFAULT_ENDPOINTS.logo,
+});
 
 export async function fetchTmdb(endpoint, { params = {}, signal } = {}) {
   const url = buildTmdbUrl({
-    baseUrl: API_BASE_URL,
+    baseUrl: TMDB_ENDPOINTS.movie,
     endpoint,
-    apiKey: API_KEY,
+    apiKey: env.VITE_API_KEY,
     params,
   });
 
-  const response = await fetch(url, { signal });
+  let response;
+  try {
+    response = await fetch(url, { signal });
+  } catch (requestError) {
+    if (requestError?.name === "AbortError") throw requestError;
+    throw new Error(NETWORK_ERROR_MESSAGE, { cause: requestError });
+  }
 
   if (!response.ok) {
-    let message = `Não foi possível consultar o TMDB (HTTP ${response.status}).`;
-
-    try {
-      const payload = await response.json();
-      if (payload.status_message) message = payload.status_message;
-    } catch {
-      // Mantém a mensagem HTTP quando a resposta não contém JSON.
-    }
-
-    throw new Error(message);
+    throw new Error(getTmdbErrorMessage(response.status));
   }
 
   const data = await response.json();
-  if (data.success === false) {
-    throw new Error(data.status_message || "O TMDB recusou a solicitação.");
+  if (data?.success === false) {
+    throw new Error(getTmdbErrorMessage(response.status));
   }
 
   return data;
 }
 
-export function getPosterUrl(path) {
-  const imageBaseUrl = import.meta.env.VITE_IMG;
-  if (!path || !imageBaseUrl) return null;
+function joinImageUrl(baseUrl, path) {
+  if (!path || !baseUrl) return null;
+  return `${baseUrl.replace(/\/$/, "")}/${path.replace(/^\//, "")}`;
+}
 
-  return `${imageBaseUrl.replace(/\/$/, "")}/${path.replace(/^\//, "")}`;
+export function getPosterUrl(path) {
+  return joinImageUrl(IMAGE_BASE_URLS.poster, path);
 }
 
 export function getBackdropUrl(path) {
-  const imageBaseUrl = import.meta.env.VITE_BACKDROP;
-  if (!path || !imageBaseUrl) return null;
+  return joinImageUrl(IMAGE_BASE_URLS.backdrop, path);
+}
 
-  return `${imageBaseUrl.replace(/\/$/, "")}/${path.replace(/^\//, "")}`;
+export function getLogoUrl(path) {
+  return joinImageUrl(IMAGE_BASE_URLS.logo, path);
 }
