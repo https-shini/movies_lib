@@ -173,15 +173,14 @@ O GitHub Actions executa instalação limpa, auditoria de dependências com nív
 
 ## 9. Evolução arquitetural planejada
 
-1. Ampliar testes de componentes e fluxos de interface.
-2. Evoluir a organização do frontend para módulos por domínio.
-3. Evoluir o proxy para uma API própria com validação de entrada.
-4. Introduzir PostgreSQL e camada de persistência.
-5. Adicionar autenticação, perfis e preferências.
-6. Implementar avaliações, comentários e listas pessoais.
-7. Ampliar a disponibilidade regional e evoluir recomendações.
+A evolução do projeto está detalhada no [Roadmap de evolução](./ROADMAP.md), que reúne:
 
-A escolha definitiva de framework backend, ORM, banco, hospedagem e provedores de autenticação deverá ser documentada antes da implementação dessa camada.
+- o diagnóstico da arquitetura e do uso atual da API;
+- as regras e limites do TMDB que afetam o projeto (limite de requisições, `append_to_response`, cache de no máximo 6 meses, atribuição ao TMDB e ao JustWatch, uso comercial e restrição a IA);
+- 25 iniciativas com justificativa, endpoints, impacto técnico, esforço, prioridade e status;
+- o plano de implementação em fases.
+
+A escolha definitiva de framework backend, ORM, banco, hospedagem e provedores de autenticação deverá ser documentada antes da implementação da fase 3 do roadmap.
 
 ## 10. Referências
 

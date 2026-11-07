@@ -198,16 +198,20 @@ Não envie seu arquivo `.env` ao Git.
 ## Documentação e contribuição
 
 - [Documentação técnica](./read-model/MODEL.md)
+- [Roadmap de evolução](./read-model/ROADMAP.md)
 - [Como contribuir](./read-model/CONTRIBUTING.md)
 
 ## Roadmap
 
-- Atualizar a cadeia de ferramentas e dependências.
-- Ampliar a análise estática e a cobertura de testes.
-- Implementar descoberta avançada, filtros, gêneros e paginação.
-- Integrar disponibilidade regional de streaming, aluguel e compra.
-- Evoluir o backend para persistência e autenticação.
-- Adicionar perfis, avaliações, comentários, listas e recursos sociais.
+O plano de evolução completo está em [read-model/ROADMAP.md](./read-model/ROADMAP.md): diagnóstico, recursos da API do TMDB, 25 iniciativas priorizadas com status e o plano por fases.
+
+| Fase | Foco |
+|---|---|
+| 0 — Conformidade | Crédito ao JustWatch, página "Sobre" com o logo do TMDB, licença comercial e política sem IA |
+| 1 — Eficiência e dados | Imagens no tamanho certo, página do filme em 1 requisição, classificação indicativa, lançamentos do Brasil, cache e proxy mais resistente |
+| 2 — Catálogo | Páginas de pessoas, busca de pessoas, filtro por streaming, mais filtros e coleções |
+| 3 — Plataforma social | Autenticação, banco de dados, diário, notas, listas, recomendações por regras e prévia ao compartilhar |
+| 4 — Expansão | Séries de TV, escolha de região, palavras-chave e galeria |
 
 ## Créditos
 
