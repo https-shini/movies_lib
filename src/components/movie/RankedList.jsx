@@ -10,7 +10,15 @@ import "./RankedList.css";
  */
 const RankedList = ({ movies, isLoading, error, onRetry, limit = 10 }) => {
   if (error) {
-    return <StateMessage tone="error" compact title="Não foi possível carregar o ranking" message={error} onRetry={onRetry} />;
+    return (
+      <StateMessage
+        tone="error"
+        compact
+        title="Não foi possível carregar o ranking"
+        message={error}
+        onRetry={onRetry}
+      />
+    );
   }
 
   if (isLoading) {
@@ -40,7 +48,9 @@ const RankedList = ({ movies, isLoading, error, onRetry, limit = 10 }) => {
         return (
           <li key={movie.id}>
             <Link to={`/movie/${movie.id}`} className="ranked__item">
-              <span className="ranked__number display" aria-label={`${index + 1}º lugar`}>{index + 1}</span>
+              <span className="ranked__number display" aria-label={`${index + 1}º lugar`}>
+                {index + 1}
+              </span>
               <Poster path={movie.poster_path} title={title} className="ranked__poster" />
               <div className="ranked__body">
                 <h3 className="ranked__title">{title}</h3>

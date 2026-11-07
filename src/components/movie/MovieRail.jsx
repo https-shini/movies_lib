@@ -18,21 +18,33 @@ const MovieRail = ({ id, index, title, subtitle, movies, isLoading, error, onRet
         index={index}
         title={title}
         subtitle={subtitle}
-        aside={(
+        aside={
           <>
             {link}
             {hasMovies && <RailControls railRef={railRef} label={title} />}
           </>
-        )}
+        }
       />
 
       {isLoading && (
         <Rail label={`Carregando ${title}`}>
-          {Array.from({ length: 8 }, (_, item) => <li key={item}><PosterCardSkeleton /></li>)}
+          {Array.from({ length: 8 }, (_, item) => (
+            <li key={item}>
+              <PosterCardSkeleton />
+            </li>
+          ))}
         </Rail>
       )}
 
-      {error && <StateMessage tone="error" compact title="Não foi possível carregar esta seção" message={error} onRetry={onRetry} />}
+      {error && (
+        <StateMessage
+          tone="error"
+          compact
+          title="Não foi possível carregar esta seção"
+          message={error}
+          onRetry={onRetry}
+        />
+      )}
 
       {!isLoading && !error && !movies?.length && (
         <StateMessage compact title="Nenhum filme nesta seção por enquanto." />

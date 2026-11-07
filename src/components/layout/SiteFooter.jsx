@@ -19,8 +19,10 @@ const SiteFooter = () => (
 
       <p className="site-footer__credits">
         Dados e imagens fornecidos pelo{" "}
-        <a href="https://www.themoviedb.org/" target="_blank" rel="noopener noreferrer">TMDB</a>.
-        Este produto usa a API do TMDB, mas não é endossado nem certificado pelo TMDB.
+        <a href="https://www.themoviedb.org/" target="_blank" rel="noopener noreferrer">
+          TMDB
+        </a>
+        . Este produto usa a API do TMDB, mas não é endossado nem certificado pelo TMDB.
       </p>
     </div>
   </footer>

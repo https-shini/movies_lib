@@ -42,10 +42,17 @@ const Dialog = ({ open, onClose, title, description, variant = "sheet", footer, 
       <div className="dialog__box">
         <header className="dialog__header">
           <div>
-            <h2 id={titleId} className="dialog__title">{title}</h2>
+            <h2 id={titleId} className="dialog__title">
+              {title}
+            </h2>
             {description && <p className="dialog__description">{description}</p>}
           </div>
-          <button type="button" className="icon-btn dialog__close" onClick={onClose} aria-label="Fechar">
+          <button
+            type="button"
+            className="icon-btn dialog__close"
+            onClick={onClose}
+            aria-label="Fechar"
+          >
             <PiX aria-hidden="true" />
           </button>
         </header>

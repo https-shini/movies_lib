@@ -45,7 +45,9 @@ function sanitizeYear(value) {
 }
 
 function sanitizeRating(value) {
-  const raw = String(value ?? "").trim().replace(",", ".");
+  const raw = String(value ?? "")
+    .trim()
+    .replace(",", ".");
   if (!raw) return "";
 
   const rating = Number(raw);

@@ -15,13 +15,16 @@ describe("buildTmdbProxyUrl", () => {
   });
 
   it("encodes query parameters and ignores empty values", () => {
-    const url = new URL(buildTmdbProxyUrl("search/movie", {
-      query: "ação & aventura",
-      page: 2,
-      language: "",
-      absent: undefined,
-      empty: null,
-    }), "http://localhost");
+    const url = new URL(
+      buildTmdbProxyUrl("search/movie", {
+        query: "ação & aventura",
+        page: 2,
+        language: "",
+        absent: undefined,
+        empty: null,
+      }),
+      "http://localhost",
+    );
 
     expect(url.searchParams.get("query")).toBe("ação & aventura");
     expect(url.searchParams.get("page")).toBe("2");

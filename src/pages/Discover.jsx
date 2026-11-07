@@ -41,7 +41,9 @@ const AdvancedFilters = ({ initial, onApply }) => {
   return (
     <form id={FORM_ID} className="advanced-filters" onSubmit={handleSubmit}>
       <div className="field">
-        <label className="field__label" htmlFor="discover-year">Ano de lançamento</label>
+        <label className="field__label" htmlFor="discover-year">
+          Ano de lançamento
+        </label>
         <input
           id="discover-year"
           className="input"
@@ -54,11 +56,15 @@ const AdvancedFilters = ({ initial, onApply }) => {
           value={draft.year}
           onChange={handleChange}
         />
-        <span className="field__hint">Entre {MIN_YEAR} e {MAX_YEAR}.</span>
+        <span className="field__hint">
+          Entre {MIN_YEAR} e {MAX_YEAR}.
+        </span>
       </div>
 
       <div className="field">
-        <label className="field__label" htmlFor="discover-rating">Nota mínima</label>
+        <label className="field__label" htmlFor="discover-rating">
+          Nota mínima
+        </label>
         <input
           id="discover-rating"
           className="input"
@@ -106,10 +112,11 @@ const Discover = () => {
   }, [genre, genresLoaded]);
 
   const loadMovies = useCallback(
-    (signal) => fetchTmdb("discover/movie", {
-      params: buildDiscoverParams({ genre, sort, year, minRating, page }),
-      signal,
-    }),
+    (signal) =>
+      fetchTmdb("discover/movie", {
+        params: buildDiscoverParams({ genre, sort, year, minRating, page }),
+        signal,
+      }),
     [genre, sort, year, minRating, page],
   );
   const { data, isLoading, error, reload } = useAsyncData(loadMovies);
@@ -128,7 +135,9 @@ const Discover = () => {
 
   const genreName = genres.find(({ id }) => String(id) === genre)?.name;
   const advancedCount = [year, minRating].filter(Boolean).length;
-  const hasAnyFilter = Boolean(genre || year || minRating || sort !== DEFAULT_DISCOVER_FILTERS.sort);
+  const hasAnyFilter = Boolean(
+    genre || year || minRating || sort !== DEFAULT_DISCOVER_FILTERS.sort,
+  );
   const activeChips = [
     year && { key: "year", label: `Ano ${year}` },
     minRating && { key: "minRating", label: `Nota ≥ ${minRating.replace(".", ",")}` },
@@ -140,21 +149,37 @@ const Discover = () => {
         <header className="page-head">
           <p className="page-head__kicker mono">Catálogo</p>
           <h1 className="page-head__title display">
-            {genreName ? <>Filmes de <em>{genreName.toLowerCase()}</em></> : "Descobrir"}
+            {genreName ? (
+              <>
+                Filmes de <em>{genreName.toLowerCase()}</em>
+              </>
+            ) : (
+              "Descobrir"
+            )}
           </h1>
-          <p className="page-head__lede">Combine gênero, época e avaliação para encontrar o próximo filme da sua lista.</p>
+          <p className="page-head__lede">
+            Combine gênero, época e avaliação para encontrar o próximo filme da sua lista.
+          </p>
         </header>
 
         <nav className="genre-bar" aria-label="Filtrar por gênero">
           <ul ref={genreListRef} className="genre-bar__list" role="list">
             <li>
-              <button type="button" className="chip" aria-pressed={!genre} onClick={() => applyFilters({ genre: "" })}>
+              <button
+                type="button"
+                className="chip"
+                aria-pressed={!genre}
+                onClick={() => applyFilters({ genre: "" })}
+              >
                 Todos
               </button>
             </li>
-            {genresState.isLoading && Array.from({ length: 8 }, (_, index) => (
-              <li key={index}><span className="chip skeleton genre-bar__skeleton" aria-hidden="true" /></li>
-            ))}
+            {genresState.isLoading &&
+              Array.from({ length: 8 }, (_, index) => (
+                <li key={index}>
+                  <span className="chip skeleton genre-bar__skeleton" aria-hidden="true" />
+                </li>
+              ))}
             {genres.map((item) => {
               const isActive = String(item.id) === genre;
               return (
@@ -180,7 +205,9 @@ const Discover = () => {
 
         <div className="discover-toolbar">
           <div className="discover-toolbar__sort">
-            <label className="field__label" htmlFor="discover-sort">Ordenar por</label>
+            <label className="field__label" htmlFor="discover-sort">
+              Ordenar por
+            </label>
             <select
               id="discover-sort"
               className="select"
@@ -188,27 +215,46 @@ const Discover = () => {
               onChange={(event) => applyFilters({ sort: event.target.value })}
             >
               {DISCOVER_SORT_OPTIONS.map(({ value, label }) => (
-                <option key={value} value={value}>{label}</option>
+                <option key={value} value={value}>
+                  {label}
+                </option>
               ))}
             </select>
           </div>
 
-          <button type="button" className="btn btn--ghost discover-toolbar__filters" onClick={() => setFiltersOpen(true)}>
+          <button
+            type="button"
+            className="btn btn--ghost discover-toolbar__filters"
+            onClick={() => setFiltersOpen(true)}
+          >
             <PiSlidersHorizontal aria-hidden="true" />
             Filtros
-            {advancedCount > 0 && <span className="count-badge" aria-label={`${advancedCount} ativos`}>{advancedCount}</span>}
+            {advancedCount > 0 && (
+              <span className="count-badge" aria-label={`${advancedCount} ativos`}>
+                {advancedCount}
+              </span>
+            )}
           </button>
         </div>
 
         <div className="discover-status">
           <p className="discover-status__count mono" aria-live="polite">
-            {isLoading ? "Buscando…" : error ? "" : `${(data?.total_results ?? 0).toLocaleString("pt-BR")} filmes`}
+            {isLoading
+              ? "Buscando…"
+              : error
+                ? ""
+                : `${(data?.total_results ?? 0).toLocaleString("pt-BR")} filmes`}
           </p>
           {activeChips.length > 0 && (
             <ul className="discover-status__chips" role="list" aria-label="Filtros ativos">
               {activeChips.map(({ key, label }) => (
                 <li key={key}>
-                  <button type="button" className="chip chip--active" onClick={() => applyFilters({ [key]: "" })} aria-label={`Remover filtro ${label}`}>
+                  <button
+                    type="button"
+                    className="chip chip--active"
+                    onClick={() => applyFilters({ [key]: "" })}
+                    aria-label={`Remover filtro ${label}`}
+                  >
                     {label} <PiX aria-hidden="true" />
                   </button>
                 </li>
@@ -216,7 +262,11 @@ const Discover = () => {
             </ul>
           )}
           {hasAnyFilter && (
-            <button type="button" className="btn btn--quiet discover-status__clear" onClick={() => setSearchParams(new URLSearchParams())}>
+            <button
+              type="button"
+              className="btn btn--quiet discover-status__clear"
+              onClick={() => setSearchParams(new URLSearchParams())}
+            >
               Limpar tudo
             </button>
           )}
@@ -230,11 +280,17 @@ const Discover = () => {
           onRetry={reload}
           emptyTitle="Nenhum filme com esses filtros"
           emptyMessage="Tente outro gênero, um ano diferente ou uma nota mínima menor."
-          emptyAction={hasAnyFilter && (
-            <button type="button" className="btn btn--ghost" onClick={() => setSearchParams(new URLSearchParams())}>
-              Limpar filtros
-            </button>
-          )}
+          emptyAction={
+            hasAnyFilter && (
+              <button
+                type="button"
+                className="btn btn--ghost"
+                onClick={() => setSearchParams(new URLSearchParams())}
+              >
+                Limpar filtros
+              </button>
+            )
+          }
         />
 
         {!isLoading && !error && movies.length > 0 && (
@@ -247,7 +303,7 @@ const Discover = () => {
         onClose={() => setFiltersOpen(false)}
         title="Filtros"
         description="Refine os resultados por época e avaliação."
-        footer={(
+        footer={
           <>
             <button
               type="button"
@@ -259,9 +315,11 @@ const Discover = () => {
             >
               Limpar
             </button>
-            <button type="submit" form={FORM_ID} className="btn btn--primary">Aplicar filtros</button>
+            <button type="submit" form={FORM_ID} className="btn btn--primary">
+              Aplicar filtros
+            </button>
           </>
-        )}
+        }
       >
         <AdvancedFilters
           initial={applied}

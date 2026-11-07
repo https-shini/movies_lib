@@ -23,7 +23,8 @@ const Home = () => {
     [],
   );
   const loadNowPlaying = useCallback(
-    (signal) => fetchTmdb("movie/now_playing", { params: { language: "pt-BR", region: "BR" }, signal }),
+    (signal) =>
+      fetchTmdb("movie/now_playing", { params: { language: "pt-BR", region: "BR" }, signal }),
     [],
   );
   const loadGenres = useCallback(
@@ -48,7 +49,12 @@ const Home = () => {
     <main className="home">
       {popular.error ? (
         <div className="shell home__hero-error">
-          <StateMessage tone="error" title="Não foi possível carregar os destaques" message={popular.error} onRetry={popular.reload} />
+          <StateMessage
+            tone="error"
+            title="Não foi possível carregar os destaques"
+            message={popular.error}
+            onRetry={popular.reload}
+          />
         </div>
       ) : (
         <FeaturedHero movie={featured} genresById={genresById} isLoading={popular.isLoading} />
@@ -64,7 +70,11 @@ const Home = () => {
             movies={trending}
             isLoading={popular.isLoading}
             onRetry={popular.reload}
-            link={<Link to="/discover" className="text-link">Ver tudo</Link>}
+            link={
+              <Link to="/discover" className="text-link">
+                Ver tudo
+              </Link>
+            }
           />
         )}
 
@@ -74,7 +84,11 @@ const Home = () => {
             index="02"
             title="Os 10 mais bem avaliados"
             subtitle="Clássicos e favoritos com as maiores notas do público."
-            aside={<Link to="/discover?sort=vote_average.desc" className="text-link">Ranking completo</Link>}
+            aside={
+              <Link to="/discover?sort=vote_average.desc" className="text-link">
+                Ranking completo
+              </Link>
+            }
           />
           <RankedList
             movies={topRated.data?.results}
@@ -93,7 +107,11 @@ const Home = () => {
           isLoading={nowPlaying.isLoading}
           error={nowPlaying.error}
           onRetry={nowPlaying.reload}
-          link={<Link to="/discover?sort=primary_release_date.desc" className="text-link">Lançamentos</Link>}
+          link={
+            <Link to="/discover?sort=primary_release_date.desc" className="text-link">
+              Lançamentos
+            </Link>
+          }
         />
 
         <section className="section" aria-labelledby="genres-title">
@@ -104,21 +122,29 @@ const Home = () => {
             subtitle="Um atalho para o catálogo filtrado."
           />
           {genres.error ? (
-            <StateMessage tone="error" compact title="Não foi possível carregar os gêneros" message={genres.error} onRetry={genres.reload} />
+            <StateMessage
+              tone="error"
+              compact
+              title="Não foi possível carregar os gêneros"
+              message={genres.error}
+              onRetry={genres.reload}
+            />
           ) : (
             <ul className="genre-index" role="list" aria-busy={genres.isLoading}>
               {genres.isLoading
                 ? Array.from({ length: 12 }, (_, index) => (
-                  <li key={index}><span className="genre-index__link skeleton" aria-hidden="true" /></li>
-                ))
+                    <li key={index}>
+                      <span className="genre-index__link skeleton" aria-hidden="true" />
+                    </li>
+                  ))
                 : genres.data?.genres?.map((genre) => (
-                  <li key={genre.id}>
-                    <Link className="genre-index__link" to={`/discover?genre=${genre.id}`}>
-                      <span>{genre.name}</span>
-                      <PiArrowRight aria-hidden="true" />
-                    </Link>
-                  </li>
-                ))}
+                    <li key={genre.id}>
+                      <Link className="genre-index__link" to={`/discover?genre=${genre.id}`}>
+                        <span>{genre.name}</span>
+                        <PiArrowRight aria-hidden="true" />
+                      </Link>
+                    </li>
+                  ))}
             </ul>
           )}
         </section>

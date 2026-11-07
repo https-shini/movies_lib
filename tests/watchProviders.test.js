@@ -1,9 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import {
-  getProviderLogoUrl,
-  getWatchProvidersForRegion,
-} from "../src/services/watchProviders.js";
+import { getProviderLogoUrl, getWatchProvidersForRegion } from "../src/services/watchProviders.js";
 
 const provider = (provider_id, provider_name, display_priority = 10) => ({
   provider_id,
@@ -48,7 +45,10 @@ describe("getWatchProvidersForRegion", () => {
   });
 
   it("normalizes the region code", () => {
-    const result = getWatchProvidersForRegion({ results: { br: { free: [provider(1, "Free")] } } }, "br");
+    const result = getWatchProvidersForRegion(
+      { results: { br: { free: [provider(1, "Free")] } } },
+      "br",
+    );
     expect(result.region).toBe("BR");
   });
 });

@@ -21,15 +21,13 @@ export function getWatchProvidersForRegion(payload, region = "BR") {
     return { region: region.toUpperCase(), link: null, groups: [] };
   }
 
-  const groups = PROVIDER_GROUPS
-    .map(({ key, label }) => ({
-      key,
-      label,
-      providers: (regionData[key] ?? [])
-        .filter((provider) => provider?.provider_id && provider?.provider_name)
-        .sort((a, b) => (a.display_priority ?? Infinity) - (b.display_priority ?? Infinity)),
-    }))
-    .filter((group) => group.providers.length > 0);
+  const groups = PROVIDER_GROUPS.map(({ key, label }) => ({
+    key,
+    label,
+    providers: (regionData[key] ?? [])
+      .filter((provider) => provider?.provider_id && provider?.provider_name)
+      .sort((a, b) => (a.display_priority ?? Infinity) - (b.display_priority ?? Infinity)),
+  })).filter((group) => group.providers.length > 0);
 
   return {
     region: region.toUpperCase(),

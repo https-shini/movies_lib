@@ -39,7 +39,13 @@ const ALLOWED_PARAMS = new Set([
   "include_video_language",
 ]);
 
-const ALLOWED_APPENDS = new Set(["credits", "videos", "recommendations", "similar", "watch/providers"]);
+const ALLOWED_APPENDS = new Set([
+  "credits",
+  "videos",
+  "recommendations",
+  "similar",
+  "watch/providers",
+]);
 const MAX_PARAM_LENGTH = 200;
 
 export class TmdbProxyError extends Error {
@@ -85,7 +91,11 @@ export function buildUpstreamRequest({
   }
 
   if (!apiKey) {
-    throw new TmdbProxyError(500, "missing_api_key", "TMDB_API_KEY não está configurada no servidor.");
+    throw new TmdbProxyError(
+      500,
+      "missing_api_key",
+      "TMDB_API_KEY não está configurada no servidor.",
+    );
   }
 
   const url = new URL(normalizedPath, TMDB_API_BASE_URL);
@@ -130,7 +140,9 @@ export async function handleTmdbProxy(
   { apiKey, fetchImpl = fetch }: ProxyOptions,
 ): Promise<Response> {
   if (request.method !== "GET") {
-    return json({ code: "method_not_allowed", status_message: "Método não permitido." }, 405, { Allow: "GET" });
+    return json({ code: "method_not_allowed", status_message: "Método não permitido." }, 405, {
+      Allow: "GET",
+    });
   }
 
   const requestUrl = new URL(request.url);
@@ -143,7 +155,9 @@ export async function handleTmdbProxy(
     upstream = buildUpstreamRequest({ path, searchParams, apiKey });
   } catch (error) {
     if (error instanceof TmdbProxyError) {
-      return json({ code: error.code, status_message: error.message }, error.status, { "Cache-Control": "no-store" });
+      return json({ code: error.code, status_message: error.message }, error.status, {
+        "Cache-Control": "no-store",
+      });
     }
     throw error;
   }
@@ -155,7 +169,11 @@ export async function handleTmdbProxy(
       signal: AbortSignal.timeout(UPSTREAM_TIMEOUT_MS),
     });
   } catch {
-    return json({ code: "upstream_unavailable", status_message: "Não foi possível conectar ao TMDB." }, 502, { "Cache-Control": "no-store" });
+    return json(
+      { code: "upstream_unavailable", status_message: "Não foi possível conectar ao TMDB." },
+      502,
+      { "Cache-Control": "no-store" },
+    );
   }
 
   const body = await response.text();

@@ -59,7 +59,11 @@ const CastRail = ({ cast }) => {
           return (
             <li key={person.cast_id ?? person.credit_id} className="cast-card">
               <div className="cast-card__photo">
-                {photo ? <img src={photo} alt="" loading="lazy" decoding="async" /> : <PiUser aria-hidden="true" />}
+                {photo ? (
+                  <img src={photo} alt="" loading="lazy" decoding="async" />
+                ) : (
+                  <PiUser aria-hidden="true" />
+                )}
               </div>
               <p className="cast-card__name">{person.name}</p>
               <p className="cast-card__role">{person.character || "Personagem não informado"}</p>
@@ -74,15 +78,16 @@ const CastRail = ({ cast }) => {
 const MovieDetails = ({ id }) => {
   const [trailerOpen, setTrailerOpen] = useState(false);
   const loadMovie = useCallback(
-    (signal) => fetchTmdb(`movie/${id}`, {
-      params: {
-        language: "pt-BR",
-        // Sem este parâmetro o TMDB só retorna vídeos em pt-BR, e muitos filmes ficam sem trailer.
-        include_video_language: "pt,en,null",
-        append_to_response: "credits,videos,recommendations,similar",
-      },
-      signal,
-    }),
+    (signal) =>
+      fetchTmdb(`movie/${id}`, {
+        params: {
+          language: "pt-BR",
+          // Sem este parâmetro o TMDB só retorna vídeos em pt-BR, e muitos filmes ficam sem trailer.
+          include_video_language: "pt,en,null",
+          append_to_response: "credits,videos,recommendations,similar",
+        },
+        signal,
+      }),
     [id],
   );
   const { data: movie, isLoading, error, reload } = useAsyncData(loadMovie);
@@ -99,7 +104,11 @@ const MovieDetails = ({ id }) => {
             title="Não foi possível abrir este filme"
             message={error || "Filme não encontrado."}
             onRetry={reload}
-            action={<Link to="/" className="btn btn--quiet">Voltar ao início</Link>}
+            action={
+              <Link to="/" className="btn btn--quiet">
+                Voltar ao início
+              </Link>
+            }
           />
         </div>
       </main>
@@ -139,9 +148,13 @@ const MovieDetails = ({ id }) => {
 
           <div className="movie-hero__info">
             <p className="movie-hero__kicker mono">
-              {[year, movie.runtime > 0 && formatRuntime(movie.runtime)].filter(Boolean).join(" · ") || "Filme"}
+              {[year, movie.runtime > 0 && formatRuntime(movie.runtime)]
+                .filter(Boolean)
+                .join(" · ") || "Filme"}
             </p>
-            <h1 id="movie-title" className="movie-hero__title display">{title}</h1>
+            <h1 id="movie-title" className="movie-hero__title display">
+              {title}
+            </h1>
             {movie.original_title && movie.original_title !== title && (
               <p className="movie-hero__original">{movie.original_title}</p>
             )}
@@ -150,7 +163,9 @@ const MovieDetails = ({ id }) => {
               <ul className="movie-hero__genres" role="list" aria-label="Gêneros">
                 {movie.genres.map((genre) => (
                   <li key={genre.id}>
-                    <Link className="chip" to={`/discover?genre=${genre.id}`}>{genre.name}</Link>
+                    <Link className="chip" to={`/discover?genre=${genre.id}`}>
+                      {genre.name}
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -161,9 +176,13 @@ const MovieDetails = ({ id }) => {
                 <>
                   <p className="movie-hero__rating" aria-label={`Nota ${rating} de 10`}>
                     <span className="display">{rating}</span>
-                    <span className="mono" aria-hidden="true">/10</span>
+                    <span className="mono" aria-hidden="true">
+                      /10
+                    </span>
                   </p>
-                  <p className="movie-hero__votes mono">{formatCompactNumber(movie.vote_count)} votos no TMDB</p>
+                  <p className="movie-hero__votes mono">
+                    {formatCompactNumber(movie.vote_count)} votos no TMDB
+                  </p>
                 </>
               ) : (
                 <p className="movie-hero__votes mono">Ainda sem avaliações suficientes</p>
@@ -172,7 +191,11 @@ const MovieDetails = ({ id }) => {
 
             <div className="movie-hero__actions">
               {trailerKey && (
-                <button type="button" className="btn btn--primary" onClick={() => setTrailerOpen(true)}>
+                <button
+                  type="button"
+                  className="btn btn--primary"
+                  onClick={() => setTrailerOpen(true)}
+                >
                   <PiPlayFill aria-hidden="true" /> Assistir trailer
                 </button>
               )}
@@ -187,13 +210,19 @@ const MovieDetails = ({ id }) => {
       <div className="shell">
         <div className="movie-body">
           <section className="movie-body__overview" aria-labelledby="overview-title">
-            <h2 id="overview-title" className="sr-only">Sinopse</h2>
+            <h2 id="overview-title" className="sr-only">
+              Sinopse
+            </h2>
             {movie.tagline && <p className="movie-tagline display">{movie.tagline}</p>}
-            <p className="movie-overview">{movie.overview || "Sinopse ainda não disponível em português."}</p>
+            <p className="movie-overview">
+              {movie.overview || "Sinopse ainda não disponível em português."}
+            </p>
           </section>
 
           <aside className="movie-body__facts" aria-labelledby="facts-title">
-            <h2 id="facts-title" className="facts__title mono">Ficha técnica</h2>
+            <h2 id="facts-title" className="facts__title mono">
+              Ficha técnica
+            </h2>
             <dl className="facts">
               {facts.map(({ label, value }) => (
                 <div key={label} className="facts__row">
@@ -229,7 +258,12 @@ const MovieDetails = ({ id }) => {
       </div>
 
       {trailerKey && (
-        <TrailerDialog open={trailerOpen} onClose={() => setTrailerOpen(false)} videoKey={trailerKey} title={title} />
+        <TrailerDialog
+          open={trailerOpen}
+          onClose={() => setTrailerOpen(false)}
+          videoKey={trailerKey}
+          title={title}
+        />
       )}
     </main>
   );

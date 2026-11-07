@@ -1,7 +1,12 @@
 import { describe, expect, it } from "vitest";
 
 import { formatDocumentTitle } from "../src/hooks/useDocumentTitle.js";
-import { pickCrewNames, pickDirectors, pickRelatedMovies, pickWriters } from "../src/services/movieDetails.js";
+import {
+  pickCrewNames,
+  pickDirectors,
+  pickRelatedMovies,
+  pickWriters,
+} from "../src/services/movieDetails.js";
 
 const movies = (...ids) => ids.map((id) => ({ id, title: `Filme ${id}` }));
 
@@ -17,12 +22,19 @@ describe("pickRelatedMovies", () => {
   });
 
   it("falls back to similar movies when recommendations are empty", () => {
-    const result = pickRelatedMovies({ id: 1, recommendations: { results: [] }, similar: { results: movies(9, 10) } });
+    const result = pickRelatedMovies({
+      id: 1,
+      recommendations: { results: [] },
+      similar: { results: movies(9, 10) },
+    });
     expect(result.map(({ id }) => id)).toEqual([9, 10]);
   });
 
   it("removes the current movie and invalid entries", () => {
-    const result = pickRelatedMovies({ id: 1, recommendations: { results: [...movies(1, 2), {}, null] } });
+    const result = pickRelatedMovies({
+      id: 1,
+      recommendations: { results: [...movies(1, 2), {}, null] },
+    });
     expect(result.map(({ id }) => id)).toEqual([2]);
   });
 

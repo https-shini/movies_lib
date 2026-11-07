@@ -22,7 +22,9 @@ const SearchBox = ({ initialQuery, onSearch }) => {
 
   return (
     <form className="search-box" role="search" onSubmit={handleSubmit}>
-      <label className="sr-only" htmlFor="search-page-input">Buscar filmes pelo título</label>
+      <label className="sr-only" htmlFor="search-page-input">
+        Buscar filmes pelo título
+      </label>
       <PiMagnifyingGlass className="search-box__icon" aria-hidden="true" />
       <input
         id="search-page-input"
@@ -37,11 +39,20 @@ const SearchBox = ({ initialQuery, onSearch }) => {
         onChange={(event) => setValue(event.target.value)}
       />
       {value && (
-        <button type="button" className="search-box__clear" onClick={() => setValue("")} aria-label="Limpar texto">
+        <button
+          type="button"
+          className="search-box__clear"
+          onClick={() => setValue("")}
+          aria-label="Limpar texto"
+        >
           <PiX aria-hidden="true" />
         </button>
       )}
-      <button type="submit" className="btn btn--primary search-box__submit" disabled={!value.trim()}>
+      <button
+        type="submit"
+        className="btn btn--primary search-box__submit"
+        disabled={!value.trim()}
+      >
         Buscar
       </button>
     </form>
@@ -57,7 +68,11 @@ const Suggestions = () => {
 
   return (
     <section className="section search-suggestions" aria-labelledby="suggestions-title">
-      <SectionHeader id="suggestions-title" title="Populares agora" subtitle="Sem ideia do que procurar? Comece por aqui." />
+      <SectionHeader
+        id="suggestions-title"
+        title="Populares agora"
+        subtitle="Sem ideia do que procurar? Comece por aqui."
+      />
       <PosterGrid
         label="Filmes populares"
         movies={data?.results?.slice(0, 12)}
@@ -78,9 +93,10 @@ const Search = () => {
   useDocumentTitle(query ? `Busca: ${query}` : "Buscar filmes");
 
   const loadResults = useCallback(
-    (signal) => query
-      ? fetchTmdb("search/movie", { params: buildSearchParams({ query, page }), signal })
-      : Promise.resolve(null),
+    (signal) =>
+      query
+        ? fetchTmdb("search/movie", { params: buildSearchParams({ query, page }), signal })
+        : Promise.resolve(null),
     [query, page],
   );
   const { data, isLoading, error, reload } = useAsyncData(loadResults);
@@ -103,7 +119,13 @@ const Search = () => {
         <header className="page-head">
           <p className="page-head__kicker mono">Busca</p>
           <h1 className="page-head__title display">
-            {query ? <>Resultados para <em>“{query}”</em></> : "O que vamos assistir?"}
+            {query ? (
+              <>
+                Resultados para <em>“{query}”</em>
+              </>
+            ) : (
+              "O que vamos assistir?"
+            )}
           </h1>
         </header>
 
@@ -112,7 +134,11 @@ const Search = () => {
         {query ? (
           <div className="search__results">
             <p className="search__count mono" aria-live="polite">
-              {isLoading ? "Buscando…" : error ? "" : `${(data?.total_results ?? 0).toLocaleString("pt-BR")} resultados`}
+              {isLoading
+                ? "Buscando…"
+                : error
+                  ? ""
+                  : `${(data?.total_results ?? 0).toLocaleString("pt-BR")} resultados`}
             </p>
             <PosterGrid
               label="Resultados da busca"

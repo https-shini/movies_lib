@@ -6,7 +6,9 @@ import SiteFooter from "./components/layout/SiteFooter";
 function App() {
   return (
     <div className="app">
-      <a className="skip-link" href="#main-content">Pular para o conteúdo</a>
+      <a className="skip-link" href="#main-content">
+        Pular para o conteúdo
+      </a>
       <AppHeader />
       <div id="main-content" className="app__content" tabIndex={-1}>
         <Outlet />

@@ -8,7 +8,12 @@ const Pagination = ({ page, totalPages, onPageChange, label = "Paginação dos r
 
   return (
     <nav className="pagination" aria-label={label}>
-      <button type="button" className="btn btn--ghost" onClick={() => onPageChange(page - 1)} disabled={page <= 1}>
+      <button
+        type="button"
+        className="btn btn--ghost"
+        onClick={() => onPageChange(page - 1)}
+        disabled={page <= 1}
+      >
         <PiCaretLeft aria-hidden="true" /> Anterior
       </button>
       <p className="pagination__status mono" aria-current="page">
@@ -18,7 +23,12 @@ const Pagination = ({ page, totalPages, onPageChange, label = "Paginação dos r
         <span className="sr-only"> de </span>
         {pad(totalPages)}
       </p>
-      <button type="button" className="btn btn--ghost" onClick={() => onPageChange(page + 1)} disabled={page >= totalPages}>
+      <button
+        type="button"
+        className="btn btn--ghost"
+        onClick={() => onPageChange(page + 1)}
+        disabled={page >= totalPages}
+      >
         Próxima <PiCaretRight aria-hidden="true" />
       </button>
     </nav>

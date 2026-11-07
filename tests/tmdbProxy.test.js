@@ -2,11 +2,13 @@ import { describe, expect, it, vi } from "vitest";
 
 import { buildUpstreamRequest, handleTmdbProxy } from "../server/tmdbProxy.js";
 
-const request = (query, method = "GET") => new Request(`https://app.example/api/tmdb?${query}`, { method });
-const okResponse = (body = { results: [] }) => new Response(JSON.stringify(body), {
-  status: 200,
-  headers: { "Content-Type": "application/json;charset=utf-8" },
-});
+const request = (query, method = "GET") =>
+  new Request(`https://app.example/api/tmdb?${query}`, { method });
+const okResponse = (body = { results: [] }) =>
+  new Response(JSON.stringify(body), {
+    status: 200,
+    headers: { "Content-Type": "application/json;charset=utf-8" },
+  });
 
 describe("buildUpstreamRequest", () => {
   it("adds the server-side API key and forwards allowed parameters", () => {
@@ -16,7 +18,9 @@ describe("buildUpstreamRequest", () => {
       apiKey: "server-key",
     });
 
-    expect(url.href).toBe("https://api.themoviedb.org/3/movie/popular?language=pt-BR&region=BR&page=2&api_key=server-key");
+    expect(url.href).toBe(
+      "https://api.themoviedb.org/3/movie/popular?language=pt-BR&region=BR&page=2&api_key=server-key",
+    );
     expect(headers.Authorization).toBeUndefined();
   });
 
@@ -35,7 +39,9 @@ describe("buildUpstreamRequest", () => {
   it("drops unknown parameters, client-supplied keys and disallowed appends", () => {
     const { url } = buildUpstreamRequest({
       path: "movie/550",
-      searchParams: new URLSearchParams("api_key=attacker&foo=bar&append_to_response=credits,account_states,videos"),
+      searchParams: new URLSearchParams(
+        "api_key=attacker&foo=bar&append_to_response=credits,account_states,videos",
+      ),
       apiKey: "server-key",
     });
 
@@ -44,22 +50,23 @@ describe("buildUpstreamRequest", () => {
     expect(url.searchParams.get("append_to_response")).toBe("credits,videos");
   });
 
-  it.each([
-    "account/123",
-    "movie/550/../../account",
-    "authentication/token/new",
-    "movie/abc",
-    "",
-  ])("rejects endpoints outside the allowlist: %s", (path) => {
-    expect(() => buildUpstreamRequest({ path, searchParams: new URLSearchParams(), apiKey: "key" }))
-      .toThrow(/não permitido/);
-  });
+  it.each(["account/123", "movie/550/../../account", "authentication/token/new", "movie/abc", ""])(
+    "rejects endpoints outside the allowlist: %s",
+    (path) => {
+      expect(() =>
+        buildUpstreamRequest({ path, searchParams: new URLSearchParams(), apiKey: "key" }),
+      ).toThrow(/não permitido/);
+    },
+  );
 });
 
 describe("handleTmdbProxy", () => {
   it("returns TMDB data with CDN cache headers", async () => {
     const fetchImpl = vi.fn().mockResolvedValue(okResponse({ results: [{ id: 1 }] }));
-    const response = await handleTmdbProxy(request("path=movie/popular&language=pt-BR"), { apiKey: "key", fetchImpl });
+    const response = await handleTmdbProxy(request("path=movie/popular&language=pt-BR"), {
+      apiKey: "key",
+      fetchImpl,
+    });
 
     expect(response.status).toBe(200);
     expect(await response.json()).toEqual({ results: [{ id: 1 }] });
@@ -69,7 +76,10 @@ describe("handleTmdbProxy", () => {
 
   it("reports a missing server key without calling TMDB", async () => {
     const fetchImpl = vi.fn();
-    const response = await handleTmdbProxy(request("path=movie/popular"), { apiKey: "", fetchImpl });
+    const response = await handleTmdbProxy(request("path=movie/popular"), {
+      apiKey: "",
+      fetchImpl,
+    });
 
     expect(response.status).toBe(500);
     expect((await response.json()).code).toBe("missing_api_key");
@@ -77,18 +87,29 @@ describe("handleTmdbProxy", () => {
   });
 
   it("returns 404 for endpoints outside the allowlist", async () => {
-    const response = await handleTmdbProxy(request("path=account/1"), { apiKey: "key", fetchImpl: vi.fn() });
+    const response = await handleTmdbProxy(request("path=account/1"), {
+      apiKey: "key",
+      fetchImpl: vi.fn(),
+    });
     expect(response.status).toBe(404);
   });
 
   it("only accepts GET", async () => {
-    const response = await handleTmdbProxy(request("path=movie/popular", "POST"), { apiKey: "key", fetchImpl: vi.fn() });
+    const response = await handleTmdbProxy(request("path=movie/popular", "POST"), {
+      apiKey: "key",
+      fetchImpl: vi.fn(),
+    });
     expect(response.status).toBe(405);
   });
 
   it("passes TMDB errors through without caching them", async () => {
-    const fetchImpl = vi.fn().mockResolvedValue(new Response('{"status_code":34}', { status: 404 }));
-    const response = await handleTmdbProxy(request("path=movie/999999"), { apiKey: "key", fetchImpl });
+    const fetchImpl = vi
+      .fn()
+      .mockResolvedValue(new Response('{"status_code":34}', { status: 404 }));
+    const response = await handleTmdbProxy(request("path=movie/999999"), {
+      apiKey: "key",
+      fetchImpl,
+    });
 
     expect(response.status).toBe(404);
     expect(response.headers.get("Cache-Control")).toBe("no-store");
@@ -96,7 +117,10 @@ describe("handleTmdbProxy", () => {
 
   it("returns 502 when TMDB cannot be reached", async () => {
     const fetchImpl = vi.fn().mockRejectedValue(new TypeError("fetch failed"));
-    const response = await handleTmdbProxy(request("path=movie/popular"), { apiKey: "key", fetchImpl });
+    const response = await handleTmdbProxy(request("path=movie/popular"), {
+      apiKey: "key",
+      fetchImpl,
+    });
 
     expect(response.status).toBe(502);
     expect((await response.json()).code).toBe("upstream_unavailable");

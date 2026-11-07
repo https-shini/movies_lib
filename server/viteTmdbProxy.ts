@@ -23,7 +23,9 @@ export function tmdbDevProxy({ apiKey }: { apiKey: string | undefined }): Plugin
       return;
     }
 
-    const request = new Request(new URL(req.url, "http://localhost"), { method: req.method ?? "GET" });
+    const request = new Request(new URL(req.url, "http://localhost"), {
+      method: req.method ?? "GET",
+    });
 
     handleTmdbProxy(request, { apiKey })
       .then(async (response) => {

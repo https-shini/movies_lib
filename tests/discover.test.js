@@ -22,13 +22,18 @@ describe("buildDiscoverParams", () => {
   });
 
   it("maps the selected filters to TMDB query parameters", () => {
-    expect(buildDiscoverParams({
-      genre: "28",
-      sort: "revenue.desc",
-      year: "2024",
-      minRating: "7.5",
-      page: "3",
-    }, { today })).toEqual({
+    expect(
+      buildDiscoverParams(
+        {
+          genre: "28",
+          sort: "revenue.desc",
+          year: "2024",
+          minRating: "7.5",
+          page: "3",
+        },
+        { today },
+      ),
+    ).toEqual({
       language: "pt-BR",
       include_adult: false,
       sort_by: "revenue.desc",
@@ -60,12 +65,14 @@ describe("buildDiscoverParams", () => {
 
 describe("sanitizeDiscoverFilters", () => {
   it("discards unknown sort values, malformed genres and years", () => {
-    expect(sanitizeDiscoverFilters({
-      genre: "28;drop",
-      sort: "title.asc",
-      year: "20245",
-      minRating: "abc",
-    })).toEqual({ genre: "", sort: "popularity.desc", year: "", minRating: "" });
+    expect(
+      sanitizeDiscoverFilters({
+        genre: "28;drop",
+        sort: "title.asc",
+        year: "20245",
+        minRating: "abc",
+      }),
+    ).toEqual({ genre: "", sort: "popularity.desc", year: "", minRating: "" });
   });
 
   it("clamps ratings, accepts comma decimals and ignores zero", () => {
@@ -82,7 +89,9 @@ describe("sanitizeDiscoverFilters", () => {
 
 describe("URL helpers", () => {
   it("reads sanitized filters from URL search params", () => {
-    const params = new URLSearchParams("genre=18&sort=vote_average.desc&year=1994&minRating=8&page=2");
+    const params = new URLSearchParams(
+      "genre=18&sort=vote_average.desc&year=1994&minRating=8&page=2",
+    );
     expect(readDiscoverFilters(params)).toEqual({
       genre: "18",
       sort: "vote_average.desc",
@@ -92,8 +101,21 @@ describe("URL helpers", () => {
   });
 
   it("omits default and empty values when writing filters to the URL", () => {
-    expect(toDiscoverSearchParams({ genre: "", sort: "popularity.desc", year: "", minRating: "" }).toString()).toBe("");
-    expect(toDiscoverSearchParams({ genre: "35", sort: "revenue.desc", year: "2020", minRating: "" }).toString())
-      .toBe("genre=35&sort=revenue.desc&year=2020");
+    expect(
+      toDiscoverSearchParams({
+        genre: "",
+        sort: "popularity.desc",
+        year: "",
+        minRating: "",
+      }).toString(),
+    ).toBe("");
+    expect(
+      toDiscoverSearchParams({
+        genre: "35",
+        sort: "revenue.desc",
+        year: "2020",
+        minRating: "",
+      }).toString(),
+    ).toBe("genre=35&sort=revenue.desc&year=2020");
   });
 });

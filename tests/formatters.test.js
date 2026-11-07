@@ -73,8 +73,9 @@ describe("getYouTubeTrailer", () => {
   });
 
   it("falls back to a non-official YouTube trailer and safely encodes the key", () => {
-    expect(getYouTubeTrailer([{ site: "YouTube", type: "Trailer", key: "trailer key" }]))
-      .toBe("https://www.youtube.com/watch?v=trailer%20key");
+    expect(getYouTubeTrailer([{ site: "YouTube", type: "Trailer", key: "trailer key" }])).toBe(
+      "https://www.youtube.com/watch?v=trailer%20key",
+    );
   });
 
   it("prefers an official Portuguese trailer over an official English one", () => {
@@ -99,9 +100,13 @@ describe("getYouTubeTrailer", () => {
 
 describe("trailer embed helpers", () => {
   it("returns the preferred trailer key and a privacy-enhanced embed URL", () => {
-    const key = getYouTubeTrailerKey([{ site: "YouTube", type: "Trailer", key: "abc 1", official: true }]);
+    const key = getYouTubeTrailerKey([
+      { site: "YouTube", type: "Trailer", key: "abc 1", official: true },
+    ]);
     expect(key).toBe("abc 1");
-    expect(getYouTubeEmbedUrl(key)).toBe("https://www.youtube-nocookie.com/embed/abc%201?autoplay=1&rel=0&modestbranding=1");
+    expect(getYouTubeEmbedUrl(key)).toBe(
+      "https://www.youtube-nocookie.com/embed/abc%201?autoplay=1&rel=0&modestbranding=1",
+    );
   });
 
   it("returns null without a key", () => {
@@ -111,7 +116,12 @@ describe("trailer embed helpers", () => {
 });
 
 describe("getReleaseYear", () => {
-  it.each([["1999-10-15", "1999"], ["", null], [undefined, null], ["abc", null]])("reads %s as %s", (value, expected) => {
+  it.each([
+    ["1999-10-15", "1999"],
+    ["", null],
+    [undefined, null],
+    ["abc", null],
+  ])("reads %s as %s", (value, expected) => {
     expect(getReleaseYear(value)).toBe(expected);
   });
 });

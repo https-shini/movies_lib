@@ -75,7 +75,10 @@ export function getReleaseYear(value) {
   return typeof value === "string" && /^\d{4}/.test(value) ? value.slice(0, 4) : null;
 }
 
-const COMPACT_FORMATTER = new Intl.NumberFormat("pt-BR", { notation: "compact", maximumFractionDigits: 1 });
+const COMPACT_FORMATTER = new Intl.NumberFormat("pt-BR", {
+  notation: "compact",
+  maximumFractionDigits: 1,
+});
 
 export function formatCompactNumber(value) {
   if (!Number.isFinite(value) || value < 0) return "0";

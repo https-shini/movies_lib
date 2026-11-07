@@ -16,7 +16,6 @@ import Discover from "./pages/Discover";
 import NotFound from "./pages/NotFound";
 import RouteError from "./pages/RouteError";
 
-
 const router = createBrowserRouter([
   {
     element: <App />,
@@ -43,5 +42,5 @@ if (!rootElement) throw new Error("Elemento #root não encontrado em index.html.
 ReactDOM.createRoot(rootElement).render(
   <StrictMode>
     <RouterProvider router={router} />
-  </StrictMode>
+  </StrictMode>,
 );
