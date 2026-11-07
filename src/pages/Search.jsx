@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { useSearchParams } from "react-router";
-import { fetchTmdb, TMDB_ENDPOINTS } from "../services/tmdb";
+import { fetchTmdb } from "../services/tmdb";
 import { buildSearchParams } from "../services/search";
 import { getTotalPages, normalizePage } from "../services/pagination";
 import { useAsyncData } from "../hooks/useAsyncData";
@@ -19,7 +19,7 @@ const Search = () => {
 
   const loadResults = useCallback(
     (signal) => query
-      ? fetchTmdb(TMDB_ENDPOINTS.search, { params: buildSearchParams({ query, page }), signal })
+      ? fetchTmdb("search/movie", { params: buildSearchParams({ query, page }), signal })
       : Promise.resolve({ results: [] }),
     [query, page],
   );

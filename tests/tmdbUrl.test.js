@@ -1,51 +1,27 @@
 import { describe, expect, it } from "vitest";
 
-import { buildTmdbUrl } from "../src/services/tmdbUrl.js";
+import { buildTmdbProxyUrl } from "../src/services/tmdbUrl.js";
 
-const baseConfig = {
-  baseUrl: "https://api.themoviedb.org/3/movie/",
-  endpoint: "top_rated",
-  apiKey: "sample-key",
-};
+describe("buildTmdbProxyUrl", () => {
+  it("targets the internal proxy and never includes an API key", () => {
+    const url = buildTmdbProxyUrl("movie/popular", { language: "pt-BR" });
 
-describe("buildTmdbUrl", () => {
-  it("resolves a relative endpoint against the configured base URL", () => {
-    const url = buildTmdbUrl(baseConfig);
-
-    expect(url.origin).toBe("https://api.themoviedb.org");
-    expect(url.pathname).toBe("/3/movie/top_rated");
-    expect(url.searchParams.get("api_key")).toBe("sample-key");
+    expect(url).toBe("/api/tmdb?path=movie%2Fpopular&language=pt-BR");
+    expect(url).not.toContain("api_key");
   });
 
-  it("accepts an absolute endpoint for search requests", () => {
-    const url = buildTmdbUrl({
-      ...baseConfig,
-      endpoint: "https://api.themoviedb.org/3/search/movie",
-    });
-
-    expect(url.pathname).toBe("/3/search/movie");
-  });
-
-  it("accepts a parameterized API key configuration", () => {
-    const url = buildTmdbUrl({ ...baseConfig, apiKey: "api_key=another-key" });
-
-    expect(url.searchParams.get("api_key")).toBe("another-key");
-  });
-
-  it("does not overwrite an API key already present in the endpoint", () => {
-    const url = buildTmdbUrl({
-      ...baseConfig,
-      endpoint: "https://api.themoviedb.org/3/movie/top_rated?api_key=endpoint-key",
-    });
-
-    expect(url.searchParams.get("api_key")).toBe("endpoint-key");
+  it("normalizes leading and trailing slashes in the endpoint", () => {
+    expect(buildTmdbProxyUrl("/movie/550/")).toBe("/api/tmdb?path=movie%2F550");
   });
 
   it("encodes query parameters and ignores empty values", () => {
-    const url = buildTmdbUrl({
-      ...baseConfig,
-      params: { query: "ação & aventura", page: 2, language: "", absent: undefined, empty: null },
-    });
+    const url = new URL(buildTmdbProxyUrl("search/movie", {
+      query: "ação & aventura",
+      page: 2,
+      language: "",
+      absent: undefined,
+      empty: null,
+    }), "http://localhost");
 
     expect(url.searchParams.get("query")).toBe("ação & aventura");
     expect(url.searchParams.get("page")).toBe("2");
@@ -54,8 +30,7 @@ describe("buildTmdbUrl", () => {
     expect(url.searchParams.has("empty")).toBe(false);
   });
 
-  it("rejects missing configuration", () => {
-    expect(() => buildTmdbUrl({ ...baseConfig, apiKey: "" })).toThrow(/VITE_API_KEY/);
-    expect(() => buildTmdbUrl({ ...baseConfig, baseUrl: "" })).toThrow(/VITE_API/);
+  it("rejects a missing endpoint", () => {
+    expect(() => buildTmdbProxyUrl("")).toThrow(/endpoint/);
   });
 });

@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import { useSearchParams } from "react-router";
-import { fetchTmdb, TMDB_ENDPOINTS } from "../services/tmdb";
+import { fetchTmdb } from "../services/tmdb";
 import {
   buildDiscoverParams,
   DEFAULT_DISCOVER_FILTERS,
@@ -107,14 +107,14 @@ const Discover = () => {
   useDocumentTitle("Descobrir filmes");
 
   const loadGenres = useCallback(
-    (signal) => fetchTmdb(TMDB_ENDPOINTS.genres, { params: { language: "pt-BR" }, signal }),
+    (signal) => fetchTmdb("genre/movie/list", { params: { language: "pt-BR" }, signal }),
     [],
   );
   const { data: genreData, error: genreError } = useAsyncData(loadGenres);
   const genres = useMemo(() => genreData?.genres ?? [], [genreData]);
 
   const loadMovies = useCallback(
-    (signal) => fetchTmdb(TMDB_ENDPOINTS.discover, {
+    (signal) => fetchTmdb("discover/movie", {
       params: buildDiscoverParams({ genre, sort, year, minRating, page }),
       signal,
     }),

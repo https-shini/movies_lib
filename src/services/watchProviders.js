@@ -11,7 +11,7 @@ const PROVIDER_GROUPS = [
 export async function fetchMovieWatchProviders(movieId, { signal } = {}) {
   if (!movieId) throw new Error("O identificador do filme é obrigatório.");
 
-  return fetchTmdb(`${movieId}/watch/providers`, { signal });
+  return fetchTmdb(`movie/${movieId}/watch/providers`, { signal });
 }
 
 export function getWatchProvidersForRegion(payload, region = "BR") {

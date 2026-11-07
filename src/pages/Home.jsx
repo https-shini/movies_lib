@@ -11,15 +11,15 @@ const Home = () => {
   useDocumentTitle("");
 
   const loadPopular = useCallback(
-    (signal) => fetchTmdb("popular", { params: { language: "pt-BR", region: "BR" }, signal }),
+    (signal) => fetchTmdb("movie/popular", { params: { language: "pt-BR", region: "BR" }, signal }),
     [],
   );
   const loadTopRated = useCallback(
-    (signal) => fetchTmdb("top_rated", { params: { language: "pt-BR" }, signal }),
+    (signal) => fetchTmdb("movie/top_rated", { params: { language: "pt-BR" }, signal }),
     [],
   );
   const loadNowPlaying = useCallback(
-    (signal) => fetchTmdb("now_playing", { params: { language: "pt-BR", region: "BR" }, signal }),
+    (signal) => fetchTmdb("movie/now_playing", { params: { language: "pt-BR", region: "BR" }, signal }),
     [],
   );
 

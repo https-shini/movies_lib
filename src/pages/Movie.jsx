@@ -20,7 +20,7 @@ import "./Movie.css";
 
 const MovieDetails = ({ id }) => {
   const loadMovie = useCallback(
-    (signal) => fetchTmdb(id, {
+    (signal) => fetchTmdb(`movie/${id}`, {
       params: {
         language: "pt-BR",
         // Sem este parâmetro o TMDB só retorna vídeos em pt-BR, e muitos filmes ficam sem trailer.

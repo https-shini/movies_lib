@@ -1,32 +1,17 @@
+export const TMDB_PROXY_PATH = "/api/tmdb";
+
 /**
- * Monta URLs do TMDB sem acoplar a lógica às variáveis de ambiente do Vite.
+ * Monta a URL do proxy interno (/api/tmdb). A chave do TMDB é adicionada no
+ * servidor; o navegador informa apenas o endpoint e os parâmetros.
  */
-export function buildTmdbUrl({ baseUrl, endpoint, apiKey, params = {} }) {
-  if (!baseUrl || !endpoint) {
-    throw new Error("Configure VITE_API e os endpoints do TMDB no arquivo .env.");
+export function buildTmdbProxyUrl(path, params = {}, origin = "http://localhost") {
+  const normalizedPath = String(path ?? "").replace(/^\/+|\/+$/g, "");
+  if (!normalizedPath) {
+    throw new Error("Informe o endpoint do TMDB.");
   }
 
-  if (!apiKey) {
-    throw new Error("A chave do TMDB não foi configurada. Defina VITE_API_KEY no arquivo .env.");
-  }
-
-  let url;
-  try {
-    url = new URL(endpoint, baseUrl);
-  } catch {
-    throw new Error("A URL do TMDB é inválida. Verifique VITE_API e VITE_SEARCH.");
-  }
-
-  const normalizedKey = String(apiKey).replace(/^[?&]/, "");
-  const keyParams = new URLSearchParams(normalizedKey);
-
-  if (normalizedKey.includes("=")) {
-    for (const [key, value] of keyParams.entries()) {
-      if (!url.searchParams.has(key)) url.searchParams.set(key, value);
-    }
-  } else if (!url.searchParams.has("api_key")) {
-    url.searchParams.set("api_key", normalizedKey);
-  }
+  const url = new URL(TMDB_PROXY_PATH, origin);
+  url.searchParams.set("path", normalizedPath);
 
   for (const [key, value] of Object.entries(params)) {
     if (value !== undefined && value !== null && value !== "") {
@@ -34,5 +19,5 @@ export function buildTmdbUrl({ baseUrl, endpoint, apiKey, params = {} }) {
     }
   }
 
-  return url;
+  return `${url.pathname}${url.search}`;
 }

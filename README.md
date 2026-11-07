@@ -59,7 +59,7 @@ O MoviesLib começou como um projeto de exploração de filmes com React e TMDB.
    Copy-Item .env.example .env
    ```
 
-4. Edite o arquivo `.env` e informe sua chave da API v3 do TMDB em `VITE_API_KEY`. É a única variável obrigatória: os endereços da API e das imagens usam os valores públicos do TMDB quando não são definidos.
+4. Edite o arquivo `.env` e informe sua chave do TMDB em `TMDB_API_KEY` (chave da API v3 ou token de leitura v4). Ela é usada apenas pelo servidor local do Vite, que atende `/api/tmdb` em `npm run dev` e `npm run preview`.
 5. Inicie o servidor local:
 
    ```bash
@@ -109,11 +109,23 @@ O GitHub Actions executa instalação limpa, auditoria de dependências, ESLint,
 
 ## Implantação
 
-O arquivo `vercel.json` redireciona todas as rotas para `index.html`, permitindo abrir diretamente endereços como `/movie/550` ou `/discover?genre=18` na Vercel. Configure `VITE_API_KEY` nas variáveis de ambiente do projeto antes do build.
+Na Vercel, a pasta `api/` é publicada como função serverless (`/api/tmdb`) e o restante como site estático.
+
+1. Em **Settings → Environment Variables**, cadastre `TMDB_API_KEY` com o tipo **Secret**, nos ambientes **Production** e **Preview**.
+2. Faça um novo deploy para que a função passe a usar a chave.
+
+O arquivo `vercel.json` redireciona as demais rotas para `index.html`, permitindo abrir diretamente endereços como `/movie/550` ou `/discover?genre=18`. As respostas do proxy são armazenadas em cache na CDN da Vercel (`s-maxage`), reduzindo chamadas ao TMDB.
 
 ## Estrutura atual
 
 ```text
+api/
+└── tmdb.js                 # função serverless da Vercel (/api/tmdb)
+
+server/
+├── tmdbProxy.js            # validação, chave e cache do proxy do TMDB
+└── viteTmdbProxy.js        # /api/tmdb no servidor local do Vite
+
 src/
 ├── components/
 │   ├── AsyncState.jsx
@@ -153,6 +165,7 @@ tests/
 ├── movieDetails.test.js
 ├── pagination.test.js
 ├── tmdb.test.js
+├── tmdbProxy.test.js
 ├── tmdbUrl.test.js
 └── watchProviders.test.js
 ```
@@ -172,7 +185,14 @@ As imagens abaixo registram a versão anterior do MoviesLib e serão atualizadas
 
 ## Segurança
 
-Variáveis com prefixo `VITE_` são incorporadas ao código enviado ao navegador. Portanto, `VITE_API_KEY` não é uma credencial secreta. Para proteger a integração em uma implantação pública, a próxima evolução arquitetural deverá introduzir uma API backend ou função serverless que intermedeie as requisições ao TMDB e mantenha credenciais no servidor.
+O navegador nunca recebe a chave do TMDB. Todas as consultas passam pelo proxy `/api/tmdb` (`server/tmdbProxy.js`), que:
+
+- lê `TMDB_API_KEY` apenas no servidor;
+- aceita somente `GET` e os endpoints usados pela aplicação (lista de permissões);
+- descarta parâmetros desconhecidos, inclusive tentativas de enviar outra `api_key`;
+- define cache na CDN para respostas bem-sucedidas.
+
+Não use o prefixo `VITE_` para segredos: variáveis com esse prefixo são incorporadas ao código enviado ao navegador.
 
 Não envie seu arquivo `.env` ao Git.
 
@@ -187,7 +207,7 @@ Não envie seu arquivo `.env` ao Git.
 - Ampliar a análise estática e a cobertura de testes.
 - Implementar descoberta avançada, filtros, gêneros e paginação.
 - Integrar disponibilidade regional de streaming, aluguel e compra.
-- Evoluir para backend, persistência e autenticação.
+- Evoluir o backend para persistência e autenticação.
 - Adicionar perfis, avaliações, comentários, listas e recursos sociais.
 
 ## Créditos
