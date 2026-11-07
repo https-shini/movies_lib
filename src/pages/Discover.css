@@ -9,16 +9,12 @@
 .filter-field input, .filter-field select { width: 100%; min-width: 0; min-height: 44px; padding: .65rem .75rem; border: 1px solid var(--color-border); border-radius: 8px; color: var(--color-text); background: #0b0f17; }
 .filter-field input::placeholder { color: #687487; }
 .filter-actions { display: flex; grid-column: 1 / -1; gap: .75rem; }
-.filter-actions button, .pagination button { min-height: 42px; padding: .65rem 1rem; border: 1px solid var(--color-border); border-radius: 8px; font-weight: 700; }
+.filter-actions button { min-height: 42px; padding: .65rem 1rem; border: 1px solid var(--color-border); border-radius: 8px; font-weight: 700; }
 .filter-submit { border-color: var(--color-accent) !important; color: #111; background: var(--color-accent); }
 .filter-clear { color: var(--color-text); background: transparent; }
 .filter-hint { margin: .8rem 0 0; color: var(--color-muted); font-size: .85rem; }
 .discover-results-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin: 2.5rem 0 1.25rem; }
 .discover-results-heading h2 { margin: 0; font-family: "Space Grotesk", sans-serif; font-size: 1.3rem; }
 .discover-results-heading span { color: var(--color-muted); font-size: .85rem; }
-.pagination { display: flex; align-items: center; justify-content: center; gap: 1rem; margin: 2rem 0 1rem; }
-.pagination button { color: var(--color-text); background: var(--color-surface); }
-.pagination button:disabled { cursor: not-allowed; opacity: .4; }
-.pagination span { color: var(--color-muted); font-size: .9rem; font-variant-numeric: tabular-nums; }
 @media (max-width: 760px) { .discover-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 480px) { .discover-page { padding-top: 2rem; } .discover-filters { grid-template-columns: 1fr; padding: 1rem; } .filter-actions { grid-column: auto; } .discover-results-heading { align-items: flex-start; flex-direction: column; gap: .35rem; } .pagination { gap: .5rem; } .pagination button { padding-inline: .7rem; } }
+@media (max-width: 480px) { .discover-page { padding-top: 2rem; } .discover-filters { grid-template-columns: 1fr; padding: 1rem; } .filter-actions { grid-column: auto; } .discover-results-heading { align-items: flex-start; flex-direction: column; gap: .35rem; } }
