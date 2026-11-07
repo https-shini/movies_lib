@@ -48,13 +48,18 @@ React + React Router 7 (data router)
 api/              tmdb.js: função serverless da Vercel (/api/tmdb)
 server/           tmdbProxy (validação, chave, cache) e viteTmdbProxy (servidor local)
 src/
-├── components/   AsyncState, MovieCard, MovieSection, Navbar, Pagination, WatchProviders
-├── hooks/        useAsyncData, useDocumentTitle
+├── config/       brand: nome e textos do produto
+├── styles/       tokens, base, ui (primitivos) e layout
+├── components/
+│   ├── layout/   cabeçalho, barra inferior do celular, rodapé, marca
+│   ├── ui/       diálogo, faixa horizontal, paginação, nota, estados, telas de status
+│   └── movie/    pôster, grade, faixa, ranking, destaque, trailer, provedores
+├── hooks/        useAsyncData (com nova tentativa), useDocumentTitle
 ├── pages/        Home, Discover, Search, Movie, NotFound, RouteError
 ├── services/     tmdb, tmdbUrl, tmdbErrors, discover, search, pagination, movieDetails, watchProviders
 ├── utils/        formatters
-├── App.jsx       layout com navegação, rodapé e ScrollRestoration
-└── main.jsx      definição das rotas (createBrowserRouter)
+├── App.jsx       layout com cabeçalho, conteúdo, rodapé, barra inferior e ScrollRestoration
+└── main.jsx      estilos globais e definição das rotas (createBrowserRouter)
 
 tests/            testes unitários de serviços, formatadores e regras isoladas
 ```
@@ -118,9 +123,9 @@ O componente `WatchProviders` consulta a disponibilidade do filme para o Brasil 
 
 ## 6. Estados assíncronos
 
-O hook `useAsyncData` padroniza carregamento, resultado, erro e cancelamento da requisição anterior quando as dependências mudam.
+O hook `useAsyncData` padroniza carregamento, resultado, erro, cancelamento da requisição anterior e nova tentativa (`reload`).
 
-O componente `AsyncState` apresenta estados de carregamento, erro e ausência de resultados.
+Os componentes de lista exibem esqueletos no formato final do conteúdo durante o carregamento. `StateMessage` apresenta estados vazios e de erro, com a ação "Tentar novamente" ligada ao `reload`.
 
 O hook `useDocumentTitle` atualiza o título da aba conforme a página e o filme exibido.
 

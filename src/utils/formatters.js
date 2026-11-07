@@ -44,8 +44,9 @@ export function formatReleaseDate(value) {
 /**
  * Escolhe o trailer do YouTube mais adequado: oficial e em português primeiro,
  * depois oficial em qualquer idioma, depois qualquer trailer disponível.
+ * @returns {string | null} A chave do vídeo no YouTube.
  */
-export function getYouTubeTrailer(videos = []) {
+export function getYouTubeTrailerKey(videos = []) {
   const youtubeTrailers = (Array.isArray(videos) ? videos : []).filter(
     (video) => video?.site === "YouTube" && video.type === "Trailer" && video.key,
   );
@@ -56,5 +57,43 @@ export function getYouTubeTrailer(videos = []) {
     .sort((a, b) => score(b.video) - score(a.video) || a.index - b.index)
     .map(({ video }) => video);
 
-  return trailer ? `https://www.youtube.com/watch?v=${encodeURIComponent(trailer.key)}` : null;
+  return trailer ? String(trailer.key) : null;
+}
+
+export function getYouTubeTrailer(videos = []) {
+  const key = getYouTubeTrailerKey(videos);
+  return key ? `https://www.youtube.com/watch?v=${encodeURIComponent(key)}` : null;
+}
+
+/** URL de incorporação sem cookies de rastreamento até a reprodução. */
+export function getYouTubeEmbedUrl(key) {
+  if (!key) return null;
+  return `https://www.youtube-nocookie.com/embed/${encodeURIComponent(key)}?autoplay=1&rel=0&modestbranding=1`;
+}
+
+export function getReleaseYear(value) {
+  return typeof value === "string" && /^\d{4}/.test(value) ? value.slice(0, 4) : null;
+}
+
+const COMPACT_FORMATTER = new Intl.NumberFormat("pt-BR", { notation: "compact", maximumFractionDigits: 1 });
+
+export function formatCompactNumber(value) {
+  if (!Number.isFinite(value) || value < 0) return "0";
+  return COMPACT_FORMATTER.format(value);
+}
+
+let languageNames = null;
+
+/** Converte códigos ISO 639-1 (ex.: "en") no nome do idioma em português. */
+export function formatLanguage(code) {
+  if (typeof code !== "string" || !/^[a-z]{2,3}$/i.test(code)) return "Não informado";
+
+  try {
+    languageNames ??= new Intl.DisplayNames(["pt-BR"], { type: "language" });
+    const name = languageNames.of(code.toLowerCase());
+    if (!name || name.toLowerCase() === code.toLowerCase()) return code.toUpperCase();
+    return name.charAt(0).toUpperCase() + name.slice(1);
+  } catch {
+    return code.toUpperCase();
+  }
 }

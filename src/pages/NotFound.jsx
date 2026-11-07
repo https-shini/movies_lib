@@ -1,16 +1,15 @@
-import { Link } from "react-router";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
+import StatusScreen from "../components/ui/StatusScreen";
 
 const NotFound = () => {
   useDocumentTitle("Página não encontrada");
 
   return (
-    <main className="not-found">
-      <p className="not-found__code">404</p>
-      <h1>Esta página não foi encontrada</h1>
-      <p>O endereço pode estar incorreto ou o conteúdo não está disponível.</p>
-      <Link to="/">Voltar para o início</Link>
-    </main>
+    <StatusScreen
+      code="404"
+      title="Esta cena foi cortada"
+      message="O endereço pode estar incorreto ou o conteúdo não está mais disponível."
+    />
   );
 };
 

@@ -1,7 +1,8 @@
+import { BRAND } from "../config/brand.js";
 import { useEffect } from "react";
 
-export const APP_NAME = "MoviesLib";
-const DEFAULT_TITLE = `${APP_NAME} | Descubra seu próximo filme`;
+export const APP_NAME = BRAND.name;
+const DEFAULT_TITLE = `${APP_NAME} | ${BRAND.tagline}`;
 
 export function formatDocumentTitle(title) {
   const normalized = typeof title === "string" ? title.trim() : "";

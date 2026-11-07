@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { formatDocumentTitle } from "../src/hooks/useDocumentTitle.js";
-import { pickRelatedMovies } from "../src/services/movieDetails.js";
+import { pickCrewNames, pickDirectors, pickRelatedMovies, pickWriters } from "../src/services/movieDetails.js";
 
 const movies = (...ids) => ids.map((id) => ({ id, title: `Filme ${id}` }));
 
@@ -37,7 +37,35 @@ describe("formatDocumentTitle", () => {
   });
 
   it("uses the default title when empty", () => {
-    expect(formatDocumentTitle("  ")).toBe("MoviesLib | Descubra seu próximo filme");
-    expect(formatDocumentTitle(undefined)).toBe("MoviesLib | Descubra seu próximo filme");
+    expect(formatDocumentTitle("  ")).toBe("MoviesLib | Seu diário de cinema");
+    expect(formatDocumentTitle(undefined)).toBe("MoviesLib | Seu diário de cinema");
+  });
+});
+
+describe("crew helpers", () => {
+  const credits = {
+    crew: [
+      { job: "Producer", name: "Produtora" },
+      { job: "Director", name: "Diretora Um" },
+      { job: "Screenplay", name: "Roteirista" },
+      { job: "Novel", name: "Autor" },
+      { job: "Director", name: "Diretora Um" },
+      { job: "Writer", name: "Roteirista" },
+      { job: "Director", name: "Diretor Dois" },
+      { job: "Director", name: "Diretor Três" },
+    ],
+  };
+
+  it("lists unique directors, capped at two", () => {
+    expect(pickDirectors(credits)).toEqual(["Diretora Um", "Diretor Dois"]);
+  });
+
+  it("lists unique writers from screenplay, story and source material jobs", () => {
+    expect(pickWriters(credits)).toEqual(["Roteirista", "Autor"]);
+  });
+
+  it("handles missing credits", () => {
+    expect(pickDirectors(undefined)).toEqual([]);
+    expect(pickCrewNames({ crew: null }, ["Director"])).toEqual([]);
   });
 });

@@ -1,6 +1,17 @@
 import { describe, expect, it } from "vitest";
 
-import { formatCurrency, formatRating, formatReleaseDate, formatRuntime, getYouTubeTrailer } from "../src/utils/formatters.js";
+import {
+  formatCompactNumber,
+  formatCurrency,
+  formatLanguage,
+  formatRating,
+  formatReleaseDate,
+  formatRuntime,
+  getReleaseYear,
+  getYouTubeEmbedUrl,
+  getYouTubeTrailer,
+  getYouTubeTrailerKey,
+} from "../src/utils/formatters.js";
 
 describe("formatCurrency", () => {
   it("formats positive amounts as USD using pt-BR locale", () => {
@@ -83,5 +94,44 @@ describe("getYouTubeTrailer", () => {
 
   it("returns null when no YouTube trailer exists", () => {
     expect(getYouTubeTrailer([{ site: "YouTube", type: "Teaser", key: "teaser" }])).toBeNull();
+  });
+});
+
+describe("trailer embed helpers", () => {
+  it("returns the preferred trailer key and a privacy-enhanced embed URL", () => {
+    const key = getYouTubeTrailerKey([{ site: "YouTube", type: "Trailer", key: "abc 1", official: true }]);
+    expect(key).toBe("abc 1");
+    expect(getYouTubeEmbedUrl(key)).toBe("https://www.youtube-nocookie.com/embed/abc%201?autoplay=1&rel=0&modestbranding=1");
+  });
+
+  it("returns null without a key", () => {
+    expect(getYouTubeTrailerKey([])).toBeNull();
+    expect(getYouTubeEmbedUrl(null)).toBeNull();
+  });
+});
+
+describe("getReleaseYear", () => {
+  it.each([["1999-10-15", "1999"], ["", null], [undefined, null], ["abc", null]])("reads %s as %s", (value, expected) => {
+    expect(getReleaseYear(value)).toBe(expected);
+  });
+});
+
+describe("formatCompactNumber", () => {
+  it("formats large counts compactly in Portuguese", () => {
+    expect(formatCompactNumber(33263).replace(/\s/g, " ")).toBe("33,3 mil");
+    expect(formatCompactNumber(950)).toBe("950");
+    expect(formatCompactNumber(Number.NaN)).toBe("0");
+  });
+});
+
+describe("formatLanguage", () => {
+  it("translates ISO codes into Portuguese language names", () => {
+    expect(formatLanguage("en")).toBe("Inglês");
+    expect(formatLanguage("pt")).toBe("Português");
+  });
+
+  it("handles invalid codes", () => {
+    expect(formatLanguage("")).toBe("Não informado");
+    expect(formatLanguage(null)).toBe("Não informado");
   });
 });

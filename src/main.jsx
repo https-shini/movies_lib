@@ -1,3 +1,8 @@
+// Estilos globais primeiro, para que os estilos dos componentes tenham precedência.
+import "./styles/base.css";
+import "./styles/ui.css";
+import "./styles/layout.css";
+
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter } from "react-router";
@@ -11,7 +16,6 @@ import Discover from "./pages/Discover";
 import NotFound from "./pages/NotFound";
 import RouteError from "./pages/RouteError";
 
-import "./index.css";
 
 const router = createBrowserRouter([
   {

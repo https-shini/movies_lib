@@ -10,13 +10,13 @@ O MoviesLib começou como um projeto de exploração de filmes com React e TMDB.
 
 ## Funcionalidades atuais
 
-- Página inicial com seções de filmes em alta, mais bem avaliados e em cartaz.
+- Página inicial com destaque do filme mais popular, faixa "Em alta", ranking dos 10 mais bem avaliados, filmes em cartaz e índice de gêneros.
 - Pesquisa de filmes por título, com resultados em português e paginação.
-- Descoberta de filmes com filtros por gênero, ano, nota mínima e ordenação. Os filtros só são aplicados ao enviar o formulário e ficam registrados na URL.
+- Descoberta de filmes com gêneros e ordenação aplicados com um toque, além de ano e nota mínima em um painel de filtros aplicado ao confirmar. Os filtros ativos aparecem como chips removíveis e ficam registrados na URL.
 - Paginação dos resultados do catálogo e da busca.
-- Página de detalhes com título original, sinopse, orçamento, bilheteria, duração, elenco, trailer (priorizando versões oficiais em português) e recomendações, com filmes semelhantes como alternativa.
+- Página de detalhes com título original, gêneros clicáveis, nota, sinopse, ficha técnica (direção, roteiro, lançamento, duração, idioma, orçamento e bilheteria), trailer reproduzido na própria página (priorizando versões oficiais em português), elenco e recomendações.
 - Disponibilidade de streaming, aluguel e compra no Brasil, agrupada por modalidade.
-- Estados de carregamento, erro e resultados vazios, com mensagens de erro em português.
+- Esqueletos de carregamento no formato de cada conteúdo, estados vazios com sugestões e erros em português com botão "Tentar novamente".
 - Navegação com React Router (modo data router), restauração de rolagem, título da aba por página, página 404 e tela de erro para falhas inesperadas.
 - Acessibilidade: link para pular ao conteúdo, foco visível, rótulos descritivos e suporte a `prefers-reduced-motion`.
 - Interface responsiva para desktop e dispositivos móveis.
@@ -120,55 +120,36 @@ O arquivo `vercel.json` redireciona as demais rotas para `index.html`, permitind
 
 ```text
 api/
-└── tmdb.js                 # função serverless da Vercel (/api/tmdb)
+└── tmdb.js                    # função serverless da Vercel (/api/tmdb)
 
 server/
-├── tmdbProxy.js            # validação, chave e cache do proxy do TMDB
-└── viteTmdbProxy.js        # /api/tmdb no servidor local do Vite
+├── tmdbProxy.js               # validação, chave e cache do proxy do TMDB
+└── viteTmdbProxy.js           # /api/tmdb no servidor local do Vite
 
 src/
+├── config/brand.js            # nome, slogan e descrição do produto
+├── styles/
+│   ├── tokens.css             # cores, tipografia, espaçamento, movimento
+│   ├── base.css               # reset e estilos globais
+│   ├── ui.css                 # botões, chips, campos, seções, esqueletos
+│   └── layout.css             # estrutura do app e cabeçalhos de página
 ├── components/
-│   ├── AsyncState.jsx
-│   ├── MovieCard.jsx
-│   ├── MovieSection.jsx
-│   ├── Navbar.jsx
-│   ├── Pagination.jsx
-│   └── WatchProviders.jsx
-├── hooks/
-│   ├── useAsyncData.js
-│   └── useDocumentTitle.js
-├── pages/
-│   ├── Discover.jsx
-│   ├── Home.jsx
-│   ├── Movie.jsx
-│   ├── NotFound.jsx
-│   ├── RouteError.jsx
-│   └── Search.jsx
-├── services/
-│   ├── discover.js
-│   ├── movieDetails.js
-│   ├── pagination.js
-│   ├── search.js
-│   ├── tmdb.js
-│   ├── tmdbErrors.js
-│   ├── tmdbUrl.js
-│   └── watchProviders.js
-├── utils/
-│   └── formatters.js
+│   ├── layout/                # AppHeader, MobileTabBar, SiteFooter, BrandMark
+│   ├── ui/                    # Dialog, Rail, Pagination, Rating, SectionHeader,
+│   │                          # StateMessage, StatusScreen
+│   └── movie/                 # PosterCard, PosterGrid, MovieRail, RankedList,
+│                              # FeaturedHero, TrailerDialog, WatchProviders
+├── hooks/                     # useAsyncData, useDocumentTitle
+├── pages/                     # Home, Discover, Search, Movie, NotFound, RouteError
+├── services/                  # TMDB, filtros, busca, paginação, detalhes, provedores
+├── utils/formatters.js
 ├── App.jsx
-├── index.css
 └── main.jsx
 
-tests/
-├── discover.test.js
-├── formatters.test.js
-├── movieDetails.test.js
-├── pagination.test.js
-├── tmdb.test.js
-├── tmdbProxy.test.js
-├── tmdbUrl.test.js
-└── watchProviders.test.js
+tests/                         # testes unitários (Vitest)
 ```
+
+Cada componente e página importa o próprio arquivo `.css`, ao lado do `.jsx`.
 
 Os arquivos `.css` ficam ao lado do componente ou da página que estilizam.
 
@@ -182,6 +163,24 @@ As imagens abaixo registram a versão anterior do MoviesLib e serão atualizadas
   <img src="./docs/screenshots/003.png" width="400" alt="Tela de detalhes da versão original do MoviesLib" />
   <img src="./docs/screenshots/004.png" width="400" alt="Outra tela da versão original do MoviesLib" />
 </div>
+
+## Identidade visual
+
+A interface segue a direção **Sala Escura**, inspirada nos programas impressos de cinematecas:
+
+- **Cores:** fundo em tinta quente (`--ink-*`), texto em marfim (`--paper-*`) e um único acento vermelho (`--accent`), a luz da cabine de projeção. As combinações de texto atendem ao contraste WCAG AA.
+- **Tipografia:** Fraunces (títulos e numerais), Instrument Sans (interface) e IBM Plex Mono (dados técnicos: ano, duração, notas, contadores).
+- **Forma:** pôsteres com cantos quase retos, linhas finas no lugar de caixas pesadas e seções numeradas (01, 02…).
+- **Movimento:** transições curtas e funcionais; tudo respeita `prefers-reduced-motion`.
+
+Todos os valores ficam em `src/styles/tokens.css`. Para renomear o produto, altere `src/config/brand.js` e o `<title>`/`<meta>` de `index.html`.
+
+### Experiência no celular
+
+- Barra de navegação inferior (Início, Descobrir, Buscar), ao alcance do polegar.
+- Faixas horizontais com rolagem por toque e encaixe (scroll snap).
+- Filtros avançados e trailer em painéis inferiores (`<dialog>` nativo, com foco preso e Esc).
+- Botões, links e campos com 44px de altura (chips com pelo menos 36px) e ausência de rolagem horizontal, verificados de 320px a 1440px.
 
 ## Segurança
 

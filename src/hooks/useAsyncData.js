@@ -1,13 +1,14 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 /**
- * Centraliza estados de carregamento, erro e cancelamento de requisições.
+ * Centraliza estados de carregamento, erro, cancelamento e nova tentativa.
  * A função loader deve ser estabilizada pelo consumidor com useCallback.
  */
 export function useAsyncData(loader) {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
+  const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -36,7 +37,9 @@ export function useAsyncData(loader) {
       active = false;
       controller.abort();
     };
-  }, [loader]);
+  }, [loader, attempt]);
 
-  return { data, isLoading, error };
+  const reload = useCallback(() => setAttempt((value) => value + 1), []);
+
+  return { data, isLoading, error, reload };
 }

@@ -1,0 +1,26 @@
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-top: var(--space-7);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--line);
+}
+
+.pagination__status {
+  color: var(--paper-faint);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.pagination__status strong {
+  color: var(--paper);
+  font-weight: 500;
+}
+
+@media (max-width: 420px) {
+  .pagination .btn {
+    padding-inline: var(--space-4);
+  }
+}
