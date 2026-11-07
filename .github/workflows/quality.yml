@@ -4,11 +4,13 @@ concurrency:
   group: quality-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+# Todo PR é verificado, qualquer que seja a branch de destino (inclusive PRs
+# empilhados), e a main a cada push (D-27).
 on:
   push:
-    branches: [main, "feature/**"]
-  pull_request:
     branches: [main]
+  pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read

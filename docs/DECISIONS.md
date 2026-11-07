@@ -178,3 +178,8 @@ Cada decisão tem: contexto, decisão e consequência. As decisões D-01 a D-11 
 ## D-26. Branch base do Bloco A
 
 - `chore/pre-launch-compliance` foi criada a partir de `feature/cinelux` (que contém `DECISIONS.md`, o arquivo central de textos e a identidade citados no prompt). O PR é empilhado: `chore/pre-launch-compliance` → `feature/cinelux` → `feature/foundation-modernization` → `main`.
+
+## D-27. Gatilhos do CI
+
+- **Contexto:** o workflow rodava em pushes para `main` e `feature/**` e em PRs para `main`. As branches deste plano (`chore/`, `test/`, `perf/`, `feat/`) e os PRs empilhados ficariam sem verificação.
+- **Decisão:** rodar em todo `pull_request` (qualquer destino), em push para `main` e sob demanda (`workflow_dispatch`).
