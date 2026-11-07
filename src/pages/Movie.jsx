@@ -1,8 +1,9 @@
 import { useCallback } from "react";
-import { useParams } from "react-router";
+import { Link, useParams } from "react-router";
 import { BsGraphUp, BsWallet2, BsHourglassSplit, BsCalendar3, BsCameraVideo } from "react-icons/bs";
 import { fetchTmdb, getBackdropUrl, getPosterUrl } from "../services/tmdb";
 import { useAsyncData } from "../hooks/useAsyncData";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
 import {
   formatCurrency,
   formatRating,
@@ -13,14 +14,17 @@ import {
 import AsyncState from "../components/AsyncState";
 import MovieCard from "../components/MovieCard";
 import WatchProviders from "../components/WatchProviders";
+import { MAX_CAST, pickRelatedMovies } from "../services/movieDetails";
+import NotFound from "./NotFound";
 import "./Movie.css";
 
-const Movie = () => {
-  const { id } = useParams();
+const MovieDetails = ({ id }) => {
   const loadMovie = useCallback(
     (signal) => fetchTmdb(id, {
       params: {
         language: "pt-BR",
+        // Sem este parâmetro o TMDB só retorna vídeos em pt-BR, e muitos filmes ficam sem trailer.
+        include_video_language: "pt,en,null",
         append_to_response: "credits,videos,recommendations,similar",
       },
       signal,
@@ -28,11 +32,13 @@ const Movie = () => {
     [id],
   );
   const { data: movie, isLoading, error } = useAsyncData(loadMovie);
+  useDocumentTitle(movie?.title || (isLoading ? "Carregando filme" : "Filme"));
 
   if (isLoading || error || !movie) {
     return (
       <main className="movie-page">
         <AsyncState isLoading={isLoading} error={error} isEmpty={!movie} emptyMessage="Não foi possível localizar este filme." />
+        {error && <Link className="movie-page__back" to="/">Voltar para o início</Link>}
       </main>
     );
   }
@@ -40,10 +46,8 @@ const Movie = () => {
   const backdrop = getBackdropUrl(movie.backdrop_path);
   const poster = getPosterUrl(movie.poster_path);
   const trailerUrl = getYouTubeTrailer(movie.videos?.results ?? []);
-  const cast = movie.credits?.cast?.slice(0, 8) ?? [];
-  const recommendations = movie.recommendations?.results?.slice(0, 6)
-    ?? movie.similar?.results?.slice(0, 6)
-    ?? [];
+  const cast = movie.credits?.cast?.slice(0, MAX_CAST) ?? [];
+  const recommendations = pickRelatedMovies(movie);
   const releaseYear = movie.release_date?.slice(0, 4);
 
   return (
@@ -65,6 +69,9 @@ const Movie = () => {
               {movie.runtime ? ` • ${formatRuntime(movie.runtime)}` : ""}
             </p>
             <h1>{movie.title}</h1>
+            {movie.original_title && movie.original_title !== movie.title && (
+              <p className="movie-original-title">Título original: {movie.original_title}</p>
+            )}
 
             <div className="movie-tags">
               {movie.genres?.map((genre) => <span key={genre.id}>{genre.name}</span>)}
@@ -93,10 +100,10 @@ const Movie = () => {
       </section>
 
       <section className="movie-facts" aria-label="Informações do filme">
-        <div className="movie-fact"><BsCalendar3 /><span>Lançamento</span><strong>{formatReleaseDate(movie.release_date)}</strong></div>
-        <div className="movie-fact"><BsWallet2 /><span>Orçamento</span><strong>{formatCurrency(movie.budget)}</strong></div>
-        <div className="movie-fact"><BsGraphUp /><span>Bilheteria</span><strong>{formatCurrency(movie.revenue)}</strong></div>
-        <div className="movie-fact"><BsHourglassSplit /><span>Duração</span><strong>{formatRuntime(movie.runtime)}</strong></div>
+        <div className="movie-fact"><BsCalendar3 aria-hidden="true" /><span>Lançamento</span><strong>{formatReleaseDate(movie.release_date)}</strong></div>
+        <div className="movie-fact"><BsWallet2 aria-hidden="true" /><span>Orçamento</span><strong>{formatCurrency(movie.budget)}</strong></div>
+        <div className="movie-fact"><BsGraphUp aria-hidden="true" /><span>Bilheteria</span><strong>{formatCurrency(movie.revenue)}</strong></div>
+        <div className="movie-fact"><BsHourglassSplit aria-hidden="true" /><span>Duração</span><strong>{formatRuntime(movie.runtime)}</strong></div>
       </section>
 
       <WatchProviders movieId={id} />
@@ -130,6 +137,16 @@ const Movie = () => {
       )}
     </main>
   );
+};
+
+const Movie = () => {
+  const { id } = useParams();
+
+  // Evita uma requisição para endereços como /movie/abc.
+  if (!/^\d+$/.test(id ?? "")) return <NotFound />;
+
+  // A key reinicia o estado ao navegar entre filmes recomendados.
+  return <MovieDetails key={id} id={id} />;
 };
 
 export default Movie;

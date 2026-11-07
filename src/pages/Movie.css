@@ -6,6 +6,8 @@
 .movie-hero__details { max-width: 760px; }
 .movie-eyebrow { margin: 0 0 .6rem; color: var(--color-accent); font-size: .8rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
 .movie-hero__details h1 { margin: 0 0 1rem; font-family: "Space Grotesk", sans-serif; font-size: clamp(2rem, 5vw, 3.5rem); line-height: 1.05; letter-spacing: -.045em; }
+.movie-original-title { margin: -.5rem 0 1rem; color: var(--color-muted); font-size: .9rem; }
+.movie-page__back { display: table; margin: 0 auto; padding: .75rem 1rem; border-radius: 8px; color: #111; background: var(--color-accent); font-weight: 700; }
 .movie-tags { display: flex; flex-wrap: wrap; gap: .5rem; }
 .movie-tags span { padding: .35rem .65rem; border: 1px solid rgb(255 255 255 / 16%); border-radius: 999px; color: #e2e7ef; background: rgb(8 10 15 / 35%); font-size: .75rem; }
 .movie-score { display: flex; align-items: baseline; gap: .25rem; margin: 1.1rem 0; color: var(--color-muted); }

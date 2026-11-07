@@ -66,6 +66,21 @@ describe("getYouTubeTrailer", () => {
       .toBe("https://www.youtube.com/watch?v=trailer%20key");
   });
 
+  it("prefers an official Portuguese trailer over an official English one", () => {
+    const videos = [
+      { site: "YouTube", type: "Trailer", key: "en-official", official: true, iso_639_1: "en" },
+      { site: "YouTube", type: "Trailer", key: "pt-unofficial", official: false, iso_639_1: "pt" },
+      { site: "YouTube", type: "Trailer", key: "pt-official", official: true, iso_639_1: "pt" },
+    ];
+
+    expect(getYouTubeTrailer(videos)).toBe("https://www.youtube.com/watch?v=pt-official");
+  });
+
+  it("ignores invalid input", () => {
+    expect(getYouTubeTrailer(null)).toBeNull();
+    expect(getYouTubeTrailer([null, { site: "YouTube" }])).toBeNull();
+  });
+
   it("returns null when no YouTube trailer exists", () => {
     expect(getYouTubeTrailer([{ site: "YouTube", type: "Teaser", key: "teaser" }])).toBeNull();
   });

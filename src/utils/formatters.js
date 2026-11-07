@@ -41,11 +41,20 @@ export function formatReleaseDate(value) {
   return new Intl.DateTimeFormat("pt-BR", { dateStyle: "long" }).format(date);
 }
 
+/**
+ * Escolhe o trailer do YouTube mais adequado: oficial e em português primeiro,
+ * depois oficial em qualquer idioma, depois qualquer trailer disponível.
+ */
 export function getYouTubeTrailer(videos = []) {
-  const youtubeTrailers = videos.filter(
-    (video) => video.site === "YouTube" && video.type === "Trailer" && video.key,
+  const youtubeTrailers = (Array.isArray(videos) ? videos : []).filter(
+    (video) => video?.site === "YouTube" && video.type === "Trailer" && video.key,
   );
 
-  const trailer = youtubeTrailers.find((video) => video.official) ?? youtubeTrailers[0];
+  const score = (video) => (video.official ? 2 : 0) + (video.iso_639_1 === "pt" ? 1 : 0);
+  const [trailer] = youtubeTrailers
+    .map((video, index) => ({ video, index }))
+    .sort((a, b) => score(b.video) - score(a.video) || a.index - b.index)
+    .map(({ video }) => video);
+
   return trailer ? `https://www.youtube.com/watch?v=${encodeURIComponent(trailer.key)}` : null;
 }
