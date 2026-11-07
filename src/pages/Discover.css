@@ -1,0 +1,114 @@
+/* Barra de gêneros: rolagem horizontal no celular, quebra em linhas no desktop */
+.genre-bar {
+  margin: 0 calc(var(--gutter) * -1) var(--space-5);
+}
+
+.genre-bar__list {
+  position: relative;
+  display: flex;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--gutter);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.genre-bar__list::-webkit-scrollbar {
+  display: none;
+}
+
+.genre-bar__list .chip {
+  min-height: 40px;
+}
+
+.genre-bar__skeleton {
+  width: 92px;
+  border-color: transparent;
+}
+
+.genre-bar .btn--quiet {
+  margin-left: var(--gutter);
+}
+
+@media (min-width: 900px) {
+  .genre-bar {
+    margin-inline: 0;
+  }
+
+  .genre-bar__list {
+    flex-wrap: wrap;
+    padding-inline: 0;
+    overflow: visible;
+  }
+
+  .genre-bar .btn--quiet {
+    margin-left: 0;
+  }
+}
+
+/* Ordenação e filtros -------------------------------------------------- */
+.discover-toolbar {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-3);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--line);
+}
+
+.discover-toolbar__sort {
+  display: grid;
+  flex: 1;
+  gap: var(--space-2);
+  max-width: 320px;
+}
+
+.discover-toolbar__filters {
+  min-height: 48px;
+}
+
+.count-badge {
+  display: inline-grid;
+  min-width: 20px;
+  height: 20px;
+  place-items: center;
+  padding: 0 6px;
+  border-radius: var(--radius-pill);
+  color: var(--accent-ink);
+  background: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+}
+
+.discover-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 60px;
+  margin-bottom: var(--space-5);
+  padding-block: var(--space-3);
+}
+
+.discover-status__count {
+  color: var(--paper-faint);
+}
+
+.discover-status__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.discover-status__clear {
+  margin-left: auto;
+}
+
+.advanced-filters {
+  display: grid;
+  gap: var(--space-5);
+}
+
+@media (max-width: 420px) {
+  .discover-toolbar__filters {
+    padding-inline: var(--space-4);
+  }
+}

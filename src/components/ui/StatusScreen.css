@@ -1,0 +1,36 @@
+.status-screen {
+  display: grid;
+  flex: 1;
+  align-items: center;
+  padding-block: var(--space-8);
+}
+
+.status-screen__inner {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-4);
+}
+
+.status-screen__code {
+  color: var(--accent);
+  font-size: clamp(5rem, 3rem + 14vw, 12rem);
+  font-style: italic;
+  line-height: 0.85;
+}
+
+.status-screen__title {
+  max-width: 18ch;
+  font-size: var(--text-3xl);
+}
+
+.status-screen__message {
+  max-width: 48ch;
+  color: var(--paper-dim);
+}
+
+.status-screen__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+}
