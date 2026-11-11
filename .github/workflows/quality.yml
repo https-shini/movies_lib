@@ -43,9 +43,16 @@ jobs:
 
   # Testes de interface (Playwright) com fixtures locais: sem rede externa e sem chave
   # do TMDB. Job independente do `quality`, para uma falha não esconder a outra (D-35).
+  # Roda na imagem oficial do Playwright, que já traz o Chromium e as dependências do
+  # sistema: o job não depende do apt nem do download do navegador (D-38).
   e2e:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    container:
+      # Manter a tag igual à versão de @playwright/test no package.json.
+      image: mcr.microsoft.com/playwright:v1.63.0-noble
+    env:
+      PLAYWRIGHT_IMAGE_VERSION: 1.63.0
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
@@ -56,21 +63,13 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm ci
-      - name: Read Playwright version
-        id: playwright
-        run: echo "version=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
-      - name: Cache Playwright browsers
-        id: browsers
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}-chromium
-      - name: Install Chromium and system dependencies
-        if: steps.browsers.outputs.cache-hit != 'true'
-        run: npx playwright install --with-deps chromium
-      - name: Install system dependencies only
-        if: steps.browsers.outputs.cache-hit == 'true'
-        run: npx playwright install-deps chromium
+      - name: Check Playwright version against the image
+        run: |
+          installed=$(node -p "require('@playwright/test/package.json').version")
+          if [ "$installed" != "$PLAYWRIGHT_IMAGE_VERSION" ]; then
+            echo "::error::@playwright/test $installed, imagem $PLAYWRIGHT_IMAGE_VERSION. Atualize a tag da imagem no workflow."
+            exit 1
+          fi
       - name: Run E2E tests
         run: npm run test:e2e
       - name: Upload report and traces on failure

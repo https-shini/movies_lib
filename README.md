@@ -166,7 +166,9 @@ npx playwright show-report
 - **Rede isolada (`e2e/helpers/test.ts`):** imagens do TMDB viram um PNG local; fontes, player do YouTube e scripts da Vercel viram respostas vazias. O teste falha se o app pedir outro domínio externo, um endpoint sem fixture ou registrar erro no console.
 - **Sem chave:** o servidor dos testes roda com `TMDB_API_KEY` vazia, mesmo que exista um `.env`.
 
-No CI, o job `e2e` instala o Chromium (com cache por versão do Playwright), roda `npm run test:e2e` e, só quando algo falha, guarda o relatório e os traces como artefato por 7 dias. Não há novas tentativas automáticas: um teste instável falha.
+No CI, o job `e2e` roda dentro da imagem oficial do Playwright (`mcr.microsoft.com/playwright:v1.63.0-noble`), que já traz o Chromium e as dependências do sistema. Ele confere se a versão do `@playwright/test` é a mesma da imagem, roda `npm run test:e2e` e, só quando algo falha, guarda o relatório e os traces como artefato por 7 dias. Não há novas tentativas automáticas: um teste instável falha.
+
+Ao atualizar o `@playwright/test`, atualize também a tag da imagem e a variável `PLAYWRIGHT_IMAGE_VERSION` em `.github/workflows/quality.yml`.
 
 ## Integração com o TMDB
 
