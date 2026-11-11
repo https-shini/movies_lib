@@ -105,7 +105,7 @@ src/
 │                           FeaturedHero, TrailerDialog, WatchProviders
 ├── pages/                  Home, Discover, Search, Movie, About, Privacy,
 │                           NotFound, RouteError
-├── styles/                 tokens, base, ui e layout
+├── styles/                 tokens, tipografia, base, ui, layout e breakpoints
 └── test/                   utilitários dos testes unitários
 e2e/                        testes de interface (Playwright)
 ├── fixtures/               respostas simuladas do TMDB em JSON, tipadas

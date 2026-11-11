@@ -49,7 +49,7 @@ src/
 ├── i18n/             pt-BR.ts (todos os textos da interface) e interpolate
 ├── components/       layout/, ui/ e movie/
 ├── pages/            uma página por rota
-├── styles/           tokens.css, base.css, ui.css e layout.css
+├── styles/           tokens.css, typography.css, base.css, ui.css, layout.css e breakpoints.ts
 └── test/             utilitários dos testes
 ```
 

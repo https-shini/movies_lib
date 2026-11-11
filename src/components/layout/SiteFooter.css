@@ -1,7 +1,7 @@
 .site-footer {
   margin-top: var(--space-8);
   padding-block: var(--space-7);
-  border-top: 1px solid var(--line);
+  border-top: 1px solid var(--color-border);
 }
 
 .site-footer__inner {
@@ -16,7 +16,7 @@
 
 .site-footer__brand p {
   max-width: 34ch;
-  color: var(--paper-dim);
+  color: var(--color-text-secondary);
   font-size: var(--text-sm);
 }
 
@@ -31,26 +31,26 @@
   min-width: 44px;
   min-height: 44px;
   align-items: center;
-  color: var(--paper-dim);
+  color: var(--color-text-secondary);
   font-size: var(--text-sm);
-  font-weight: 600;
-  transition: color var(--dur-fast) ease;
+  font-weight: var(--weight-semibold);
+  transition: color var(--duration-fast) ease;
 }
 
 .site-footer__nav a:hover {
-  color: var(--paper);
+  color: var(--color-text-primary);
 }
 
 .site-footer__credits {
   padding-top: var(--space-4);
-  border-top: 1px solid var(--line);
-  color: var(--paper-faint);
+  border-top: 1px solid var(--color-border);
+  color: var(--color-text-tertiary);
   font-size: var(--text-xs);
-  line-height: 1.7;
+  line-height: var(--leading-relaxed);
 }
 
 .site-footer__credits a {
-  color: var(--paper-dim);
+  color: var(--color-text-secondary);
   text-decoration: underline;
   text-underline-offset: 3px;
 }

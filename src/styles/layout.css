@@ -18,12 +18,12 @@
   position: fixed;
   top: var(--space-3);
   left: var(--space-3);
-  z-index: 50;
+  z-index: var(--layer-skip-link);
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-sm);
-  color: var(--accent-ink);
-  background: var(--accent);
-  font-weight: 700;
+  color: var(--color-accent-on);
+  background: var(--color-accent-default);
+  font-weight: var(--weight-bold);
   transform: translateY(-200%);
 }
 
@@ -50,7 +50,7 @@
 }
 
 .page-head__kicker {
-  color: var(--accent);
+  color: var(--color-accent-default);
 }
 
 .page-head__title {
@@ -59,17 +59,17 @@
 }
 
 .page-head__title em {
-  color: var(--accent);
+  color: var(--color-accent-default);
   font-style: italic;
 }
 
 .page-head__lede {
   max-width: 56ch;
-  color: var(--paper-dim);
+  color: var(--color-text-secondary);
 }
 
 .page-head__count {
-  color: var(--paper-faint);
+  color: var(--color-text-tertiary);
 }
 
 @media (max-width: 599px) {
@@ -81,5 +81,5 @@
 /* Primeiro carregamento de uma página dividida (RouteFallback): ocupa a tela. */
 .route-fallback {
   min-height: 100vh;
-  background: var(--ink-0);
+  background: var(--color-bg);
 }

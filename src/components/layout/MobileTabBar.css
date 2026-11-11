@@ -3,10 +3,10 @@
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: 30;
+  z-index: var(--layer-bars);
   padding-bottom: env(safe-area-inset-bottom);
-  border-top: 1px solid var(--line);
-  background: rgb(12 11 10 / 94%);
+  border-top: 1px solid var(--color-border);
+  background: var(--color-tabbar-bg);
   backdrop-filter: saturate(140%) blur(14px);
   -webkit-backdrop-filter: saturate(140%) blur(14px);
 }
@@ -24,23 +24,23 @@
   align-items: center;
   justify-content: center;
   gap: 3px;
-  color: var(--paper-faint);
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  transition: color var(--dur-fast) ease;
+  color: var(--color-text-tertiary);
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-wide);
+  transition: color var(--duration-fast) ease;
 }
 
 .tabbar__item svg {
-  font-size: 1.45rem;
+  font-size: var(--icon-lg);
 }
 
 .tabbar__item.active {
-  color: var(--paper);
+  color: var(--color-text-primary);
 }
 
 .tabbar__item.active svg {
-  color: var(--accent);
+  color: var(--color-accent-default);
 }
 
 @media (min-width: 900px) {

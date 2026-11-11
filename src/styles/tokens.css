@@ -1,41 +1,122 @@
 /*
- * Sala Escura — tokens do sistema visual.
- * Tinta quente como fundo, marfim como "papel" do texto e um único acento
- * vermelho, a luz da cabine de projeção. Todas as cores de texto têm contraste AA.
+ * Cinelux · tokens do sistema visual "Sala Escura" (D-49, D-50).
+ *
+ * Tinta quente como fundo, marfim como "papel" do texto e um único acento vermelho, a luz
+ * da cabine de projeção. Todas as cores de texto têm contraste AA.
+ *
+ * Origem de cada valor:
+ * - [atual]           valor que já estava em uso e foi preservado;
+ * - [especificação]   valor de docs/Cinelux_Identidade_Visual.md (v3.1.0);
+ * - [reconstruído]    o `tokens.css` original da especificação não existe no repositório
+ *                     (D-49); o token foi criado a partir dos estilos que já existiam.
+ *
+ * A estrutura e os nomes semânticos seguem a especificação (`--color-*`, `--font-sans`,
+ * `--weight-*`, `--duration-*`...). Os componentes usam só os tokens semânticos; os
+ * primitivos (`--ink-*`, `--paper-*`, `--vermilion-*`) ficam restritos a este arquivo.
  */
 :root {
   color-scheme: dark;
 
-  /* Superfícies */
+  /* 1. Cores e superfícies -------------------------------------------------- */
+
+  /* Primitivos [atual] */
   --ink-0: #0c0b0a;
   --ink-1: #141210;
   --ink-2: #1c1916;
   --ink-3: #27231f;
+  --ink-black: #000;
+  --paper-100: #ede6d6;
+  --paper-300: #b4ab9b;
+  --paper-500: #8a8275;
+  --vermilion-500: #ff5b3a;
+  --vermilion-400: #ff7556;
+  --vermilion-950: #1a0804;
+  --coral-300: #ff8a73;
+  --mint-300: #9fd8a8;
+
+  /* Canais RGB para variações com transparência [reconstruído] */
+  --rgb-ink: 12 11 10;
+  --rgb-ink-deep: 6 5 4;
+  --rgb-paper: 237 230 214;
+  --rgb-vermilion: 255 91 58;
+
+  /* Superfícies */
+  --color-bg: var(--ink-0);
+  --color-surface-base: var(--ink-1);
+  --color-surface-elevated: var(--ink-2);
+  --color-surface-raised: var(--ink-3);
+  --color-video-bg: var(--ink-black);
 
   /* Texto */
-  --paper: #ede6d6;
-  --paper-dim: #b4ab9b;
-  --paper-faint: #8a8275;
+  --color-text-heading: var(--paper-100);
+  --color-text-primary: var(--paper-100);
+  --color-text-secondary: var(--paper-300);
+  --color-text-tertiary: var(--paper-500);
 
   /* Acento */
-  --accent: #ff5b3a;
-  --accent-strong: #ff7556;
-  --accent-ink: #1a0804;
-  --accent-wash: rgb(255 91 58 / 12%);
+  --color-accent-default: var(--vermilion-500);
+  --color-accent-hover: var(--vermilion-400);
+  --color-accent-on: var(--vermilion-950);
+  --color-accent-subtle: rgb(var(--rgb-vermilion) / 12%);
 
   /* Estados */
-  --danger: #ff8a73;
-  --success: #9fd8a8;
+  --color-danger: var(--coral-300);
+  --color-success: var(--mint-300);
+  --color-hover-tint: rgb(var(--rgb-paper) / 5%);
 
   /* Linhas */
-  --line: rgb(237 230 214 / 11%);
-  --line-strong: rgb(237 230 214 / 22%);
+  --color-border: rgb(var(--rgb-paper) / 11%);
+  --color-border-strong: rgb(var(--rgb-paper) / 22%);
 
-  /* Tipografia */
+  /* Véus sobre conteúdo [atual] */
+  --color-nav-bg: rgb(var(--rgb-ink) / 88%);
+  --color-tabbar-bg: rgb(var(--rgb-ink) / 94%);
+  --color-badge-bg: rgb(var(--rgb-ink) / 86%);
+  --color-backdrop: rgb(var(--rgb-ink-deep) / 72%);
+  --color-shimmer: rgb(var(--rgb-paper) / 5%);
+
+  /* Gradientes dos destaques [atual] */
+  --gradient-hero-scrim: linear-gradient(
+    180deg,
+    rgb(var(--rgb-ink) / 15%) 0%,
+    rgb(var(--rgb-ink) / 35%) 40%,
+    rgb(var(--rgb-ink) / 96%) 82%,
+    var(--color-bg) 100%
+  );
+  --gradient-hero-side: linear-gradient(
+    90deg,
+    rgb(var(--rgb-ink) / 92%) 0%,
+    rgb(var(--rgb-ink) / 55%) 45%,
+    rgb(var(--rgb-ink) / 0%) 75%
+  );
+  --gradient-backdrop-scrim: linear-gradient(
+    180deg,
+    rgb(var(--rgb-ink) / 10%) 0%,
+    rgb(var(--rgb-ink) / 45%) 55%,
+    var(--color-bg) 100%
+  );
+  --gradient-backdrop-side: linear-gradient(
+    90deg,
+    rgb(var(--rgb-ink) / 94%) 0%,
+    rgb(var(--rgb-ink) / 70%) 38%,
+    rgb(var(--rgb-ink) / 15%) 75%
+  );
+
+  /* 2. Tipografia e pesos ----------------------------------------------------- */
+
+  /* Famílias [especificação, 4.2] */
   --font-display: "Fraunces", "Iowan Old Style", Georgia, serif;
-  --font-ui: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-sans: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 
+  /* Pesos [especificação, 4.3] */
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* Escala [atual] */
+  --text-2xs: 0.6875rem;
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
   --text-md: 1rem;
@@ -44,8 +125,41 @@
   --text-2xl: clamp(1.6rem, 1.3rem + 1.4vw, 2.25rem);
   --text-3xl: clamp(2.1rem, 1.5rem + 3vw, 3.75rem);
   --text-4xl: clamp(2.6rem, 1.6rem + 5vw, 5.5rem);
+  --text-brand: 1.4rem;
+  --text-numeral: 2.1rem;
+  --text-numeral-lg: 2.8rem;
 
-  /* Espaçamento (escala de 4px) */
+  /* Entrelinha [atual] */
+  --leading-numeral: 0.85;
+  --leading-none: 1;
+  --leading-display: 1.02;
+  --leading-tight: 1.15;
+  --leading-snug: 1.25;
+  --leading-title: 1.3;
+  --leading-body: 1.55;
+  --leading-relaxed: 1.7;
+  --leading-loose: 1.75;
+
+  /* Espaçamento entre letras [atual] */
+  --tracking-tightest: -0.03em;
+  --tracking-tighter: -0.02em;
+  --tracking-tight: -0.015em;
+  --tracking-snug: -0.01em;
+  --tracking-normal: 0;
+  --tracking-slight: 0.01em;
+  --tracking-wide: 0.02em;
+  --tracking-wider: 0.06em;
+
+  /* Medida de leitura [especificação, 4.6] */
+  --measure-prose: 65ch;
+
+  /* Ícones [especificação, seção 6: 16, 20 e 24 px; 32 px nos estados] */
+  --icon-sm: 1rem;
+  --icon-md: 1.25rem;
+  --icon-lg: 1.5rem;
+  --icon-xl: 2rem;
+
+  /* 3. Espaçamentos (base 4 px) [atual; a especificação usa 4rem em --space-8] */
   --space-1: 0.25rem;
   --space-2: 0.5rem;
   --space-3: 0.75rem;
@@ -55,22 +169,54 @@
   --space-7: 3rem;
   --space-8: 4.5rem;
 
-  /* Layout */
+  /* Layout [atual] */
   --gutter: clamp(1rem, 0.6rem + 2vw, 2.5rem);
-  --shell: 1320px;
+  --container-max: 1320px;
   --header-h: 64px;
   --tabbar-h: 64px;
+  --tap-target: 44px; /* alvo mínimo de toque [especificação, 11] */
 
-  /* Forma */
+  /* 4. Raios e bordas [atual] ------------------------------------------------ */
+  --radius-hairline: 2px;
   --radius-xs: 3px;
   --radius-sm: 6px;
   --radius-md: 10px;
-  --radius-pill: 999px;
+  --radius-lg: 16px;
+  --radius-full: 999px;
+  --radius-round: 50%;
+  --border-width: 1px;
+  --border-width-strong: 2px;
 
-  /* Movimento */
+  /* 5. Sombras e elevação ------------------------------------------------------ */
+  --elevation-overlay: 0 18px 50px -12px rgb(0 0 0 / 70%); /* [atual] diálogos e pôster */
+  --ring-hairline: inset 0 0 0 var(--border-width) var(--color-border); /* [reconstruído] */
+  --ring-selected: inset 0 0 0 var(--border-width-strong) var(--color-accent-default);
+  --focus-halo: 0 0 0 4px var(--color-accent-subtle); /* [reconstruído] campos em foco */
+  --focus-halo-sm: 0 0 0 3px var(--color-accent-subtle);
+
+  /* 6. Breakpoints [reconstruído] ---------------------------------------------
+   * Variáveis CSS não funcionam dentro de @media; os valores abaixo são a referência
+   * para todo `@media` do projeto (src/styles/breakpoints.ts tem os mesmos números).
+   *   2xs  380px  grade de pôsteres em 2 colunas fixas (até)
+   *   xs   420px  celulares estreitos (até)
+   *   sm   480px  botão de busca visível (a partir de)
+   *   md   600px  diálogos em tela cheia (até 599px)
+   *   lg   700px  layouts de duas colunas
+   *   xl   900px  cabeçalho com navegação e busca; barra inferior some
+   *   2xl 1024px  grade de pôsteres mais larga
+   *   3xl 1200px  trilhos com 7 itens e índice de gêneros em 4 colunas
+   */
+
+  /* 7. Transições e animações [atual; a especificação sugere 120, 200 e 360 ms] */
   --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
-  --dur-fast: 140ms;
-  --dur-med: 240ms;
+  --ease-standard: ease;
+  --duration-fast: 140ms;
+  --duration-base: 240ms;
+  --duration-shimmer: 1.4s;
 
-  --shadow-pop: 0 18px 50px -12px rgb(0 0 0 / 70%);
+  /* 8. Camadas e estados [reconstruído] -------------------------------------- */
+  --layer-behind: -1;
+  --layer-bars: 30; /* cabeçalho e barra inferior */
+  --layer-skip-link: 50;
+  --opacity-disabled: 0.4;
 }

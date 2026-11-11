@@ -6,7 +6,7 @@ import { getMovieTitle, Poster } from "./PosterCard";
 import "./RankedList.css";
 
 /**
- * Ranking editorial com numerais grandes — os mais bem avaliados.
+ * Ranking editorial com numerais grandes: os mais bem avaliados.
  */
 const RankedList = ({ movies, isLoading, error, onRetry, limit = 10 }) => {
   if (error) {

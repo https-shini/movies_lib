@@ -1,4 +1,5 @@
 import { test as base, expect, type Page } from "@playwright/test";
+import { BREAKPOINTS } from "../../src/styles/breakpoints.ts";
 import { installTmdbMock, type TmdbMock } from "./tmdb.ts";
 
 /**
@@ -116,7 +117,7 @@ export const test = base.extend<{
 export { expect };
 
 /** A partir de 900 px o cabeçalho mostra navegação e busca; abaixo, a barra inferior. */
-export const DESKTOP_MIN_WIDTH = 900;
+export const DESKTOP_MIN_WIDTH = BREAKPOINTS.xl;
 
 export function isDesktopLayout(page: Page): boolean {
   return (page.viewportSize()?.width ?? 0) >= DESKTOP_MIN_WIDTH;
