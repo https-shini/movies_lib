@@ -138,6 +138,8 @@ Os valores da URL são validados em `lib/discover.ts` e `lib/pagination.ts`: ord
 
 ## 8. Testes e qualidade
 
+### Testes unitários (Vitest)
+
 142 testes em 12 arquivos, ao lado do código, cobrem:
 
 - proxy: lista de permissões, chave, token v4, tempo limite, cache por tipo e erros sem cache;
@@ -146,11 +148,31 @@ Os valores da URL são validados em `lib/discover.ts` e `lib/pagination.ts`: ord
 - regras de `lib/`: formatação, imagens, descoberta, paginação, trailer, onde assistir e analytics;
 - i18n: interpolação de valores e nome da marca sem tradução.
 
-Ainda não há testes de componentes nem de interface no navegador; eles entram no Bloco B (Playwright). O CI está descrito no [README](../README.md#scripts).
+### Testes de interface (E2E)
+
+O Playwright (Chromium) testa o app como o visitante usa, a partir do build de produção servido pelo `vite preview`:
+
+```text
+playwright.config.ts   webServer (build + vite preview, sem chave), 5 projetos de tela + projeto proxy
+e2e/
+├── fixtures/          JSON no formato do TMDB, tipados por src/types/tmdb.ts (index.ts)
+├── helpers/
+│   ├── tmdb.ts        page.route em /api/tmdb/**: fixture por endpoint, trocas por teste, registro das chamadas
+│   └── test.ts        test estendido: mock automático, rede externa isolada, falha em erro de console
+└── tests/             home, search, movie, discover, states, routes, a11y, responsive e proxy
+```
+
+- **Fluxo:** o navegador carrega o app real; as chamadas a `/api/tmdb/<endpoint>` são interceptadas antes de chegar ao servidor e respondidas com fixtures. Os testes também conferem os parâmetros enviados (idioma, região, filtros, página e complementos dos detalhes).
+- **Tamanhos:** 320, 375, 768, 1024 e 1440 px de largura. Testes que dependem do layout (campo de busca do cabeçalho a partir de 900 px, barra inferior abaixo disso) são pulados, com o motivo, onde o elemento não existe.
+- **Proxy:** o projeto `proxy` chama o `/api/tmdb` do `vite preview` por HTTP. Sem chave, nenhuma consulta chega ao TMDB; os testes cobrem método, lista de endpoints, chave ausente e `Cache-Control` dos erros.
+- **Cobertura:** início; busca pelo campo da página, pelo cabeçalho e pela barra inferior; filme, trailer e onde assistir; descoberta (gênero, ordenação, filtros, paginação); carregamento, vazio, erros 503, 429, 504 e chave ausente com "Tentar novamente"; rotas diretas e 404; rodapé e créditos; teclado, foco e nomes acessíveis; rolagem horizontal e diálogos em todas as larguras.
+
+O CI está descrito no [README](../README.md#scripts).
 
 ## 9. Limitações atuais
 
-- Sem limite de requisições aplicado ao proxy: a regra do firewall da Vercel está pendente (D-31).
+- O limite do firewall da Vercel em `/api` (300 requisições por minuto por IP) está em modo **Log**: registra, mas ainda não bloqueia (D-34).
+- A resposta 405 do proxy não envia `Cache-Control: no-store`, ao contrário dos demais erros (D-36).
 - Faltam cabeçalhos de segurança além do HSTS (CSP, `X-Content-Type-Options`, `Referrer-Policy`).
 - Um único bundle de JavaScript (cerca de 120 KB com gzip), sem divisão por rota; pôsteres sem `srcset`; fontes do Google Fonts. São alvos do Bloco C.
 - A página de privacidade ainda não identifica o responsável pelos dados nem traz canal de contato.

@@ -23,7 +23,7 @@ O projeto nasceu como MoviesLib e está sendo refeito como Cinelux em fases e bl
 | Interface       | React 19.3.1, React Router 8.5.1 (data router), react-icons                                                         |
 | Linguagem       | TypeScript 6.0.3 em modo `strict`; os componentes visuais ainda são `.jsx` e migram nas próximas fases (`allowJs`) |
 | Build           | Vite 8.3.6                                                                                                          |
-| Testes          | Vitest 5.1.0, jsdom e Testing Library                                                                               |
+| Testes          | Vitest 5.1.0, jsdom e Testing Library; Playwright 1.63.0 (E2E, Chromium)                                                                               |
 | Qualidade       | ESLint 10 com `typescript-eslint`, React Hooks e `jsx-a11y-x`; Prettier                                             |
 | Hospedagem      | Vercel: site estático e uma função serverless (`/api/tmdb`)                                                         |
 | Observabilidade | Vercel Web Analytics e Speed Insights, sem cookies                                                                  |
@@ -66,11 +66,18 @@ O projeto nasceu como MoviesLib e está sendo refeito como Cinelux em fases e bl
 | `npm run typecheck`    | Verificação de tipos do app e da configuração |
 | `npm test`             | Testes unitários e de hooks (Vitest)         |
 | `npm run test:watch`   | Testes em modo de observação                 |
+| `npm run test:e2e`     | Testes de interface (Playwright)             |
+| `npm run test:e2e:ui`  | Testes de interface no modo visual           |
 | `npm run format`       | Formata o projeto com o Prettier             |
 | `npm run format:check` | Confere a formatação                         |
 | `npm run check`        | Lint, tipos, testes e build                  |
 
-O GitHub Actions (`.github/workflows/quality.yml`, Node 24) roda em todo pull request e a cada push na `main`: instalação limpa, `npm audit` (nível moderado), formatação, lint, tipos, testes e build. O Dependabot propõe atualizações semanais de npm e GitHub Actions.
+O GitHub Actions (`.github/workflows/quality.yml`, Node 24) roda em todo pull request e a cada push na `main`, com dois jobs independentes:
+
+- **`quality`:** instalação limpa, `npm audit` (nível moderado), formatação, lint, tipos, testes unitários e build;
+- **`e2e`:** testes de interface com Playwright (ver [Testes de interface](#testes-de-interface-e2e)).
+
+O Dependabot propõe atualizações semanais de npm e GitHub Actions.
 
 ## Estrutura
 
@@ -99,12 +106,67 @@ src/
 ├── pages/                  Home, Discover, Search, Movie, About, Privacy,
 │                           NotFound, RouteError
 ├── styles/                 tokens, base, ui e layout
-└── test/                   utilitários dos testes
+└── test/                   utilitários dos testes unitários
+e2e/                        testes de interface (Playwright)
+├── fixtures/               respostas simuladas do TMDB em JSON, tipadas
+├── helpers/                mock do /api/tmdb, rede isolada e utilitários
+└── tests/                  um arquivo por área (início, busca, filme…)
+playwright.config.ts        servidor, tamanhos de tela e relatórios do Playwright
 public/                     robots.txt, sitemap.xml e logo do TMDB
 docs/                       decisões, roadmap, identidade visual e documentação técnica
 ```
 
-Os testes ficam ao lado do código (`*.test.ts` e `*.test.tsx`). A arquitetura e os fluxos de dados estão em [docs/MODEL.md](./docs/MODEL.md).
+Os testes unitários ficam ao lado do código (`*.test.ts` e `*.test.tsx`); os de interface ficam em `e2e/`. A arquitetura e os fluxos de dados estão em [docs/MODEL.md](./docs/MODEL.md).
+
+## Testes de interface (E2E)
+
+Os testes de interface usam o [Playwright](https://playwright.dev/) com o Chromium. Eles rodam contra o build de produção servido localmente pelo `vite preview`, nunca contra a Vercel, e não dependem do TMDB: as respostas de `/api/tmdb` vêm de fixtures locais e nenhuma chave é usada.
+
+### Instalação
+
+Depois do `npm ci`, instale o Chromium do Playwright (uma vez por máquina):
+
+```bash
+npx playwright install --with-deps chromium
+```
+
+### Execução
+
+Todos os testes (o build é feito automaticamente):
+
+```bash
+npm run test:e2e
+```
+
+Um arquivo, um tamanho de tela ou um teste pelo nome:
+
+```bash
+npx playwright test e2e/tests/search.spec.ts
+```
+
+```bash
+npx playwright test --project=mobile-320
+```
+
+```bash
+npx playwright test -g "trailer"
+```
+
+Relatório da última execução (com trace e captura de tela das falhas):
+
+```bash
+npx playwright show-report
+```
+
+### Como funciona
+
+- **Tamanhos de tela:** cada teste de interface roda em cinco projetos, `mobile-320`, `mobile-375`, `tablet-768`, `desktop-1024` e `desktop-1440`, com essas larguras em pixels CSS. O projeto `proxy` testa o proxy por HTTP, uma vez.
+- **Fixtures (`e2e/fixtures/`):** JSON no formato do TMDB, tipados com `src/types/tmdb.ts`. Se uma fixture sair do modelo, o `npm run typecheck` falha.
+- **Mocks (`e2e/helpers/tmdb.ts`):** `page.route` intercepta `/api/tmdb/**` no navegador e responde com a fixture do endpoint. Um teste troca a resposta com `tmdb.on("search/movie", { status: 503 })` ou segura uma resposta para observar o carregamento.
+- **Rede isolada (`e2e/helpers/test.ts`):** imagens do TMDB viram um PNG local; fontes, player do YouTube e scripts da Vercel viram respostas vazias. O teste falha se o app pedir outro domínio externo, um endpoint sem fixture ou registrar erro no console.
+- **Sem chave:** o servidor dos testes roda com `TMDB_API_KEY` vazia, mesmo que exista um `.env`.
+
+No CI, o job `e2e` instala o Chromium (com cache por versão do Playwright), roda `npm run test:e2e` e, só quando algo falha, guarda o relatório e os traces como artefato por 7 dias. Não há novas tentativas automáticas: um teste instável falha.
 
 ## Integração com o TMDB
 
