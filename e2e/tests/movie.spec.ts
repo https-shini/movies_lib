@@ -45,7 +45,11 @@ test.describe("Filme", () => {
     );
     expect(detailCalls[0]?.searchParams.get("include_video_language")).toBe("pt,en,null");
     expect(tmdb.callsTo("movie/550/watch/providers")).toHaveLength(0);
-    expect(tmdb.calls).toHaveLength(1);
+    // A página do filme faz uma única consulta. A outra chamada permitida é o preload do
+    // destaque do Início, que o index.html faz em todas as rotas (D-42).
+    expect(
+      tmdb.calls.map((url) => url.pathname).filter((path) => path !== "/api/tmdb/movie/popular"),
+    ).toEqual(["/api/tmdb/movie/550"]);
   });
 
   test("abre o trailer e fecha com Esc, devolvendo o foco", async ({ page }) => {

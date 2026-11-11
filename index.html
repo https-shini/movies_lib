@@ -11,6 +11,14 @@
     />
     <link rel="icon" type="image/svg+xml" href="/src/favicon.svg" />
     <link rel="preconnect" href="https://image.tmdb.org" />
+    <!-- Dados do destaque do Início pedidos junto com o JavaScript (D-42). A URL precisa
+         ser igual à de getMovieList("popular", 1) em src/services/tmdb.ts. -->
+    <link
+      rel="preload"
+      href="/api/tmdb/movie/popular?language=pt-BR&page=1&region=BR"
+      as="fetch"
+      crossorigin="anonymous"
+    />
     <title>Cinelux · Seu acervo de cinema</title>
   </head>
   <body>
