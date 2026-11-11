@@ -135,7 +135,7 @@ Os valores da URL são validados em `lib/discover.ts` e `lib/pagination.ts`: ord
 | `search/movie`                  | 10 min                                                  |
 
 - O navegador recebe `max-age=60`; a Vercel consome o `s-maxage` (D-19).
-- Erros sempre com `no-store`: endpoint fora da lista recebe 404 `unknown_endpoint`, outros métodos recebem 405 (com `Allow: GET`) e falha de conexão com o TMDB recebe 502.
+- Erros sempre com `no-store`: endpoint fora da lista recebe 404 `unknown_endpoint`, outros métodos recebem 405 (com `Allow: GET`; a função exporta todos os métodos para o proxy responder, D-43) e falha de conexão com o TMDB recebe 502.
 - Parâmetros aceitos: `language`, `region`, `page`, `query`, `include_adult`, `sort_by`, `with_genres`, `primary_release_year`, `primary_release_date.lte`, `vote_average.gte`, `vote_count.gte`, `append_to_response` (só `credits`, `videos`, `recommendations`, `similar` e `watch/providers`) e `include_video_language`. Os demais são descartados.
 
 | Variável       | Onde                                                            | Uso                                     |
@@ -148,7 +148,7 @@ Os valores da URL são validados em `lib/discover.ts` e `lib/pagination.ts`: ord
 
 ### Cabeçalhos de segurança
 
-Todas as respostas recebem `X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options`, `Permissions-Policy` e uma `Content-Security-Policy-Report-Only` (`vercel.json`). O `vite preview` envia os mesmos valores (`server/securityHeaders.ts`), e os testes E2E falham em qualquer violação da CSP (D-39).
+Todas as respostas recebem `X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options`, `Permissions-Policy` e uma `Content-Security-Policy` em modo de bloqueio (`vercel.json`). O `vite preview` envia os mesmos valores (`server/securityHeaders.ts`), e os testes E2E falham em qualquer violação da CSP (D-39 e D-43).
 
 ## 8. Testes e qualidade
 
@@ -186,9 +186,9 @@ O CI está descrito no [README](../README.md#scripts).
 ## 9. Limitações atuais
 
 - O limite do firewall da Vercel em `/api` (300 requisições por minuto por IP) está em modo **Log**: registra, mas ainda não bloqueia (D-34).
-- A Content-Security-Policy está em modo de relatório (`Report-Only`), sem endpoint de coleta: violações aparecem só no console do navegador (D-39).
+- A CSP não tem endpoint de coleta de relatórios: um bloqueio aparece só no console do navegador do visitante (D-43). Nos Previews da Vercel, a barra de ferramentas da Vercel (`vercel.live`) fica bloqueada pela CSP.
 - O JavaScript inicial ainda tem cerca de 116 KB com gzip: quase tudo é `react-dom` e `react-router`, que a divisão por rota não reduz.
-- A página de privacidade ainda não identifica o responsável pelos dados nem traz canal de contato.
+- A página de privacidade ainda não identifica o responsável pelos dados nem traz canal de contato: depende do proprietário preencher `src/config/legal.ts` (D-44).
 - Disponibilidade de streaming só para o Brasil.
 
 ## 10. Referências
