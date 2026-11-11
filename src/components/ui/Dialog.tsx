@@ -1,13 +1,40 @@
-import { useEffect, useId, useRef } from "react";
+import {
+  useEffect,
+  useId,
+  useRef,
+  type MouseEvent,
+  type ReactNode,
+  type SyntheticEvent,
+} from "react";
 import { PiX } from "react-icons/pi";
+import { messages } from "../../i18n";
 import "./Dialog.css";
+
+interface DialogProps {
+  open: boolean;
+  onClose: () => void;
+  title: string;
+  description?: string | undefined;
+  /** "sheet": painel inferior no celular; "media": vídeo em destaque. */
+  variant?: "sheet" | "media" | undefined;
+  footer?: ReactNode | undefined;
+  children?: ReactNode | undefined;
+}
 
 /**
  * Modal acessível sobre o <dialog> nativo: foco preso, Esc e fundo inerte.
  * No celular, a variante "sheet" aparece como painel inferior.
  */
-const Dialog = ({ open, onClose, title, description, variant = "sheet", footer, children }) => {
-  const ref = useRef(null);
+const Dialog = ({
+  open,
+  onClose,
+  title,
+  description,
+  variant = "sheet",
+  footer,
+  children,
+}: DialogProps) => {
+  const ref = useRef<HTMLDialogElement>(null);
   const titleId = useId();
 
   useEffect(() => {
@@ -18,12 +45,12 @@ const Dialog = ({ open, onClose, title, description, variant = "sheet", footer, 
     if (!open && dialog.open) dialog.close();
   }, [open]);
 
-  const handleClick = (event) => {
+  const handleClick = (event: MouseEvent<HTMLDialogElement>) => {
     // Clique no fundo (fora da caixa) fecha o diálogo.
     if (event.target === ref.current) onClose();
   };
 
-  const handleCancel = (event) => {
+  const handleCancel = (event: SyntheticEvent<HTMLDialogElement>) => {
     event.preventDefault();
     onClose();
   };
@@ -51,7 +78,7 @@ const Dialog = ({ open, onClose, title, description, variant = "sheet", footer, 
             type="button"
             className="icon-btn dialog__close"
             onClick={onClose}
-            aria-label="Fechar"
+            aria-label={messages.common.close}
           >
             <PiX aria-hidden="true" />
           </button>

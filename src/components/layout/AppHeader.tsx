@@ -1,42 +1,46 @@
-import { useState } from "react";
+import { useState, type SyntheticEvent } from "react";
 import { Link, NavLink, useLocation, useNavigate } from "react-router";
 import { PiMagnifyingGlass } from "react-icons/pi";
-import { messages } from "../../i18n";
+import { interpolate, messages } from "../../i18n";
 import BrandMark from "./BrandMark";
 import "./AppHeader.css";
 
+const text = messages.nav;
+
 const NAV_ITEMS = [
-  { to: "/", label: "Início", end: true },
-  { to: "/discover", label: "Descobrir" },
-];
+  { to: "/", label: text.home, end: true },
+  { to: "/discover", label: text.discover, end: false },
+] as const;
 
 const HeaderSearch = () => {
   const [value, setValue] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
     const query = value.trim();
     if (!query) return;
-    navigate(`/search?q=${encodeURIComponent(query)}`);
+    void navigate(`/search?q=${encodeURIComponent(query)}`);
     setValue("");
   };
 
   return (
     <form className="header-search" role="search" onSubmit={handleSubmit}>
       <label className="sr-only" htmlFor="header-search-input">
-        Buscar filmes
+        {text.searchLabel}
       </label>
       <PiMagnifyingGlass className="header-search__icon" aria-hidden="true" />
       <input
         id="header-search-input"
         className="header-search__input"
         type="search"
-        placeholder="Buscar filmes"
+        placeholder={text.searchPlaceholder}
         autoComplete="off"
         enterKeyHint="search"
         value={value}
-        onChange={(event) => setValue(event.target.value)}
+        onChange={(event) => {
+          setValue(event.target.value);
+        }}
       />
     </form>
   );
@@ -52,12 +56,12 @@ const AppHeader = () => {
         <Link
           to="/"
           className="app-header__brand"
-          aria-label={`${messages.brand.name}, página inicial`}
+          aria-label={interpolate(text.homeLink, { brand: messages.brand.name })}
         >
           <BrandMark />
         </Link>
 
-        <nav className="app-header__nav" aria-label="Principal">
+        <nav className="app-header__nav" aria-label={text.mainLabel}>
           {NAV_ITEMS.map(({ to, label, end }) => (
             <NavLink key={to} to={to} end={end} className="app-header__link">
               {label}
@@ -70,7 +74,7 @@ const AppHeader = () => {
           <Link
             to="/search"
             className="icon-btn app-header__search-link"
-            aria-label="Buscar filmes"
+            aria-label={text.searchLabel}
           >
             <PiMagnifyingGlass aria-hidden="true" />
           </Link>

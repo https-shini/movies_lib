@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { Link, useParams } from "react-router";
 import { PiArrowDown, PiPlayFill, PiUser } from "react-icons/pi";
+import { interpolate, messages } from "../i18n";
 import { backdropSrcSet, getBackdropUrl, getProfileUrl } from "../lib/images";
 import {
   getYouTubeTrailerKey,
@@ -19,7 +20,9 @@ import {
   formatReleaseDate,
   formatRuntime,
   getReleaseYear,
+  textOr,
 } from "../lib/format";
+import type { CastMember } from "../types/tmdb";
 import MovieRail from "../components/movie/MovieRail";
 import { Poster } from "../components/movie/PosterCard";
 import TrailerDialog from "../components/movie/TrailerDialog";
@@ -30,8 +33,10 @@ import StateMessage from "../components/ui/StateMessage";
 import NotFound from "./NotFound";
 import "./Movie.css";
 
+const text = messages.movie;
+
 const MovieSkeleton = () => (
-  <main className="movie" aria-busy="true" aria-label="Carregando filme">
+  <main className="movie" aria-busy="true" aria-label={text.loading}>
     <section className="movie-hero">
       <div className="movie-hero__backdrop skeleton" />
       <div className="shell movie-hero__inner">
@@ -46,8 +51,8 @@ const MovieSkeleton = () => (
   </main>
 );
 
-const CastRail = ({ cast }) => {
-  const railRef = useRef(null);
+const CastRail = ({ cast }: { cast: readonly CastMember[] }) => {
+  const railRef = useRef<HTMLUListElement>(null);
   if (!cast.length) return null;
 
   return (
@@ -55,10 +60,10 @@ const CastRail = ({ cast }) => {
       <SectionHeader
         id="cast-title"
         index="02"
-        title="Elenco principal"
-        aside={<RailControls railRef={railRef} label="Elenco principal" />}
+        title={text.castTitle}
+        aside={<RailControls railRef={railRef} label={text.castTitle} />}
       />
-      <Rail railRef={railRef} label="Elenco principal" className="rail--wide">
+      <Rail railRef={railRef} label={text.castTitle} className="rail--wide">
         {cast.map((person) => {
           const photo = getProfileUrl(person.profile_path);
           return (
@@ -71,7 +76,7 @@ const CastRail = ({ cast }) => {
                 )}
               </div>
               <p className="cast-card__name">{person.name}</p>
-              <p className="cast-card__role">{person.character || "Personagem não informado"}</p>
+              <p className="cast-card__role">{textOr(person.character, text.noCharacter)}</p>
             </li>
           );
         })}
@@ -80,10 +85,15 @@ const CastRail = ({ cast }) => {
   );
 };
 
-const MovieDetails = ({ id }) => {
+interface Fact {
+  label: string;
+  value: string;
+}
+
+const MovieDetails = ({ id }: { id: string }) => {
   const [trailerOpen, setTrailerOpen] = useState(false);
   const { data: movie, isLoading, error, reload } = useMovie(id);
-  useDocumentTitle(movie?.title || (isLoading ? "Carregando filme" : "Filme"));
+  useDocumentTitle(textOr(movie?.title, isLoading ? text.loadingTitle : text.fallbackTitle));
 
   if (isLoading) return <MovieSkeleton />;
 
@@ -93,12 +103,12 @@ const MovieDetails = ({ id }) => {
         <div className="shell">
           <StateMessage
             tone="error"
-            title="Não foi possível abrir este filme"
-            message={error || "Filme não encontrado."}
+            title={text.error}
+            message={error || text.notFound}
             onRetry={reload}
             action={
               <Link to="/" className="btn btn--quiet">
-                Voltar ao início
+                {messages.common.backHome}
               </Link>
             }
           />
@@ -107,26 +117,33 @@ const MovieDetails = ({ id }) => {
     );
   }
 
-  const title = movie.title || "Título não informado";
+  const title = textOr(movie.title, messages.common.untitled);
   const backdrop = getBackdropUrl(movie.backdrop_path);
   const trailerKey = getYouTubeTrailerKey(movie.videos?.results);
-  const cast = movie.credits?.cast?.slice(0, MAX_CAST) ?? [];
+  const cast = movie.credits?.cast.slice(0, MAX_CAST) ?? [];
   const related = pickRelatedMovies(movie);
   const directors = pickDirectors(movie.credits);
   const writers = pickWriters(movie.credits);
   const year = getReleaseYear(movie.release_date);
+  const runtime = movie.runtime ?? 0;
   const rating = formatRating(movie.vote_average);
-  const hasRating = rating !== null && movie.vote_count > 0;
+  const voteCount = movie.vote_count ?? 0;
+  const hasRating = rating !== null && voteCount > 0;
+  const genres = movie.genres ?? [];
 
-  const facts = [
-    directors.length && { label: "Direção", value: directors.join(", ") },
-    writers.length && { label: "Roteiro", value: writers.join(", ") },
-    { label: "Lançamento", value: formatReleaseDate(movie.release_date) },
-    { label: "Duração", value: formatRuntime(movie.runtime) },
-    { label: "Idioma original", value: formatLanguage(movie.original_language) },
-    { label: "Orçamento", value: formatCurrency(movie.budget) },
-    { label: "Bilheteria", value: formatCurrency(movie.revenue) },
-  ].filter(Boolean);
+  const facts: Fact[] = [
+    ...(directors.length ? [{ label: text.directing, value: directors.join(", ") }] : []),
+    ...(writers.length ? [{ label: text.writing, value: writers.join(", ") }] : []),
+    { label: text.release, value: formatReleaseDate(movie.release_date) },
+    { label: text.runtime, value: formatRuntime(movie.runtime) },
+    { label: text.language, value: formatLanguage(movie.original_language) },
+    { label: text.budget, value: formatCurrency(movie.budget) },
+    { label: text.revenue, value: formatCurrency(movie.revenue) },
+  ];
+
+  const kicker =
+    [year, runtime > 0 ? formatRuntime(runtime) : null].filter(Boolean).join(" · ") ||
+    text.fallbackTitle;
 
   return (
     <main className="movie">
@@ -153,11 +170,7 @@ const MovieDetails = ({ id }) => {
           />
 
           <div className="movie-hero__info">
-            <p className="movie-hero__kicker mono">
-              {[year, movie.runtime > 0 && formatRuntime(movie.runtime)]
-                .filter(Boolean)
-                .join(" · ") || "Filme"}
-            </p>
+            <p className="movie-hero__kicker mono">{kicker}</p>
             <h1 id="movie-title" className="movie-hero__title display">
               {title}
             </h1>
@@ -165,9 +178,9 @@ const MovieDetails = ({ id }) => {
               <p className="movie-hero__original">{movie.original_title}</p>
             )}
 
-            {movie.genres?.length > 0 && (
-              <ul className="movie-hero__genres" role="list" aria-label="Gêneros">
-                {movie.genres.map((genre) => (
+            {genres.length > 0 && (
+              <ul className="movie-hero__genres" role="list" aria-label={text.genresLabel}>
+                {genres.map((genre) => (
                   <li key={genre.id}>
                     <Link className="chip" to={`/discover?genre=${genre.id}`}>
                       {genre.name}
@@ -180,18 +193,21 @@ const MovieDetails = ({ id }) => {
             <div className="movie-hero__score">
               {hasRating ? (
                 <>
-                  <p className="movie-hero__rating" aria-label={`Nota ${rating} de 10`}>
+                  <p
+                    className="movie-hero__rating"
+                    aria-label={interpolate(messages.common.ratingLabel, { rating })}
+                  >
                     <span className="display">{rating}</span>
                     <span className="mono" aria-hidden="true">
                       /10
                     </span>
                   </p>
                   <p className="movie-hero__votes mono">
-                    {formatCompactNumber(movie.vote_count)} votos no TMDB
+                    {interpolate(text.votes, { count: formatCompactNumber(voteCount) })}
                   </p>
                 </>
               ) : (
-                <p className="movie-hero__votes mono">Ainda sem avaliações suficientes</p>
+                <p className="movie-hero__votes mono">{text.noVotes}</p>
               )}
             </div>
 
@@ -200,13 +216,15 @@ const MovieDetails = ({ id }) => {
                 <button
                   type="button"
                   className="btn btn--primary"
-                  onClick={() => setTrailerOpen(true)}
+                  onClick={() => {
+                    setTrailerOpen(true);
+                  }}
                 >
-                  <PiPlayFill aria-hidden="true" /> Assistir trailer
+                  <PiPlayFill aria-hidden="true" /> {text.watchTrailer}
                 </button>
               )}
               <a className="btn btn--ghost" href="#where-to-watch">
-                Onde assistir <PiArrowDown aria-hidden="true" />
+                {text.whereToWatch} <PiArrowDown aria-hidden="true" />
               </a>
             </div>
           </div>
@@ -217,17 +235,15 @@ const MovieDetails = ({ id }) => {
         <div className="movie-body">
           <section className="movie-body__overview" aria-labelledby="overview-title">
             <h2 id="overview-title" className="sr-only">
-              Sinopse
+              {text.overviewTitle}
             </h2>
             {movie.tagline && <p className="movie-tagline display">{movie.tagline}</p>}
-            <p className="movie-overview">
-              {movie.overview || "Sinopse ainda não disponível em português."}
-            </p>
+            <p className="movie-overview">{textOr(movie.overview, text.noOverview)}</p>
           </section>
 
           <aside className="movie-body__facts" aria-labelledby="facts-title">
             <h2 id="facts-title" className="facts__title mono">
-              Ficha técnica
+              {text.factsTitle}
             </h2>
             <dl className="facts">
               {facts.map(({ label, value }) => (
@@ -244,8 +260,8 @@ const MovieDetails = ({ id }) => {
           <SectionHeader
             id="providers-title"
             index="01"
-            title="Onde assistir"
-            subtitle="Streaming, aluguel e compra no Brasil."
+            title={text.providersTitle}
+            subtitle={text.providersSubtitle}
           />
           <WatchProviders providers={movie["watch/providers"]} />
         </section>
@@ -256,7 +272,7 @@ const MovieDetails = ({ id }) => {
           <MovieRail
             id="related-title"
             index={cast.length ? "03" : "02"}
-            title="Você também pode gostar"
+            title={text.relatedTitle}
             movies={related}
             isLoading={false}
           />
@@ -266,7 +282,9 @@ const MovieDetails = ({ id }) => {
       {trailerKey && (
         <TrailerDialog
           open={trailerOpen}
-          onClose={() => setTrailerOpen(false)}
+          onClose={() => {
+            setTrailerOpen(false);
+          }}
           videoKey={trailerKey}
           title={title}
         />
@@ -276,10 +294,10 @@ const MovieDetails = ({ id }) => {
 };
 
 const Movie = () => {
-  const { id } = useParams();
+  const { id = "" } = useParams();
 
   // Evita uma requisição para endereços como /movie/abc.
-  if (!/^\d+$/.test(id ?? "")) return <NotFound />;
+  if (!/^\d+$/.test(id)) return <NotFound />;
 
   // A key reinicia o estado ao navegar entre filmes recomendados.
   return <MovieDetails key={id} id={id} />;

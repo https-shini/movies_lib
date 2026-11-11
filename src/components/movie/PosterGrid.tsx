@@ -1,23 +1,36 @@
+import type { ReactNode } from "react";
+import { messages } from "../../i18n";
+import type { MovieSummary } from "../../types/tmdb";
 import StateMessage from "../ui/StateMessage";
 import PosterCard, { PosterCardSkeleton } from "./PosterCard";
 
-/**
- * Grade de filmes com estados de carregamento, erro (com nova tentativa) e vazio.
- */
+interface PosterGridProps {
+  movies: readonly MovieSummary[];
+  isLoading: boolean;
+  error: string;
+  onRetry: () => void;
+  label: string;
+  emptyTitle?: string | undefined;
+  emptyMessage?: string | undefined;
+  emptyAction?: ReactNode | undefined;
+  skeletonCount?: number | undefined;
+}
+
+/** Grade de filmes com estados de carregamento, erro (com nova tentativa) e vazio. */
 const PosterGrid = ({
   movies,
   isLoading,
   error,
   onRetry,
   label,
-  emptyTitle = "Nada por aqui",
+  emptyTitle = messages.grid.emptyTitle,
   emptyMessage,
   emptyAction,
   skeletonCount = 12,
-}) => {
+}: PosterGridProps) => {
   if (isLoading) {
     return (
-      <div className="poster-grid" aria-busy="true" aria-label="Carregando filmes">
+      <div className="poster-grid" aria-busy="true" aria-label={messages.grid.loading}>
         {Array.from({ length: skeletonCount }, (_, index) => (
           <PosterCardSkeleton key={index} />
         ))}
@@ -29,14 +42,14 @@ const PosterGrid = ({
     return (
       <StateMessage
         tone="error"
-        title="Não foi possível carregar"
+        title={messages.common.loadError}
         message={error}
         onRetry={onRetry}
       />
     );
   }
 
-  if (!movies?.length) {
+  if (!movies.length) {
     return (
       <StateMessage tone="empty" title={emptyTitle} message={emptyMessage} action={emptyAction} />
     );

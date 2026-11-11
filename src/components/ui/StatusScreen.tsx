@@ -1,8 +1,15 @@
 import { Link } from "react-router";
+import { messages } from "../../i18n";
 import "./StatusScreen.css";
 
+interface StatusScreenProps {
+  code: string;
+  title: string;
+  message: string;
+}
+
 /** Tela de página inexistente ou erro inesperado, com caminhos de volta. */
-const StatusScreen = ({ code, title, message }) => (
+const StatusScreen = ({ code, title, message }: StatusScreenProps) => (
   <main className="status-screen">
     <div className="shell status-screen__inner reveal">
       <p className="status-screen__code display" aria-hidden="true">
@@ -12,10 +19,10 @@ const StatusScreen = ({ code, title, message }) => (
       <p className="status-screen__message">{message}</p>
       <div className="status-screen__actions">
         <Link to="/" className="btn btn--primary">
-          Voltar ao início
+          {messages.common.backHome}
         </Link>
         <Link to="/discover" className="btn btn--ghost">
-          Descobrir filmes
+          {messages.common.discoverMovies}
         </Link>
       </div>
     </div>

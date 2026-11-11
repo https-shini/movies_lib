@@ -1,22 +1,32 @@
 import { Link } from "react-router";
 import { PiArrowUpRight } from "react-icons/pi";
+import { messages } from "../../i18n";
 import { getReleaseYear } from "../../lib/format";
 import { backdropSrcSet, getBackdropUrl, getPosterUrl } from "../../lib/images";
+import type { MovieSummary } from "../../types/tmdb";
 import Rating from "../ui/Rating";
 import { getMovieTitle } from "./PosterCard";
 import "./FeaturedHero.css";
+
+const text = messages.home;
+
+interface FeaturedHeroProps {
+  movie: MovieSummary | undefined;
+  genresById: ReadonlyMap<number, string>;
+  isLoading: boolean;
+}
 
 /**
  * Destaque da página inicial: o filme mais popular do momento.
  * No celular usa o pôster (vertical); a partir de 700px, a imagem de fundo.
  */
-const FeaturedHero = ({ movie, genresById, isLoading }) => {
+const FeaturedHero = ({ movie, genresById, isLoading }: FeaturedHeroProps) => {
   if (isLoading || !movie) {
     return (
       <section
         className="featured featured--loading"
         aria-busy="true"
-        aria-label="Carregando destaque"
+        aria-label={text.featuredLoading}
       >
         <div className="featured__media skeleton" />
         <div className="featured__content shell">
@@ -33,14 +43,14 @@ const FeaturedHero = ({ movie, genresById, isLoading }) => {
   const poster = getPosterUrl(movie.poster_path, "w500");
   const year = getReleaseYear(movie.release_date);
   const genres = (movie.genre_ids ?? [])
-    .map((id) => genresById?.get(id))
-    .filter(Boolean)
+    .map((id) => genresById.get(id))
+    .filter((name): name is string => Boolean(name))
     .slice(0, 2);
 
   return (
     <section className="featured" aria-labelledby="featured-title">
       <div className="featured__media">
-        {(backdrop || poster) && (
+        {(backdrop ?? poster) && (
           <picture>
             {backdrop && (
               <source
@@ -49,7 +59,7 @@ const FeaturedHero = ({ movie, genresById, isLoading }) => {
                 sizes="100vw"
               />
             )}
-            <img src={poster ?? backdrop} alt="" fetchPriority="high" />
+            <img src={poster ?? backdrop ?? undefined} alt="" fetchPriority="high" />
           </picture>
         )}
       </div>
@@ -57,7 +67,7 @@ const FeaturedHero = ({ movie, genresById, isLoading }) => {
       <div className="featured__content shell reveal">
         <p className="featured__kicker mono">
           <span className="featured__live" aria-hidden="true" />
-          Em alta agora
+          {text.featuredKicker}
         </p>
         <h1 id="featured-title" className="featured__title display">
           {title}
@@ -74,10 +84,10 @@ const FeaturedHero = ({ movie, genresById, isLoading }) => {
         {movie.overview && <p className="featured__overview">{movie.overview}</p>}
         <div className="featured__actions">
           <Link to={`/movie/${movie.id}`} className="btn btn--primary">
-            Ver detalhes <PiArrowUpRight aria-hidden="true" />
+            {text.featuredDetails} <PiArrowUpRight aria-hidden="true" />
           </Link>
           <Link to="/discover" className="btn btn--ghost">
-            Explorar catálogo
+            {text.featuredExplore}
           </Link>
         </div>
       </div>

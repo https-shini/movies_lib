@@ -1,15 +1,37 @@
-import { useRef } from "react";
+import { useRef, type ReactNode } from "react";
+import { interpolate, messages } from "../../i18n";
+import type { MovieSummary } from "../../types/tmdb";
 import SectionHeader from "../ui/SectionHeader";
 import StateMessage from "../ui/StateMessage";
 import Rail, { RailControls } from "../ui/Rail";
 import PosterCard, { PosterCardSkeleton } from "./PosterCard";
 
-/**
- * Seção com cabeçalho numerado e faixa horizontal de pôsteres.
- */
-const MovieRail = ({ id, index, title, subtitle, movies, isLoading, error, onRetry, link }) => {
-  const railRef = useRef(null);
-  const hasMovies = !isLoading && !error && movies?.length > 0;
+interface MovieRailProps {
+  id: string;
+  index?: string | undefined;
+  title: string;
+  subtitle?: string | undefined;
+  movies: readonly MovieSummary[];
+  isLoading: boolean;
+  error?: string | undefined;
+  onRetry?: (() => void) | undefined;
+  link?: ReactNode | undefined;
+}
+
+/** Seção com cabeçalho numerado e faixa horizontal de pôsteres. */
+const MovieRail = ({
+  id,
+  index,
+  title,
+  subtitle,
+  movies,
+  isLoading,
+  error = "",
+  onRetry,
+  link,
+}: MovieRailProps) => {
+  const railRef = useRef<HTMLUListElement>(null);
+  const hasMovies = !isLoading && !error && movies.length > 0;
 
   return (
     <section className="section" aria-labelledby={id}>
@@ -27,7 +49,7 @@ const MovieRail = ({ id, index, title, subtitle, movies, isLoading, error, onRet
       />
 
       {isLoading && (
-        <Rail label={`Carregando ${title}`}>
+        <Rail label={interpolate(messages.rail.loading, { title })}>
           {Array.from({ length: 8 }, (_, item) => (
             <li key={item}>
               <PosterCardSkeleton />
@@ -40,14 +62,14 @@ const MovieRail = ({ id, index, title, subtitle, movies, isLoading, error, onRet
         <StateMessage
           tone="error"
           compact
-          title="Não foi possível carregar esta seção"
+          title={messages.rail.error}
           message={error}
           onRetry={onRetry}
         />
       )}
 
-      {!isLoading && !error && !movies?.length && (
-        <StateMessage compact title="Nenhum filme nesta seção por enquanto." />
+      {!isLoading && !error && !movies.length && (
+        <StateMessage compact title={messages.rail.empty} />
       )}
 
       {hasMovies && (

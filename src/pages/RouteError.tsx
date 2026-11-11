@@ -1,12 +1,15 @@
 import { isRouteErrorResponse, useRouteError } from "react-router";
+import { messages } from "../i18n";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
 import StatusScreen from "../components/ui/StatusScreen";
+
+const text = messages.status;
 
 const RouteError = () => {
   const error = useRouteError();
   const isNotFound = isRouteErrorResponse(error) && error.status === 404;
 
-  useDocumentTitle(isNotFound ? "Página não encontrada" : "Algo deu errado");
+  useDocumentTitle(isNotFound ? text.notFoundTitle : text.errorTitle);
 
   if (import.meta.env.DEV && !isNotFound) {
     console.error(error);
@@ -14,16 +17,12 @@ const RouteError = () => {
 
   return isNotFound ? (
     <StatusScreen
-      code="404"
-      title="Esta cena foi cortada"
-      message="O endereço pode estar incorreto ou o conteúdo não está mais disponível."
+      code={text.notFoundCode}
+      title={text.notFoundHeading}
+      message={text.notFoundMessage}
     />
   ) : (
-    <StatusScreen
-      code="Ops"
-      title="O projetor falhou"
-      message="Algo deu errado ao exibir esta página. Recarregue a página ou volte para o início."
-    />
+    <StatusScreen code={text.errorCode} title={text.errorHeading} message={text.errorMessage} />
   );
 };
 
