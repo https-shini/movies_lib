@@ -4,8 +4,9 @@ import { installTmdbMock, type TmdbMock } from "./tmdb.ts";
 /**
  * `test` dos testes de interface do Cinelux. Cada teste recebe automaticamente:
  * - `tmdb`: o proxy /api/tmdb simulado com fixtures (ver tmdb.ts);
- * - rede externa bloqueada: imagens do TMDB viram um PNG local, fontes e o player do
- *   YouTube viram respostas vazias, e qualquer outro domínio externo faz o teste falhar;
+ * - rede externa bloqueada: imagens do TMDB viram um PNG local e o player do YouTube
+ *   vira uma página vazia; qualquer outro domínio externo (inclusive o Google Fonts,
+ *   que deixou de ser usado) faz o teste falhar;
  * - `consoleErrors`: o teste falha se o navegador registrar erros não esperados.
  */
 
@@ -32,16 +33,12 @@ async function isolateNetwork(page: Page, blocked: string[]): Promise<void> {
       const { hostname } = new URL(route.request().url());
       if (hostname === "image.tmdb.org") {
         await route.fulfill({ status: 200, contentType: "image/png", body: PIXEL });
-      } else if (hostname === "fonts.googleapis.com") {
-        await route.fulfill({ status: 200, contentType: "text/css", body: "" });
       } else if (hostname === "www.youtube-nocookie.com") {
         await route.fulfill({
           status: 200,
           contentType: "text/html",
           body: "<!doctype html><title>Player simulado</title>",
         });
-      } else if (hostname === "fonts.gstatic.com") {
-        await route.abort("blockedbyclient");
       } else {
         blocked.push(hostname);
         await route.abort("blockedbyclient");

@@ -1,4 +1,5 @@
 // Estilos globais primeiro, para que os estilos dos componentes tenham precedência.
+import "./styles/fonts.css";
 import "./styles/base.css";
 import "./styles/ui.css";
 import "./styles/layout.css";

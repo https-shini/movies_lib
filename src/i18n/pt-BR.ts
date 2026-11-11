@@ -104,7 +104,6 @@ export const ptBR = {
       "Ao abrir uma página, o seu navegador busca conteúdo diretamente nestes serviços, que recebem o endereço IP como em qualquer acesso à internet:",
     thirdParty: [
       "TMDB (image.tmdb.org): pôsteres, imagens de fundo e fotos do elenco.",
-      "Google Fonts: as fontes tipográficas do site.",
       "YouTube (youtube-nocookie.com): o trailer, apenas quando você clica em assistir.",
     ],
     storageTitle: "O que guardamos",
