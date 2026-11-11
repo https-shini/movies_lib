@@ -44,9 +44,10 @@ const PosterGrid = ({
 
   return (
     <ul className="poster-grid reveal" role="list" aria-label={label}>
-      {movies.map((movie) => (
+      {movies.map((movie, index) => (
         <li key={movie.id}>
-          <PosterCard movie={movie} />
+          {/* O primeiro pôster costuma ser o maior elemento visível (LCP). */}
+          <PosterCard movie={movie} priority={index === 0} />
         </li>
       ))}
     </ul>

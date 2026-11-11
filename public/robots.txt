@@ -1,0 +1,6 @@
+# Cinelux
+User-agent: *
+Allow: /
+Disallow: /api/
+
+Sitemap: https://movies-lib-vite.vercel.app/sitemap.xml

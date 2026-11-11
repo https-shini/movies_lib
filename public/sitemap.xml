@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Rotas fixas do Cinelux. Trocar o domínio quando cinelux.app estiver ativo (docs/DECISIONS.md, D-20). -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://movies-lib-vite.vercel.app/</loc>
+  </url>
+  <url>
+    <loc>https://movies-lib-vite.vercel.app/discover</loc>
+  </url>
+  <url>
+    <loc>https://movies-lib-vite.vercel.app/search</loc>
+  </url>
+  <url>
+    <loc>https://movies-lib-vite.vercel.app/sobre</loc>
+  </url>
+  <url>
+    <loc>https://movies-lib-vite.vercel.app/privacidade</loc>
+  </url>
+</urlset>
