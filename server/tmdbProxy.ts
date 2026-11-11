@@ -55,6 +55,7 @@ const ALLOWED_APPENDS = new Set([
   "recommendations",
   "similar",
   "watch/providers",
+  "release_dates",
 ]);
 const MAX_PARAM_LENGTH = 200;
 

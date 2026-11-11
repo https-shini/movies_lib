@@ -302,10 +302,11 @@ export async function getMovieGenres(options?: RequestOptions): Promise<Genre[]>
 }
 
 /** Complementos pedidos junto com os detalhes do filme. */
-export const MOVIE_APPENDS = "credits,videos,recommendations,similar,watch/providers";
+export const MOVIE_APPENDS = "credits,videos,recommendations,similar,watch/providers,release_dates";
 
 /**
- * Detalhes, elenco, vídeos, recomendações e onde assistir numa única chamada
+ * Detalhes, elenco, vídeos, recomendações, onde assistir e datas de lançamento por país
+ * (com a classificação indicativa) numa única chamada
  * (`append_to_response`, D-41). Vídeos em português, inglês e sem idioma: sem isso
  * muitos filmes ficam sem trailer.
  */

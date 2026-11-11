@@ -108,7 +108,7 @@ describe("requisições ao TMDB", () => {
     expect(fetchMock).toHaveBeenCalledTimes(1);
     expect(url.pathname).toBe("/api/tmdb/movie/550");
     expect(url.searchParams.get("append_to_response")).toBe(
-      "credits,videos,recommendations,similar,watch/providers",
+      "credits,videos,recommendations,similar,watch/providers,release_dates",
     );
     expect(url.searchParams.get("include_video_language")).toBe("pt,en,null");
     expect(url.searchParams.get("language")).toBe("pt-BR");

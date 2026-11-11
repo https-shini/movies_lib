@@ -60,14 +60,14 @@ describe("buildUpstreamRequest", () => {
     const { url } = buildUpstreamRequest({
       path: "movie/550",
       searchParams: new URLSearchParams(
-        "api_key=attacker&foo=bar&append_to_response=credits,account_states,videos",
+        "api_key=attacker&foo=bar&append_to_response=credits,account_states,videos,release_dates",
       ),
       apiKey: "server-key",
     });
 
     expect(url.searchParams.get("api_key")).toBe("server-key");
     expect(url.searchParams.has("foo")).toBe(false);
-    expect(url.searchParams.get("append_to_response")).toBe("credits,videos");
+    expect(url.searchParams.get("append_to_response")).toBe("credits,videos,release_dates");
   });
 
   it.each(["account/123", "authentication/token/new", "movie/abc", "", null])(
