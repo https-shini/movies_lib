@@ -109,7 +109,7 @@ test.describe("Rodapé e créditos", () => {
 });
 
 test.describe("Fontes", () => {
-  test("as três famílias carregam do próprio site", async ({ page }) => {
+  test("as duas famílias carregam do próprio site", async ({ page }) => {
     const fontRequests: string[] = [];
     page.on("requestfinished", (request) => {
       if (request.resourceType() === "font") fontRequests.push(new URL(request.url()).host);
@@ -123,18 +123,17 @@ test.describe("Fontes", () => {
     // (o navegador só baixa sob demanda os estilos usados na página).
     const loaded = await page.evaluate(async () => {
       const faces = [
-        '400 16px "Fraunces"',
-        'italic 400 16px "Fraunces"',
-        '400 16px "Instrument Sans"',
-        '400 16px "IBM Plex Mono"',
-        '500 16px "IBM Plex Mono"',
+        '400 16px "DM Sans"',
+        '800 16px "DM Sans"',
+        '500 16px "Space Grotesk"',
+        '700 16px "Space Grotesk"',
       ];
       const results = await Promise.all(faces.map((face) => document.fonts.load(face, "Cinelux")));
       return results.map(
         (list) => list.length > 0 && list.every((face) => face.status === "loaded"),
       );
     });
-    expect(loaded).toEqual([true, true, true, true, true]);
+    expect(loaded).toEqual([true, true, true, true]);
     expect(fontRequests.length).toBeGreaterThan(0);
     expect(new Set(fontRequests)).toEqual(new Set([new URL(page.url()).host]));
   });

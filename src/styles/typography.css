@@ -1,23 +1,23 @@
 /*
- * Tipografia: classes de texto reutilizáveis (seção 4 da identidade).
+ * Tipografia: classes de texto reutilizáveis.
  * Os valores vêm de tokens.css; a base do texto (família, tamanho e entrelinha) fica no
  * `body`, em base.css.
  */
 
-/* Rótulo técnico em mono: ano, duração, contadores e numeração de seções. */
+/* Rótulo em caixa alta: ano, duração, contadores e numeração de seções. */
 .mono {
   font-family: var(--font-mono);
   font-size: var(--text-xs);
-  font-weight: var(--weight-medium);
-  letter-spacing: var(--tracking-wider);
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-eyebrow);
   text-transform: uppercase;
 }
 
+/* Títulos em Space Grotesk, compactos como na identidade original. */
 .display {
   font-family: var(--font-display);
-  font-optical-sizing: auto;
-  font-variation-settings: "SOFT" 50;
-  font-weight: var(--weight-semibold);
-  letter-spacing: var(--tracking-tighter);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-display);
   line-height: var(--leading-display);
 }

@@ -4,6 +4,5 @@ As fontes em `src/assets/fonts/` são redistribuídas sem alterações, nos subc
 
 | Família | Licença | Copyright |
 | --- | --- | --- |
-| Fraunces | [OFL-Fraunces.txt](./OFL-Fraunces.txt) | The Fraunces Project Authors |
-| Instrument Sans | [OFL-InstrumentSans.txt](./OFL-InstrumentSans.txt) | The Instrument Sans Project Authors |
-| IBM Plex Mono | [OFL-IBMPlexMono.txt](./OFL-IBMPlexMono.txt) | IBM Corp. (Reserved Font Name "Plex") |
+| DM Sans | [OFL-DMSans.txt](./OFL-DMSans.txt) | The DM Sans Project Authors |
+| Space Grotesk | [OFL-SpaceGrotesk.txt](./OFL-SpaceGrotesk.txt) | The Space Grotesk Project Authors |

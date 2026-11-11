@@ -1,10 +1,16 @@
+/* Painel com borda e cantos arredondados, como na identidade original. */
 .featured {
   position: relative;
   display: grid;
-  min-height: min(78svh, 680px);
+  width: min(100% - 2 * var(--gutter), var(--container-max));
+  min-height: min(72svh, 620px);
+  margin: var(--space-5) auto 0;
   align-items: end;
   overflow: hidden;
   isolation: isolate;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--gradient-panel);
 }
 
 .featured__media {
@@ -40,7 +46,7 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  color: var(--color-text-primary);
+  color: var(--color-accent-default);
 }
 
 .featured__live {

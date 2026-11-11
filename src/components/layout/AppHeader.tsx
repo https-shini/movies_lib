@@ -42,6 +42,14 @@ const HeaderSearch = () => {
           setValue(event.target.value);
         }}
       />
+      <button
+        type="submit"
+        className="header-search__submit"
+        aria-label={text.searchSubmit}
+        disabled={!value.trim()}
+      >
+        <PiMagnifyingGlass aria-hidden="true" />
+      </button>
     </form>
   );
 };

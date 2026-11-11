@@ -1,6 +1,19 @@
 import { useRef, useState } from "react";
 import { Link, useParams } from "react-router";
-import { PiArrowDown, PiPlayFill, PiUser } from "react-icons/pi";
+import type { IconType } from "react-icons";
+import {
+  PiArrowDown,
+  PiCalendarBlank,
+  PiChartLineUp,
+  PiFilmSlate,
+  PiHourglassMedium,
+  PiPencilSimpleLine,
+  PiPlayFill,
+  PiShieldCheck,
+  PiTranslate,
+  PiUser,
+  PiWallet,
+} from "react-icons/pi";
 import { interpolate, messages } from "../i18n";
 import { backdropSrcSet, getBackdropUrl, getProfileUrl } from "../lib/images";
 import {
@@ -95,6 +108,7 @@ function formatAgeRating(rating: string | null): string {
 interface Fact {
   label: string;
   value: string;
+  Icon: IconType;
 }
 
 const MovieDetails = ({ id }: { id: string }) => {
@@ -139,14 +153,22 @@ const MovieDetails = ({ id }: { id: string }) => {
   const genres = movie.genres ?? [];
 
   const facts: Fact[] = [
-    ...(directors.length ? [{ label: text.directing, value: directors.join(", ") }] : []),
-    ...(writers.length ? [{ label: text.writing, value: writers.join(", ") }] : []),
-    { label: text.release, value: formatReleaseDate(movie.release_date) },
-    { label: text.runtime, value: formatRuntime(movie.runtime) },
-    { label: text.ageRating, value: formatAgeRating(getBrazilianRating(movie.release_dates)) },
-    { label: text.language, value: formatLanguage(movie.original_language) },
-    { label: text.budget, value: formatCurrency(movie.budget) },
-    { label: text.revenue, value: formatCurrency(movie.revenue) },
+    ...(directors.length
+      ? [{ label: text.directing, value: directors.join(", "), Icon: PiFilmSlate }]
+      : []),
+    ...(writers.length
+      ? [{ label: text.writing, value: writers.join(", "), Icon: PiPencilSimpleLine }]
+      : []),
+    { label: text.release, value: formatReleaseDate(movie.release_date), Icon: PiCalendarBlank },
+    { label: text.runtime, value: formatRuntime(movie.runtime), Icon: PiHourglassMedium },
+    {
+      label: text.ageRating,
+      value: formatAgeRating(getBrazilianRating(movie.release_dates)),
+      Icon: PiShieldCheck,
+    },
+    { label: text.language, value: formatLanguage(movie.original_language), Icon: PiTranslate },
+    { label: text.budget, value: formatCurrency(movie.budget), Icon: PiWallet },
+    { label: text.revenue, value: formatCurrency(movie.revenue), Icon: PiChartLineUp },
   ];
 
   const kicker =
@@ -183,7 +205,9 @@ const MovieDetails = ({ id }: { id: string }) => {
               {title}
             </h1>
             {movie.original_title && movie.original_title !== title && (
-              <p className="movie-hero__original">{movie.original_title}</p>
+              <p className="movie-hero__original">
+                {interpolate(text.originalTitle, { title: movie.original_title })}
+              </p>
             )}
 
             {genres.length > 0 && (
@@ -245,7 +269,7 @@ const MovieDetails = ({ id }: { id: string }) => {
             <h2 id="overview-title" className="sr-only">
               {text.overviewTitle}
             </h2>
-            {movie.tagline && <p className="movie-tagline display">{movie.tagline}</p>}
+            {movie.tagline && <p className="movie-tagline">{movie.tagline}</p>}
             <p className="movie-overview">{textOr(movie.overview, text.noOverview)}</p>
           </section>
 
@@ -254,9 +278,12 @@ const MovieDetails = ({ id }: { id: string }) => {
               {text.factsTitle}
             </h2>
             <dl className="facts">
-              {facts.map(({ label, value }) => (
+              {facts.map(({ label, value, Icon }) => (
                 <div key={label} className="facts__row">
-                  <dt>{label}</dt>
+                  <dt>
+                    <Icon className="facts__icon" aria-hidden="true" />
+                    {label}
+                  </dt>
                   <dd>{value}</dd>
                 </div>
               ))}

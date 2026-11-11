@@ -115,7 +115,7 @@ Requisições canceladas (`AbortError`) são repassadas sem conversão.
 ### Imagens e fontes (D-40)
 
 - **Pôsteres:** `srcset` e `sizes` medidos nos cinco tamanhos de tela (`POSTER_VARIANTS` em `lib/images.ts`): cards com `w185`/`w342`, ranking com `w92`/`w185` e pôster do filme com `w185` a `w500`. Os backdrops usam `w780`/`w1280`.
-- **Fontes:** Fraunces, Instrument Sans e IBM Plex Mono servidas pelo próprio site (`src/assets/fonts`, `src/styles/fonts.css`), nos subconjuntos latin e latin-ext, com `font-display: swap`. Não há requisições ao Google.
+- **Fontes:** DM Sans e Space Grotesk (identidade original, D-54) servidas pelo próprio site (`src/assets/fonts`, `src/styles/fonts.css`), nos subconjuntos latin e latin-ext, com `font-display: swap`. Não há requisições ao Google.
 
 ### Regras de descoberta
 

@@ -1,7 +1,14 @@
 /* Herói ----------------------------------------------------------------- */
+/* Painel com borda e cantos arredondados, como na identidade original. */
 .movie-hero {
   position: relative;
+  width: min(100% - 2 * var(--gutter), var(--container-max));
+  margin: var(--space-5) auto 0;
+  overflow: hidden;
   isolation: isolate;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--gradient-panel);
 }
 
 .movie-hero__backdrop {
@@ -32,10 +39,12 @@
   grid-template-columns: 112px minmax(0, 1fr);
   gap: var(--space-5) var(--space-4);
   margin-top: -84px;
+  padding-bottom: var(--space-6);
 }
 
 .movie-hero__poster {
   width: 112px;
+  border-radius: var(--radius-md);
   box-shadow: var(--ring-hairline), var(--elevation-overlay);
 }
 
@@ -62,9 +71,7 @@
 
 .movie-hero__original {
   color: var(--color-text-secondary);
-  font-family: var(--font-display);
-  font-size: var(--text-lg);
-  font-style: italic;
+  font-size: var(--text-md);
 }
 
 .movie-hero__genres {
@@ -91,7 +98,6 @@
 .movie-hero__rating .display {
   color: var(--color-accent-default);
   font-size: clamp(2.4rem, 2rem + 2vw, 3.4rem);
-  font-style: italic;
   line-height: var(--leading-none);
 }
 
@@ -124,8 +130,7 @@
 @media (min-width: 900px) {
   .movie-hero {
     display: grid;
-    min-height: min(78vh, 720px);
-    align-items: end;
+    align-items: center;
   }
 
   .movie-hero__backdrop {
@@ -141,10 +146,10 @@
 
   .movie-hero__inner {
     grid-template-columns: clamp(220px, 20vw, 280px) minmax(0, 1fr);
-    align-items: end;
+    align-items: center;
     gap: var(--space-7);
     margin-top: 0;
-    padding-block: var(--space-8) var(--space-7);
+    padding-block: var(--space-7);
   }
 
   .movie-hero__poster {
@@ -168,7 +173,6 @@
   margin-bottom: var(--space-4);
   color: var(--color-text-primary);
   font-size: var(--text-xl);
-  font-style: italic;
   font-weight: var(--weight-medium);
   line-height: var(--leading-title);
 }
@@ -185,33 +189,42 @@
   color: var(--color-text-tertiary);
 }
 
+/* Ficha técnica em cards com ícone dourado, como na identidade original. */
 .facts {
-  border-top: 1px solid var(--color-border-strong);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr));
+  gap: var(--space-3);
 }
 
 .facts__row {
+  position: relative;
   display: grid;
-  grid-template-columns: minmax(7.5rem, 38%) minmax(0, 1fr);
-  gap: var(--space-4);
-  padding-block: var(--space-3);
-  border-bottom: 1px solid var(--color-border);
-  font-size: var(--text-sm);
+  align-content: center;
+  gap: var(--space-1);
+  padding: var(--space-4) var(--space-4) var(--space-4) calc(var(--space-4) * 2 + var(--icon-md));
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-base);
+}
+
+.facts__icon {
+  position: absolute;
+  top: 50%;
+  left: var(--space-4);
+  color: var(--color-accent-default);
+  font-size: var(--icon-md);
+  transform: translateY(-50%);
 }
 
 .facts__row dt {
   color: var(--color-text-tertiary);
+  font-size: var(--text-xs);
 }
 
 .facts__row dd {
-  font-weight: var(--weight-medium);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
   overflow-wrap: anywhere;
-}
-
-@media (min-width: 900px) {
-  .movie-body {
-    grid-template-columns: minmax(0, 1.6fr) minmax(280px, 1fr);
-    gap: var(--space-8);
-  }
 }
 
 /* Elenco ---------------------------------------------------------------- */

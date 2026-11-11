@@ -14,7 +14,6 @@
 .status-screen__code {
   color: var(--color-accent-default);
   font-size: clamp(5rem, 3rem + 14vw, 12rem);
-  font-style: italic;
   line-height: var(--leading-numeral);
 }
 

@@ -27,7 +27,6 @@ a.ranked__item:hover .ranked__number {
 .ranked__number {
   color: var(--color-text-tertiary);
   font-size: var(--text-numeral);
-  font-style: italic;
   font-variant-numeric: lining-nums tabular-nums;
   text-align: right;
   transition: color var(--duration-fast) ease;

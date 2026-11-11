@@ -2,7 +2,7 @@
   position: relative;
   aspect-ratio: 2 / 3;
   overflow: hidden;
-  border-radius: var(--radius-xs);
+  border-radius: var(--radius-sm);
   background: var(--color-surface-elevated);
   box-shadow: var(--ring-hairline);
 }
@@ -33,23 +33,30 @@
   overflow: hidden;
   font-family: var(--font-display);
   font-size: var(--text-sm);
-  font-style: italic;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 4;
 }
 
+/* Card com borda sobre a superfície, como na identidade original. */
 .poster-card {
   display: grid;
   gap: var(--space-2);
   align-content: start;
   min-width: 0;
+  height: 100%;
+  padding: var(--space-3);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-base);
+  transition:
+    transform var(--duration-base) var(--ease-out),
+    border-color var(--duration-fast) ease;
 }
 
 .poster-card__media {
   position: relative;
   margin-bottom: var(--space-1);
-  border-radius: var(--radius-xs);
-  transition: transform var(--duration-base) var(--ease-out);
+  border-radius: var(--radius-sm);
 }
 
 .poster-card__media::after {
@@ -62,7 +69,8 @@
   content: "";
 }
 
-.poster-card:hover .poster-card__media {
+.poster-card:hover {
+  border-color: var(--color-border-strong);
   transform: translateY(-3px);
 }
 

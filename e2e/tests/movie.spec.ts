@@ -7,7 +7,7 @@ test.describe("Filme", () => {
 
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Clube da Luta");
     await expect(page).toHaveTitle("Clube da Luta · Cinelux");
-    await expect(page.getByText("Fight Club", { exact: true })).toBeVisible();
+    await expect(page.getByText("Título original: Fight Club", { exact: true })).toBeVisible();
     await expect(page.getByLabel("Nota 8.4 de 10")).toBeVisible();
     await expect(page.getByText(movie550.tagline ?? "")).toBeVisible();
 

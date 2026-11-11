@@ -29,19 +29,16 @@
 }
 
 .brand__mark {
-  width: 26px;
-  max-width: none;
-  height: 26px;
   flex: none;
+  color: var(--color-accent-default);
+  font-size: var(--icon-xl);
 }
 
 .brand__name {
   font-family: var(--font-display);
   font-size: var(--text-brand);
-  font-style: italic;
-  font-variation-settings: "SOFT" 100;
-  font-weight: var(--weight-semibold);
-  letter-spacing: var(--tracking-tightest);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-display);
 }
 
 .app-header__nav {
@@ -85,7 +82,9 @@
 .header-search {
   position: relative;
   display: none;
-  width: clamp(220px, 24vw, 340px);
+  width: clamp(280px, 30vw, 440px);
+  align-items: center;
+  gap: var(--space-2);
 }
 
 .header-search__icon {
@@ -100,10 +99,12 @@
 
 .header-search__input {
   width: 100%;
+  min-width: 0;
+  flex: 1;
   height: var(--tap-target);
   padding: 0 var(--space-4) 0 42px;
   border: 1px solid var(--color-border-strong);
-  border-radius: var(--radius-full);
+  border-radius: var(--radius-sm);
   background: var(--color-surface-base);
   font-size: var(--text-sm);
   transition:
@@ -123,6 +124,30 @@
 
 .header-search__input::-webkit-search-cancel-button {
   display: none;
+}
+
+/* Botão dourado ao lado do campo, como na identidade original. */
+.header-search__submit {
+  display: grid;
+  width: var(--tap-target);
+  height: var(--tap-target);
+  flex: none;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  color: var(--color-accent-on);
+  background: var(--color-accent-default);
+  font-size: var(--icon-md);
+  transition: background-color var(--duration-fast) ease;
+}
+
+.header-search__submit:hover:not(:disabled) {
+  background: var(--color-accent-hover);
+}
+
+.header-search__submit:disabled {
+  opacity: var(--opacity-disabled);
 }
 
 @media (min-width: 900px) {
