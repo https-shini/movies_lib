@@ -171,7 +171,8 @@ export const ptBR = {
     search: "Buscar",
     homeLink: "{brand}, página inicial",
     searchLabel: "Buscar filmes",
-    searchPlaceholder: "Buscar filmes",
+    searchPlaceholder: "Buscar filmes…",
+    searchSubmit: "Pesquisar",
   },
 
   pagination: {
@@ -293,6 +294,7 @@ export const ptBR = {
     error: "Não foi possível abrir este filme",
     notFound: "Filme não encontrado.",
     genresLabel: "Gêneros",
+    originalTitle: "Título original: {title}",
     votes: "{count} votos no TMDB",
     noVotes: "Ainda sem avaliações suficientes",
     watchTrailer: "Assistir trailer",

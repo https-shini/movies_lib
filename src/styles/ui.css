@@ -7,9 +7,9 @@
   min-height: 44px;
   padding: 0 var(--space-5);
   border: 1px solid transparent;
-  border-radius: var(--radius-full);
+  border-radius: var(--radius-sm);
   font-size: var(--text-sm);
-  font-weight: var(--weight-semibold);
+  font-weight: var(--weight-extrabold);
   letter-spacing: var(--tracking-slight);
   white-space: nowrap;
   transition:
@@ -115,9 +115,9 @@
 
 .chip[aria-pressed="true"],
 .chip--active {
-  border-color: var(--color-text-primary);
-  color: var(--color-bg);
-  background: var(--color-text-primary);
+  border-color: var(--color-accent-default);
+  color: var(--color-accent-on);
+  background: var(--color-accent-default);
 }
 
 .chip svg {
