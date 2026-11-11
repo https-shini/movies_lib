@@ -60,11 +60,9 @@ function defaultResponse(path: string, url: URL): MockResponse | null {
     return json({ ...results, page });
   }
 
+  // Onde assistir chega junto com os detalhes; o endpoint separado não tem fixture
+  // de propósito: se o app voltar a pedi-lo, o teste falha.
   if (path === "movie/550") return json(fixtures.movie550);
-  if (path === "movie/550/watch/providers") return json(fixtures.providers550);
-
-  const providers = /^movie\/(\d+)\/watch\/providers$/.exec(path);
-  if (providers) return json({ id: Number(providers[1]), results: {} });
 
   const details = /^movie\/(\d+)$/.exec(path);
   if (details) {

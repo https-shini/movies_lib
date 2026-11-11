@@ -12,7 +12,6 @@ import type {
   MovieDetails,
   MovieSummary,
   Paginated,
-  WatchProvidersResponse,
 } from "../../src/types/tmdb.ts";
 import discoverPage1Json from "./discover-page-1.json" with { type: "json" };
 import discoverPage2Json from "./discover-page-2.json" with { type: "json" };
@@ -20,7 +19,6 @@ import emptyPageJson from "./empty-page.json" with { type: "json" };
 import genresJson from "./genres.json" with { type: "json" };
 import movie550Json from "./movie-550.json" with { type: "json" };
 import moviesJson from "./movies.json" with { type: "json" };
-import providers550Json from "./providers-550.json" with { type: "json" };
 import searchDunaPage1Json from "./search-duna-page-1.json" with { type: "json" };
 import searchDunaPage2Json from "./search-duna-page-2.json" with { type: "json" };
 import tmdb404Json from "./tmdb-404.json" with { type: "json" };
@@ -41,9 +39,11 @@ export const discover: Record<1 | 2, MoviePage> = {
   1: discoverPage1Json,
   2: discoverPage2Json,
 };
-/** Clube da Luta (550) com elenco, equipe, trailer oficial em português e recomendações. */
+/**
+ * Clube da Luta (550) com elenco, equipe, trailer oficial em português, recomendações e
+ * onde assistir (`watch/providers`), como chega numa única consulta de detalhes.
+ */
 export const movie550: MovieDetails = movie550Json;
-export const providers550: WatchProvidersResponse = providers550Json;
 /** Corpo de erro no formato do TMDB para recursos inexistentes. */
 export const tmdbNotFound = tmdb404Json;
 
@@ -83,5 +83,6 @@ export function detailsFrom(summary: MovieSummary): MovieDetails {
     videos: { results: [] },
     recommendations: { ...emptyPage },
     similar: { ...emptyPage },
+    "watch/providers": { results: {} },
   };
 }

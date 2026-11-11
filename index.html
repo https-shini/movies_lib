@@ -10,12 +10,14 @@
       content="Cinelux, seu acervo de cinema. Descubra filmes, veja do que se trata cada um e encontre onde assistir no Brasil."
     />
     <link rel="icon" type="image/svg+xml" href="/src/favicon.svg" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preconnect" href="https://image.tmdb.org" />
+    <!-- Dados do destaque do Início pedidos junto com o JavaScript (D-42). A URL precisa
+         ser igual à de getMovieList("popular", 1) em src/services/tmdb.ts. -->
     <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,400..700,50;1,9..144,400..700,50&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:wght@400..700&display=swap"
+      rel="preload"
+      href="/api/tmdb/movie/popular?language=pt-BR&page=1&region=BR"
+      as="fetch"
+      crossorigin="anonymous"
     />
     <title>Cinelux · Seu acervo de cinema</title>
   </head>

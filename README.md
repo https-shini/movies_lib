@@ -163,12 +163,21 @@ npx playwright show-report
 - **Tamanhos de tela:** cada teste de interface roda em cinco projetos, `mobile-320`, `mobile-375`, `tablet-768`, `desktop-1024` e `desktop-1440`, com essas larguras em pixels CSS. O projeto `proxy` testa o proxy por HTTP, uma vez.
 - **Fixtures (`e2e/fixtures/`):** JSON no formato do TMDB, tipados com `src/types/tmdb.ts`. Se uma fixture sair do modelo, o `npm run typecheck` falha.
 - **Mocks (`e2e/helpers/tmdb.ts`):** `page.route` intercepta `/api/tmdb/**` no navegador e responde com a fixture do endpoint. Um teste troca a resposta com `tmdb.on("search/movie", { status: 503 })` ou segura uma resposta para observar o carregamento.
-- **Rede isolada (`e2e/helpers/test.ts`):** imagens do TMDB viram um PNG local; fontes, player do YouTube e scripts da Vercel viram respostas vazias. O teste falha se o app pedir outro domínio externo, um endpoint sem fixture ou registrar erro no console.
+- **Rede isolada (`e2e/helpers/test.ts`):** imagens do TMDB viram um PNG local; o player do YouTube e os scripts da Vercel viram respostas vazias. O teste falha se o app pedir outro domínio externo, um endpoint sem fixture, registrar erro no console ou violar a CSP.
 - **Sem chave:** o servidor dos testes roda com `TMDB_API_KEY` vazia, mesmo que exista um `.env`.
 
 No CI, o job `e2e` roda dentro da imagem oficial do Playwright (`mcr.microsoft.com/playwright:v1.63.0-noble`), que já traz o Chromium e as dependências do sistema. Ele confere se a versão do `@playwright/test` é a mesma da imagem, roda `npm run test:e2e` e, só quando algo falha, guarda o relatório e os traces como artefato por 7 dias. Não há novas tentativas automáticas: um teste instável falha.
 
 Ao atualizar o `@playwright/test`, atualize também a tag da imagem e a variável `PLAYWRIGHT_IMAGE_VERSION` em `.github/workflows/quality.yml`.
+
+## Desempenho
+
+- **Fontes servidas pelo próprio site:** sem requisições ao Google Fonts (`src/assets/fonts`, licenças OFL junto aos arquivos).
+- **Imagens responsivas:** `srcset` e `sizes` medidos para pôsteres e imagens de fundo.
+- **Dados:** a página de filme faz uma única requisição; respostas bem-sucedidas ficam em cache no navegador por 5 minutos; cada rota pré-carrega seus dados enquanto o código da página é baixado.
+- **Divisão por rota:** as páginas além do Início são carregadas sob demanda.
+
+Detalhes e medições em [docs/MODEL.md](./docs/MODEL.md) e [docs/DECISIONS.md](./docs/DECISIONS.md) (D-40 e D-41).
 
 ## Integração com o TMDB
 

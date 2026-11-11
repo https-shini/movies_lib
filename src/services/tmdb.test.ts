@@ -7,7 +7,8 @@ import {
   getMovieDetails,
   getMovieGenres,
   getMovieList,
-  getMovieWatchProviders,
+  CLIENT_CACHE_TTL_MS,
+  PREFETCH,
   searchMovies,
   TmdbError,
 } from "./tmdb";
@@ -97,7 +98,7 @@ describe("requisições ao TMDB", () => {
     expect(url.searchParams.get("region")).toBe("BR");
   });
 
-  it("detalhes trazem elenco, vídeos e recomendações numa única chamada, sem região", async () => {
+  it("detalhes trazem elenco, vídeos, recomendações e onde assistir numa única chamada, sem região", async () => {
     const fetchMock = mockFetch(
       jsonResponse({ id: 550, title: "Clube da Luta", poster_path: null }),
     );
@@ -107,27 +108,139 @@ describe("requisições ao TMDB", () => {
     expect(fetchMock).toHaveBeenCalledTimes(1);
     expect(url.pathname).toBe("/api/tmdb/movie/550");
     expect(url.searchParams.get("append_to_response")).toBe(
-      "credits,videos,recommendations,similar",
+      "credits,videos,recommendations,similar,watch/providers",
     );
     expect(url.searchParams.get("include_video_language")).toBe("pt,en,null");
     expect(url.searchParams.get("language")).toBe("pt-BR");
     expect(url.searchParams.has("region")).toBe(false);
   });
 
-  it("gêneros devolvem a lista e provedores usam o endpoint do filme", async () => {
+  it("gêneros devolvem a lista", async () => {
     mockFetch(jsonResponse({ genres: [{ id: 18, name: "Drama" }] }));
     await expect(getMovieGenres()).resolves.toEqual([{ id: 18, name: "Drama" }]);
-
-    const fetchMock = mockFetch(jsonResponse({ results: {} }));
-    await getMovieWatchProviders(550);
-    expect(requestedUrl(fetchMock).pathname).toBe("/api/tmdb/movie/550/watch/providers");
   });
 
-  it("repassa o AbortSignal para o fetch", async () => {
-    const fetchMock = mockFetch(jsonResponse(page));
+  it("cancelar o único interessado cancela a requisição", async () => {
+    const fetchMock = vi.fn(
+      (_input: RequestInfo | URL, init?: RequestInit) =>
+        new Promise<Response>((_resolve, reject) => {
+          init?.signal?.addEventListener("abort", () => {
+            reject(new DOMException("Aborted", "AbortError"));
+          });
+        }),
+    );
+    vi.stubGlobal("fetch", fetchMock);
     const controller = new AbortController();
-    await getMovieList("popular", 1, { signal: controller.signal });
-    expect(fetchMock.mock.calls[0]?.[1]?.signal).toBe(controller.signal);
+
+    const pending = getMovieList("popular", 1, { signal: controller.signal });
+    controller.abort();
+
+    await expect(pending).rejects.toMatchObject({ name: "AbortError" });
+    expect(fetchMock.mock.calls[0]?.[1]?.signal?.aborted).toBe(true);
+  });
+});
+
+describe("cache de respostas no cliente", () => {
+  it("pedidos iguais compartilham uma única requisição e reaproveitam o resultado", async () => {
+    const fetchMock = mockFetch(jsonResponse(page));
+
+    const [first, second] = await Promise.all([getMovieList("popular"), getMovieList("popular")]);
+    const third = await getMovieList("popular");
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(second).toBe(first);
+    expect(third).toBe(first);
+  });
+
+  it("não guarda erros: a nova tentativa consulta de novo", async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(new Response("{}", { status: 503 }))
+      .mockResolvedValueOnce(jsonResponse(page));
+    vi.stubGlobal("fetch", fetchMock);
+
+    await expect(getMovieList("popular")).rejects.toMatchObject({ code: "unavailable" });
+    await expect(getMovieList("popular")).resolves.toEqual(page);
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+
+  it("consulta de novo depois que o prazo do cache expira", async () => {
+    const fetchMock = vi.fn(() => Promise.resolve(jsonResponse(page)));
+    vi.stubGlobal("fetch", fetchMock);
+    const now = vi.spyOn(Date, "now").mockReturnValue(1_000);
+
+    await getMovieList("popular");
+    now.mockReturnValue(1_000 + CLIENT_CACHE_TTL_MS - 1);
+    await getMovieList("popular");
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+
+    now.mockReturnValue(1_000 + CLIENT_CACHE_TTL_MS + 1);
+    await getMovieList("popular");
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+
+  it("a desistência de um interessado não cancela a requisição dos outros", async () => {
+    let resolveFetch: (response: Response) => void = () => undefined;
+    const fetchMock = vi.fn(
+      (_input: RequestInfo | URL, _init?: RequestInit) =>
+        new Promise<Response>((resolve) => {
+          resolveFetch = resolve;
+        }),
+    );
+    vi.stubGlobal("fetch", fetchMock);
+    const leaving = new AbortController();
+
+    const abandoned = getMovieList("popular", 1, { signal: leaving.signal });
+    const kept = getMovieList("popular", 1, { signal: new AbortController().signal });
+    leaving.abort();
+    resolveFetch(jsonResponse(page));
+
+    await expect(abandoned).rejects.toMatchObject({ name: "AbortError" });
+    await expect(kept).resolves.toEqual(page);
+    expect(fetchMock.mock.calls[0]?.[1]?.signal?.aborted).toBe(false);
+  });
+
+  it("o erro de um pré-carregamento chega uma vez à página, sem repetir a requisição", async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(new Response("{}", { status: 503 }))
+      .mockResolvedValueOnce(jsonResponse(page));
+    vi.stubGlobal("fetch", fetchMock);
+
+    await expect(getMovieList("popular", 1, PREFETCH)).rejects.toMatchObject({
+      code: "unavailable",
+    });
+    // A página recebe o mesmo erro, sem nova requisição...
+    await expect(
+      getMovieList("popular", 1, { signal: new AbortController().signal }),
+    ).rejects.toMatchObject({ code: "unavailable" });
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    // ...e "Tentar novamente" consulta de novo.
+    await expect(
+      getMovieList("popular", 1, { signal: new AbortController().signal }),
+    ).resolves.toEqual(page);
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+
+  it("o pré-carregamento mantém a requisição viva mesmo se a página desistir", async () => {
+    let resolveFetch: (response: Response) => void = () => undefined;
+    const fetchMock = vi.fn(
+      (_input: RequestInfo | URL, _init?: RequestInit) =>
+        new Promise<Response>((resolve) => {
+          resolveFetch = resolve;
+        }),
+    );
+    vi.stubGlobal("fetch", fetchMock);
+    const controller = new AbortController();
+
+    const prefetched = getMovieList("popular");
+    const fromPage = getMovieList("popular", 1, { signal: controller.signal });
+    controller.abort();
+    resolveFetch(jsonResponse(page));
+
+    await expect(fromPage).rejects.toMatchObject({ name: "AbortError" });
+    await expect(prefetched).resolves.toEqual(page);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 });
 

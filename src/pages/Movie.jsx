@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { Link, useParams } from "react-router";
 import { PiArrowDown, PiPlayFill, PiUser } from "react-icons/pi";
-import { getBackdropUrl, getProfileUrl } from "../lib/images";
+import { backdropSrcSet, getBackdropUrl, getProfileUrl } from "../lib/images";
 import {
   getYouTubeTrailerKey,
   MAX_CAST,
@@ -132,7 +132,15 @@ const MovieDetails = ({ id }) => {
     <main className="movie">
       <section className="movie-hero" aria-labelledby="movie-title">
         <div className="movie-hero__backdrop">
-          {backdrop && <img src={backdrop} alt="" fetchPriority="high" />}
+          {backdrop && (
+            <img
+              src={backdrop}
+              srcSet={backdropSrcSet(movie.backdrop_path, ["w780", "w1280"])}
+              sizes="100vw"
+              alt=""
+              fetchPriority="high"
+            />
+          )}
         </div>
 
         <div className="shell movie-hero__inner reveal">
@@ -140,7 +148,7 @@ const MovieDetails = ({ id }) => {
             path={movie.poster_path}
             title={title}
             className="movie-hero__poster"
-            size="w500"
+            variant="detail"
             eager
           />
 
@@ -239,7 +247,7 @@ const MovieDetails = ({ id }) => {
             title="Onde assistir"
             subtitle="Streaming, aluguel e compra no Brasil."
           />
-          <WatchProviders movieId={id} />
+          <WatchProviders providers={movie["watch/providers"]} />
         </section>
 
         <CastRail cast={cast} />

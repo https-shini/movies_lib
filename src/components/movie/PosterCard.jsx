@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 import { PiFilmSlate } from "react-icons/pi";
 import { getReleaseYear } from "../../lib/format";
-import { getPosterUrl } from "../../lib/images";
+import { getPosterUrl, POSTER_VARIANTS, posterSrcSet } from "../../lib/images";
 import Rating from "../ui/Rating";
 import "./PosterCard.css";
 
@@ -9,7 +9,8 @@ export const getMovieTitle = (movie) => movie?.title || movie?.name || "Título 
 
 /**
  * `eager` carrega sem esperar a rolagem; `priority` também pede prioridade alta
- * (use só na imagem principal da página, candidata ao LCP).
+ * (use só na imagem principal da página, candidata ao LCP). `variant` escolhe o
+ * `srcset`/`sizes` medido para cada contexto (card, thumb ou detail).
  */
 export const Poster = ({
   path,
@@ -17,15 +18,19 @@ export const Poster = ({
   className = "",
   eager = false,
   priority = false,
-  size = "w342",
+  variant = "card",
 }) => {
-  const src = getPosterUrl(path, size);
+  const config = POSTER_VARIANTS[variant] ?? POSTER_VARIANTS.card;
+  const src = getPosterUrl(path, config.src);
+  const srcSet = posterSrcSet(path, config.srcSet);
 
   return (
     <div className={`poster ${className}`}>
       {src ? (
         <img
           src={src}
+          srcSet={srcSet}
+          sizes={config.sizes}
           alt=""
           loading={eager || priority ? "eager" : "lazy"}
           decoding="async"

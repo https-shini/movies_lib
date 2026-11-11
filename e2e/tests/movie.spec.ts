@@ -2,7 +2,7 @@ import { movie550 } from "../fixtures/index.ts";
 import { expect, test } from "../helpers/test.ts";
 
 test.describe("Filme", () => {
-  test("mostra os dados do filme numa única consulta de detalhes", async ({ page, tmdb }) => {
+  test("mostra os dados do filme numa única requisição ao proxy", async ({ page, tmdb }) => {
     await page.goto("/movie/550");
 
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Clube da Luta");
@@ -37,14 +37,19 @@ test.describe("Filme", () => {
 
     await expect(page.getByRole("heading", { name: "Você também pode gostar" })).toBeVisible();
 
-    // Detalhes, elenco, vídeos e recomendações chegam numa só requisição.
+    // Detalhes, elenco, vídeos, recomendações e onde assistir chegam numa só requisição.
     const detailCalls = tmdb.callsTo("movie/550");
     expect(detailCalls).toHaveLength(1);
     expect(detailCalls[0]?.searchParams.get("append_to_response")).toBe(
-      "credits,videos,recommendations,similar",
+      "credits,videos,recommendations,similar,watch/providers",
     );
     expect(detailCalls[0]?.searchParams.get("include_video_language")).toBe("pt,en,null");
-    expect(tmdb.callsTo("movie/550/watch/providers")).toHaveLength(1);
+    expect(tmdb.callsTo("movie/550/watch/providers")).toHaveLength(0);
+    // A página do filme faz uma única consulta. A outra chamada permitida é o preload do
+    // destaque do Início, que o index.html faz em todas as rotas (D-42).
+    expect(
+      tmdb.calls.map((url) => url.pathname).filter((path) => path !== "/api/tmdb/movie/popular"),
+    ).toEqual(["/api/tmdb/movie/550"]);
   });
 
   test("abre o trailer e fecha com Esc, devolvendo o foco", async ({ page }) => {

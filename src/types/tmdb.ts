@@ -81,6 +81,8 @@ export interface MovieDetails extends MovieSummary {
   videos?: { results: Video[] };
   recommendations?: Paginated<MovieSummary>;
   similar?: Paginated<MovieSummary>;
+  /** Onde assistir, pedido junto com os detalhes (`append_to_response=watch/providers`). */
+  "watch/providers"?: WatchProvidersResponse;
 }
 
 export interface WatchProvider {

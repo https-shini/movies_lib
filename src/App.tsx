@@ -1,8 +1,11 @@
+import { lazy, Suspense } from "react";
 import { Outlet, ScrollRestoration } from "react-router";
 import AppHeader from "./components/layout/AppHeader";
 import MobileTabBar from "./components/layout/MobileTabBar";
-import Observability from "./components/layout/Observability";
 import SiteFooter from "./components/layout/SiteFooter";
+
+// Estatísticas fora do pacote principal: carregam depois da página (D-41).
+const Observability = lazy(() => import("./components/layout/Observability"));
 
 function App() {
   return (
@@ -17,7 +20,9 @@ function App() {
       <SiteFooter />
       <MobileTabBar />
       <ScrollRestoration />
-      <Observability />
+      <Suspense fallback={null}>
+        <Observability />
+      </Suspense>
     </div>
   );
 }
