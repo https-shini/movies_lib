@@ -386,3 +386,14 @@ Cada decisão tem: contexto, decisão e consequência. As decisões D-01 a D-11 
   As Boas práticas voltaram a 100: a queda para 96 nos Previews vinha só da barra de ferramentas da Vercel (D-42).
 - **Verificado no domínio público:** rotas e proxy com 200; cache da CDN (`MISS` e depois `HIT`); erros com `no-store`; `POST`, `PUT`, `DELETE` e `OPTIONS` com 405, `Allow: GET` e `no-store`; CSP em modo de bloqueio e demais cabeçalhos; nenhuma requisição ao Google Fonts; 50 de 50 verificações no navegador nos cinco tamanhos de tela; nenhuma violação da CSP.
 - **Observação:** com o trailer aberto em 320 px, o player do YouTube (dentro do iframe) registrou "Permissions policy violation: compute-pressure". É o navegador negando a um iframe de outro domínio um recurso que ele não tem por padrão; não vem da CSP nem afeta a página.
+
+## D-47. Fechamento da versão atual: privacidade, TypeScript 7 e Firewall
+
+- **Privacidade:** a página passou a ter finalidade de cada tratamento, cookies e armazenamento no navegador (o Cinelux não grava cookies; o YouTube pode gravar durante a reprodução), transferência internacional (Vercel, EUA), prazos de guarda e o procedimento para exercer direitos (dentro da seção de contato, com o prazo de 15 dias do art. 19, II). As bases legais (art. 7º) são escolha do controlador: ficam em `legalBases` (`src/config/legal.ts`), vazias, e a seção "Bases legais" só aparece com algum item preenchido. Tudo o que depende do proprietário está em `docs/PENDENCIAS_PROPRIETARIO.md`.
+- **PR #12 (TypeScript 6 → 7):** não aplicado. O `typescript-eslint` 8.72 declara `typescript >=4.8.4 <6.1.0` como dependência par; instalar a 7 quebraria o lint com tipos (`strictTypeChecked`). O Dependabot passa a ignorar versões maiores de `typescript` até o `typescript-eslint` aceitar a nova versão.
+- **Firewall ("Rate Limit API", `/api`, janela fixa, 300 por 60 s, por IP, ação Log):** mantido em Log. A API de configuração continua respondendo 404 para o projeto (divergência conhecida; a regra aparece no registro de auditoria da conta), e a Vercel não expõe por API os eventos do Firewall. Os registros de execução da produção, retidos por 1 hora no plano Hobby, mostraram 3 linhas em 50 minutos: não há volume nem evidência de abuso que justifique Block, nem como medir falsos positivos. Reavaliar pelo painel (Firewall → regra → eventos) se o tráfego crescer.
+- **Speed Insights:** recebendo dados desde 11 de novembro de 2026, 13:36 UTC (evento da conta). **Web Analytics:** a API ainda responde `web_analytics_not_enabled`; a ativação é feita no painel (ver pendências).
+
+## D-48. Sete tamanhos de tela nos testes E2E
+
+- Os testes de interface passam a rodar também em 390 px (iPhone 12 a 15) e 420 px (Androids grandes), além dos cinco tamanhos do Bloco B (D-33). O custo é cerca de 40% a mais de tempo no job `e2e`, aceitável para cobrir as larguras mais comuns entre 375 e 768 px.
