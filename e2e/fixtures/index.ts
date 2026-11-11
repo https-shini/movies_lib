@@ -7,6 +7,7 @@
  * por um PNG local durante os testes.
  */
 import type {
+  Genre,
   GenreList,
   MovieDetails,
   MovieSummary,
@@ -54,3 +55,33 @@ function first<T>(items: readonly T[], label: string): T {
 
 /** Primeiro filme dos populares: o destaque da página inicial. */
 export const FEATURED_MOVIE = first(movies.results, "movies.json");
+
+const allSummaries: readonly MovieSummary[] = [
+  ...movies.results,
+  ...searchDuna[1].results,
+  ...searchDuna[2].results,
+];
+
+/** Filme que aparece em alguma lista das fixtures. */
+export function findMovie(id: number): MovieSummary | undefined {
+  return allSummaries.find((movie) => movie.id === id);
+}
+
+/**
+ * Detalhes mínimos para filmes que só existem nas listas: os campos do resumo, os
+ * gêneros por nome e nenhum elenco, trailer ou recomendação. O Clube da Luta (550)
+ * tem uma fixture completa própria.
+ */
+export function detailsFrom(summary: MovieSummary): MovieDetails {
+  const genreList: Genre[] = genres.genres.filter(({ id }) => summary.genre_ids?.includes(id));
+  return {
+    ...summary,
+    tagline: null,
+    runtime: null,
+    genres: genreList,
+    credits: { cast: [], crew: [] },
+    videos: { results: [] },
+    recommendations: { ...emptyPage },
+    similar: { ...emptyPage },
+  };
+}

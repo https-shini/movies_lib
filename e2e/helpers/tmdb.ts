@@ -66,7 +66,11 @@ function defaultResponse(path: string, url: URL): MockResponse | null {
   const providers = /^movie\/(\d+)\/watch\/providers$/.exec(path);
   if (providers) return json({ id: Number(providers[1]), results: {} });
 
-  if (/^movie\/\d+$/.test(path)) return json(fixtures.tmdbNotFound, 404);
+  const details = /^movie\/(\d+)$/.exec(path);
+  if (details) {
+    const summary = fixtures.findMovie(Number(details[1]));
+    return summary ? json(fixtures.detailsFrom(summary)) : json(fixtures.tmdbNotFound, 404);
+  }
 
   return null;
 }
