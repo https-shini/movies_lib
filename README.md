@@ -21,7 +21,7 @@ O projeto nasceu como MoviesLib e está sendo refeito como Cinelux em fases e bl
 | Área            | Ferramenta                                                                                                          |
 | --------------- | ------------------------------------------------------------------------------------------------------------------- |
 | Interface       | React 19.3.1, React Router 8.5.1 (data router), react-icons                                                         |
-| Linguagem       | TypeScript 6.0.3 em modo `strict`; os componentes visuais ainda são `.jsx` e migram nas próximas fases (`allowJs`) |
+| Linguagem       | TypeScript 6.0.3 em modo `strict`, em todo o código (sem `.js` ou `.jsx` no app) |
 | Build           | Vite 8.3.6                                                                                                          |
 | Testes          | Vitest 5.1.0, jsdom e Testing Library; Playwright 1.63.0 (E2E, Chromium)                                                                               |
 | Qualidade       | ESLint 10 com `typescript-eslint`, React Hooks e `jsx-a11y-x`; Prettier                                             |

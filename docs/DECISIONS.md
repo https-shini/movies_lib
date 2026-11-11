@@ -415,3 +415,12 @@ Cada decisão tem: contexto, decisão e consequência. As decisões D-01 a D-11 
 - **Mudança visual intencional:** ícones na escala da seção 6 da identidade (16, 20, 24 e 32 px), em vez de 7 tamanhos soltos (17,6 a 28,8 px). Opacidade de botões desativados unificada em 0,4 (antes 0,3 e 0,4).
 - **Verificação:** capturas de tela de página inteira, antes e depois, de 8 telas nos 7 tamanhos (56 comparações, imagens do TMDB substituídas por um pixel fixo). Fora dos ícones, nenhuma diferença: os maiores desvios (até 562 pixels) são o ícone de busca maior empurrando o texto do campo em poucos pixels.
 - **CSS Modules:** não adotados. As classes já usam prefixo por componente (BEM), não há conflito de nomes e a migração de 22 arquivos traria risco sem ganho visível (decisão do proprietário, D-49).
+
+## D-51. Componentes em TypeScript e textos centralizados
+
+- **Migração:** os 24 arquivos `.jsx` (componentes e páginas) viraram `.tsx` com props tipadas, sob `strict` e `exactOptionalPropertyTypes`. O `allowJs` foi removido dos dois `tsconfig`; o único arquivo JavaScript restante é o `eslint.config.js`.
+- **Textos:** cerca de 50 textos que estavam escritos direto nos componentes (títulos de seção, estados, rótulos acessíveis, filtros, paginação, 404) passaram para `src/i18n/pt-BR.ts`, em seções por tela.
+- **Português:** "Melhor avaliados" virou "Mais bem avaliados" na ordenação de Descobrir.
+- **Campos vazios do TMDB:** o TMDB devolve `""` (e não `null`) para sinopse, personagem e título sem tradução. A regra `prefer-nullish-coalescing` foi mantida, e um auxiliar explícito, `textOr` (`lib/format.ts`, com testes), trata texto vazio como ausente.
+- **Código morto:** `getMovieTitle` deixou de ler `movie.name` (campo de séries, que o app não usa); o link do YouTube passou a usar `getYouTubeWatchUrl`, que já existia e não era usado.
+- **Verificação:** as capturas de tela das 8 telas nos 7 tamanhos ficaram idênticas às da D-50 (a migração não mudou nenhum pixel), e os 420 testes E2E passaram sem mudança, exceto o rótulo corrigido da ordenação.
