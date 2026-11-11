@@ -22,9 +22,9 @@ test.describe("Filme", () => {
     await expect(facts).toContainText("Jim Uhls");
     await expect(facts).toContainText("2h 19min");
     await expect(facts).toContainText(/US\$\s63\.000\.000/);
-    // Classificação indicativa do Brasil (18), não a dos EUA (R), que também está na fixture.
+    // Classificação indicativa do Brasil (16, como no TMDB), não a dos EUA (R), que também está na fixture.
     await expect(facts.locator(".facts__row", { hasText: "Classificação indicativa" })).toHaveText(
-      "Classificação indicativa18 anos",
+      "Classificação indicativa16 anos",
     );
 
     const providers = page.getByRole("region", { name: "Onde assistir" });
