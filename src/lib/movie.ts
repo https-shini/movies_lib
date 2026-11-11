@@ -1,4 +1,10 @@
-import type { Credits, MovieDetails, MovieSummary, Video } from "../types/tmdb";
+import type {
+  Credits,
+  MovieDetails,
+  MovieSummary,
+  ReleaseDatesResponse,
+  Video,
+} from "../types/tmdb";
 
 /** O prompt do projeto define até 10 nomes no elenco principal. */
 export const MAX_CAST = 10;
@@ -68,4 +74,40 @@ export function getYouTubeEmbedUrl(key: string | null | undefined): string | nul
   return key
     ? `https://www.youtube-nocookie.com/embed/${encodeURIComponent(key)}?autoplay=1&rel=0&modestbranding=1`
     : null;
+}
+
+/** Faixas da classificação indicativa brasileira (ClassInd), como o TMDB as informa. */
+export const BRAZILIAN_RATINGS = ["L", "10", "12", "14", "16", "18"] as const;
+export type BrazilianRating = (typeof BRAZILIAN_RATINGS)[number];
+
+/** Ordem de preferência entre os tipos de lançamento: cinema, digital, mídia física e os demais. */
+const RELEASE_TYPE_PRIORITY = [3, 4, 5, 2, 1, 6];
+
+const isBrazilianRating = (value: string): value is BrazilianRating =>
+  (BRAZILIAN_RATINGS as readonly string[]).includes(value);
+
+/**
+ * Classificação indicativa do Brasil. Lê só a entrada `BR`: a classificação de outro país
+ * (ex.: "R" dos EUA) nunca é usada no lugar. `null` quando o TMDB não informa.
+ */
+export function getBrazilianRating(
+  releaseDates: ReleaseDatesResponse | null | undefined,
+): BrazilianRating | null {
+  const brazil = releaseDates?.results.find((entry) => entry.iso_3166_1 === "BR");
+  if (!brazil) return null;
+
+  const candidates = brazil.release_dates
+    .map((release) => ({ type: release.type, rating: release.certification.trim().toUpperCase() }))
+    .filter((release): release is { type: number; rating: BrazilianRating } =>
+      isBrazilianRating(release.rating),
+    )
+    .sort((a, b) => {
+      const rank = (type: number) => {
+        const index = RELEASE_TYPE_PRIORITY.indexOf(type);
+        return index === -1 ? RELEASE_TYPE_PRIORITY.length : index;
+      };
+      return rank(a.type) - rank(b.type);
+    });
+
+  return candidates[0]?.rating ?? null;
 }

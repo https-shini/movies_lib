@@ -63,6 +63,7 @@ Cada decisão tem: contexto, decisão e consequência. As decisões D-01 a D-11 
 
 - **Contexto:** a seção 4.4 da identidade indica Sans 500 para o "título no card"; as seções 4.5 e 9.2 indicam Fraunces 600.
 - **Decisão:** Fraunces 600, que aparece em duas seções e na regra "Use Fraunces para todo nome de filme".
+- **Revisão (D-49):** com a identidade Sala Escura mantida pelo proprietário, o título no card usa Instrument Sans 600, como no visual publicado; Fraunces continua nos títulos de página, do destaque e do filme.
 
 ## D-10. Conformidade com os termos do TMDB
 
@@ -432,3 +433,10 @@ Cada decisão tem: contexto, decisão e consequência. As decisões D-01 a D-11 
 - **Testes E2E novos:** área de toque efetiva (elemento + camada invisível) em 6 páginas e 7 larguras; chip selecionado e item ativo com cor diferente do fundo da página no alto contraste; busca com `&`, `#` e `?` preservando o termo na URL, no campo e na consulta ao proxy. Os testes de toque e de alto contraste foram conferidos falhando sem a correção. A primeira versão do teste de alto contraste comparava o chip selecionado com o não selecionado e passava mesmo sem a correção; foi refeita para comparar com o fundo da página.
 - **Testes de componente (Testing Library):** `StateMessage`, `PosterGrid` (carregamento, erro, vazio, pôster, título e data ausentes) e `Pagination`.
 - **Visual:** capturas idênticas abaixo de 900 px; acima disso, só o campo de busca do cabeçalho 2 px mais alto.
+
+## D-53. Classificação indicativa do Brasil
+
+- **Fonte:** o complemento `release_dates` do TMDB, pedido na mesma consulta dos detalhes do filme (`append_to_response`), sem requisição nova. O proxy passa a aceitar esse complemento; nenhuma rota ou parâmetro novo.
+- **Regra:** só a entrada `BR` é lida, e só valores da tabela do ClassInd (`L`, `10`, `12`, `14`, `16`, `18`). A classificação de outro país, como o "R" dos EUA, nunca aparece no lugar. Entre os lançamentos brasileiros, a preferência é cinema, depois digital, mídia física e os demais; entradas sem classificação são ignoradas.
+- **Interface:** linha "Classificação indicativa" na ficha técnica, com "Livre", "14 anos" etc., ou "Não informada" quando o TMDB não tiver o dado. A linha não é omitida, para não sugerir que o filme é livre.
+- **Testes:** `getBrazilianRating` com dados do Brasil e dos EUA, preferência pelo cinema, "Livre", valor fora da tabela e ausência de dados; E2E com a fixture do Clube da Luta (BR "16" e US "R", os mesmos valores que o TMDB devolve; conferido pelo proxy num Preview) e com um filme sem dados ("Não informada").

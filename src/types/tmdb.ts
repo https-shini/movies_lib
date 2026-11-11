@@ -83,6 +83,22 @@ export interface MovieDetails extends MovieSummary {
   similar?: Paginated<MovieSummary>;
   /** Onde assistir, pedido junto com os detalhes (`append_to_response=watch/providers`). */
   "watch/providers"?: WatchProvidersResponse;
+  /** Datas de lançamento e classificação por país (`append_to_response=release_dates`). */
+  release_dates?: ReleaseDatesResponse;
+}
+
+/** Tipo de lançamento no TMDB: 1 pré-estreia, 2 limitado, 3 cinema, 4 digital, 5 mídia física, 6 TV. */
+export interface ReleaseDate {
+  certification: string;
+  type: number;
+  release_date?: string;
+  note?: string;
+  iso_639_1?: string;
+  descriptors?: string[];
+}
+
+export interface ReleaseDatesResponse {
+  results: { iso_3166_1: string; release_dates: ReleaseDate[] }[];
 }
 
 export interface WatchProvider {

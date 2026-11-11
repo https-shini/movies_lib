@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
-import type { MovieSummary, Video } from "../types/tmdb";
+import type { MovieSummary, ReleaseDatesResponse, Video } from "../types/tmdb";
 import {
+  getBrazilianRating,
   getYouTubeEmbedUrl,
   getYouTubeTrailerKey,
   getYouTubeWatchUrl,
@@ -111,5 +112,33 @@ describe("trailers do YouTube", () => {
       "https://www.youtube-nocookie.com/embed/abc?autoplay=1&rel=0&modestbranding=1",
     );
     expect(getYouTubeEmbedUrl(null)).toBeNull();
+  });
+});
+
+describe("getBrazilianRating", () => {
+  const release = (certification: string, type: number) => ({ certification, type });
+  const dates = (...entries: [string, ReturnType<typeof release>[]][]): ReleaseDatesResponse => ({
+    results: entries.map(([country, items]) => ({ iso_3166_1: country, release_dates: items })),
+  });
+
+  it("usa só a classificação do Brasil, nunca a de outro país", () => {
+    const data = dates(["US", [release("R", 3)]], ["BR", [release("16", 3)]]);
+    expect(getBrazilianRating(data)).toBe("16");
+    expect(getBrazilianRating(dates(["US", [release("R", 3)]]))).toBeNull();
+  });
+
+  it("prefere o lançamento nos cinemas e ignora entradas sem classificação", () => {
+    const data = dates(["BR", [release("", 1), release("12", 4), release("14", 3)]]);
+    expect(getBrazilianRating(data)).toBe("14");
+  });
+
+  it("aceita Livre e descarta valores fora da tabela do ClassInd", () => {
+    expect(getBrazilianRating(dates(["BR", [release(" l ", 3)]]))).toBe("L");
+    expect(getBrazilianRating(dates(["BR", [release("PG-13", 3)]]))).toBeNull();
+  });
+
+  it("devolve null sem dados", () => {
+    expect(getBrazilianRating(undefined)).toBeNull();
+    expect(getBrazilianRating({ results: [] })).toBeNull();
   });
 });

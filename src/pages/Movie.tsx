@@ -4,6 +4,7 @@ import { PiArrowDown, PiPlayFill, PiUser } from "react-icons/pi";
 import { interpolate, messages } from "../i18n";
 import { backdropSrcSet, getBackdropUrl, getProfileUrl } from "../lib/images";
 import {
+  getBrazilianRating,
   getYouTubeTrailerKey,
   MAX_CAST,
   pickDirectors,
@@ -85,6 +86,12 @@ const CastRail = ({ cast }: { cast: readonly CastMember[] }) => {
   );
 };
 
+/** "Livre", "14 anos" ou "Não informada" (nunca a classificação de outro país). */
+function formatAgeRating(rating: string | null): string {
+  if (rating === null) return text.ageRatingMissing;
+  return rating === "L" ? text.ageRatingFree : interpolate(text.ageRatingYears, { age: rating });
+}
+
 interface Fact {
   label: string;
   value: string;
@@ -136,6 +143,7 @@ const MovieDetails = ({ id }: { id: string }) => {
     ...(writers.length ? [{ label: text.writing, value: writers.join(", ") }] : []),
     { label: text.release, value: formatReleaseDate(movie.release_date) },
     { label: text.runtime, value: formatRuntime(movie.runtime) },
+    { label: text.ageRating, value: formatAgeRating(getBrazilianRating(movie.release_dates)) },
     { label: text.language, value: formatLanguage(movie.original_language) },
     { label: text.budget, value: formatCurrency(movie.budget) },
     { label: text.revenue, value: formatCurrency(movie.revenue) },

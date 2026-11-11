@@ -22,6 +22,10 @@ test.describe("Filme", () => {
     await expect(facts).toContainText("Jim Uhls");
     await expect(facts).toContainText("2h 19min");
     await expect(facts).toContainText(/US\$\s63\.000\.000/);
+    // Classificação indicativa do Brasil (16, como no TMDB), não a dos EUA (R), que também está na fixture.
+    await expect(facts.locator(".facts__row", { hasText: "Classificação indicativa" })).toHaveText(
+      "Classificação indicativa16 anos",
+    );
 
     const providers = page.getByRole("region", { name: "Onde assistir" });
     await expect(providers.getByText("Assinatura")).toBeVisible();
@@ -41,7 +45,7 @@ test.describe("Filme", () => {
     const detailCalls = tmdb.callsTo("movie/550");
     expect(detailCalls).toHaveLength(1);
     expect(detailCalls[0]?.searchParams.get("append_to_response")).toBe(
-      "credits,videos,recommendations,similar,watch/providers",
+      "credits,videos,recommendations,similar,watch/providers,release_dates",
     );
     expect(detailCalls[0]?.searchParams.get("include_video_language")).toBe("pt,en,null");
     expect(tmdb.callsTo("movie/550/watch/providers")).toHaveLength(0);
@@ -93,6 +97,12 @@ test.describe("Filme", () => {
 
     await expect(page).toHaveURL("/movie/603");
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Matrix");
+    // Sem classificação do Brasil no TMDB, a ficha diz isso em vez de omitir ou inventar.
+    await expect(
+      page
+        .getByRole("complementary", { name: "Ficha técnica" })
+        .locator(".facts__row", { hasText: "Classificação indicativa" }),
+    ).toContainText("Não informada");
   });
 
   test("mostra erro com nova tentativa quando o filme não existe no TMDB", async ({

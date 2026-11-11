@@ -11,7 +11,7 @@ O projeto nasceu como MoviesLib e está sendo refeito como Cinelux em fases e bl
 - **Início:** destaque do filme mais popular, faixa "Em alta", ranking dos 10 mais bem avaliados, "Nos cinemas" e índice de gêneros.
 - **Descobrir (`/discover`):** gêneros e ordenação com um toque, ano e nota mínima num painel de filtros, filtros ativos como chips removíveis, tudo registrado na URL, com paginação.
 - **Buscar (`/search?q=`):** busca por título em português, com paginação e sugestões quando não há termo.
-- **Filme (`/movie/:id`):** sinopse, nota, gêneros clicáveis, ficha técnica, trailer na própria página (YouTube em modo de privacidade aprimorada), elenco, recomendações e onde assistir no Brasil (dados do JustWatch).
+- **Filme (`/movie/:id`):** sinopse, nota, gêneros clicáveis, ficha técnica com a classificação indicativa do Brasil, trailer na própria página (YouTube em modo de privacidade aprimorada), elenco, recomendações e onde assistir no Brasil (dados do JustWatch).
 - **Sobre (`/sobre`) e Privacidade (`/privacidade`):** créditos exigidos pelo TMDB e pelo JustWatch e o que o site coleta.
 - **Estados:** esqueletos de carregamento, estados vazios, erros em português com "Tentar novamente", página 404 e tela de erro de rota.
 - **Acessibilidade e responsividade:** link para pular ao conteúdo, foco visível, `prefers-reduced-motion`, barra inferior no celular e ausência de rolagem horizontal de 320 a 1440 px.

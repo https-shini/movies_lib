@@ -93,7 +93,7 @@ Requisições canceladas (`AbortError`) são repassadas sem conversão.
 
 - `useAsync`: carregamento, dados, erro, código do erro e `reload`, com `AbortController` a cada nova consulta.
 - `useMovies`: listas, busca e descoberta, com paginação, "carregar mais" e remoção de duplicados.
-- `useMovie`: detalhes do filme numa chamada com `append_to_response=credits,videos,recommendations,similar,watch/providers` e vídeos em `pt`, `en` e sem idioma.
+- `useMovie`: detalhes do filme numa chamada com `append_to_response=credits,videos,recommendations,similar,watch/providers,release_dates` e vídeos em `pt`, `en` e sem idioma.
 - `useGenres`: gêneros. Onde assistir chega junto com os detalhes do filme.
 - `useDocumentTitle`: título da aba (`Duna · Cinelux`).
 
@@ -136,7 +136,7 @@ Os valores da URL são validados em `lib/discover.ts` e `lib/pagination.ts`: ord
 
 - O navegador recebe `max-age=60`; a Vercel consome o `s-maxage` (D-19).
 - Erros sempre com `no-store`: endpoint fora da lista recebe 404 `unknown_endpoint`, outros métodos recebem 405 (com `Allow: GET`; a função exporta todos os métodos para o proxy responder, D-43) e falha de conexão com o TMDB recebe 502.
-- Parâmetros aceitos: `language`, `region`, `page`, `query`, `include_adult`, `sort_by`, `with_genres`, `primary_release_year`, `primary_release_date.lte`, `vote_average.gte`, `vote_count.gte`, `append_to_response` (só `credits`, `videos`, `recommendations`, `similar` e `watch/providers`) e `include_video_language`. Os demais são descartados.
+- Parâmetros aceitos: `language`, `region`, `page`, `query`, `include_adult`, `sort_by`, `with_genres`, `primary_release_year`, `primary_release_date.lte`, `vote_average.gte`, `vote_count.gte`, `append_to_response` (só `credits`, `videos`, `recommendations`, `similar`, `watch/providers` e `release_dates`) e `include_video_language`. Os demais são descartados.
 
 | Variável       | Onde                                                            | Uso                                     |
 | -------------- | --------------------------------------------------------------- | --------------------------------------- |
@@ -186,10 +186,11 @@ O CI está descrito no [README](../README.md#scripts).
 
 ## 9. Limitações atuais
 
-- O limite do firewall da Vercel em `/api` (300 requisições por minuto por IP) está em modo **Log**: registra, mas ainda não bloqueia (D-34).
+- O limite do firewall da Vercel em `/api` (300 requisições por minuto por IP) está em modo **Log**: registra, mas ainda não bloqueia. Com o tráfego atual não há evidência que justifique o modo Block (D-34, D-47).
 - A CSP não tem endpoint de coleta de relatórios: um bloqueio aparece só no console do navegador do visitante (D-43). Nos Previews da Vercel, a barra de ferramentas da Vercel (`vercel.live`) fica bloqueada pela CSP.
-- O JavaScript inicial ainda tem cerca de 116 KB com gzip: quase tudo é `react-dom` e `react-router`, que a divisão por rota não reduz.
-- A página de privacidade ainda não identifica o responsável pelos dados nem traz canal de contato: depende do proprietário preencher `src/config/legal.ts` (D-44).
+- O JavaScript inicial ainda tem cerca de 120 KB com gzip: quase tudo é `react-dom` e `react-router`, que a divisão por rota não reduz.
+- A página de privacidade ainda não identifica o responsável pelos dados, o canal de contato nem as bases legais: depende do proprietário preencher `src/config/legal.ts` (D-44, D-47 e `docs/PENDENCIAS_PROPRIETARIO.md`).
+- O Web Analytics depende de ativação no painel da Vercel; até lá, os eventos enviados pelo site são descartados. O Speed Insights já recebe dados.
 - Disponibilidade de streaming só para o Brasil.
 
 ## 10. Referências
