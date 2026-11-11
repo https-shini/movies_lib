@@ -1,0 +1,85 @@
+{
+  "page": 1,
+  "results": [
+    {
+      "id": 550,
+      "title": "Clube da Luta",
+      "original_title": "Fight Club",
+      "overview": "Um funcionário de escritório insone e um vendedor de sabão formam um clube de luta clandestino.",
+      "poster_path": "/fixture-poster-550.jpg",
+      "backdrop_path": "/fixture-backdrop-550.jpg",
+      "release_date": "1999-10-15",
+      "vote_average": 8.4,
+      "vote_count": 30500,
+      "genre_ids": [18, 53],
+      "popularity": 200.0
+    },
+    {
+      "id": 603,
+      "title": "Matrix",
+      "original_title": "The Matrix",
+      "overview": "Um hacker descobre que a realidade em que vive é uma simulação controlada por máquinas.",
+      "poster_path": "/fixture-poster-603.jpg",
+      "backdrop_path": "/fixture-backdrop-603.jpg",
+      "release_date": "1999-03-31",
+      "vote_average": 8.2,
+      "vote_count": 26800,
+      "genre_ids": [28, 878],
+      "popularity": 192.5
+    },
+    {
+      "id": 157336,
+      "title": "Interestelar",
+      "original_title": "Interstellar",
+      "overview": "Exploradores atravessam um buraco de minhoca em busca de um novo lar para a humanidade.",
+      "poster_path": "/fixture-poster-157336.jpg",
+      "backdrop_path": "/fixture-backdrop-157336.jpg",
+      "release_date": "2014-11-05",
+      "vote_average": 8.4,
+      "vote_count": 36900,
+      "genre_ids": [12, 18, 878],
+      "popularity": 185.0
+    },
+    {
+      "id": 27205,
+      "title": "A Origem",
+      "original_title": "Inception",
+      "overview": "Um ladrão que invade sonhos recebe a missão de implantar uma ideia na mente de um herdeiro.",
+      "poster_path": "/fixture-poster-27205.jpg",
+      "backdrop_path": "/fixture-backdrop-27205.jpg",
+      "release_date": "2010-07-15",
+      "vote_average": 8.4,
+      "vote_count": 37400,
+      "genre_ids": [28, 878, 12],
+      "popularity": 177.5
+    },
+    {
+      "id": 238,
+      "title": "O Poderoso Chefão",
+      "original_title": "The Godfather",
+      "overview": "O patriarca de uma família mafiosa transfere o controle de seu império ao filho relutante.",
+      "poster_path": "/fixture-poster-238.jpg",
+      "backdrop_path": "/fixture-backdrop-238.jpg",
+      "release_date": "1972-03-14",
+      "vote_average": 8.7,
+      "vote_count": 21500,
+      "genre_ids": [18, 80],
+      "popularity": 170.0
+    },
+    {
+      "id": 496243,
+      "title": "Parasita",
+      "original_title": "기생충",
+      "overview": "Uma família pobre se infiltra, um a um, no cotidiano de uma família rica.",
+      "poster_path": "/fixture-poster-496243.jpg",
+      "backdrop_path": "/fixture-backdrop-496243.jpg",
+      "release_date": "2019-05-30",
+      "vote_average": 8.5,
+      "vote_count": 19100,
+      "genre_ids": [35, 53, 18],
+      "popularity": 162.5
+    }
+  ],
+  "total_pages": 3,
+  "total_results": 18
+}

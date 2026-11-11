@@ -1,0 +1,33 @@
+{
+  "page": 1,
+  "results": [
+    {
+      "id": 438631,
+      "title": "Duna",
+      "original_title": "Dune",
+      "overview": "Paul Atreides chega a Arrakis, o planeta mais perigoso do universo.",
+      "poster_path": "/fixture-poster-438631.jpg",
+      "backdrop_path": "/fixture-backdrop-438631.jpg",
+      "release_date": "2021-09-15",
+      "vote_average": 7.8,
+      "vote_count": 13100,
+      "genre_ids": [878, 12],
+      "popularity": 147.5
+    },
+    {
+      "id": 693134,
+      "title": "Duna: Parte Dois",
+      "original_title": "Dune: Part Two",
+      "overview": "Paul Atreides se une a Chani e aos Fremen em sua vingança.",
+      "poster_path": "/fixture-poster-693134.jpg",
+      "backdrop_path": "/fixture-backdrop-693134.jpg",
+      "release_date": "2024-02-27",
+      "vote_average": 8.1,
+      "vote_count": 7800,
+      "genre_ids": [878, 12],
+      "popularity": 50.0
+    }
+  ],
+  "total_pages": 2,
+  "total_results": 3
+}

@@ -18,7 +18,8 @@
     "noEmit": true,
     "allowJs": true,
     "checkJs": false,
-    "allowImportingTsExtensions": true
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true
   },
-  "include": ["vite.config.ts", "api", "server"]
+  "include": ["vite.config.ts", "playwright.config.ts", "api", "server", "e2e"]
 }
