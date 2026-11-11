@@ -10,7 +10,7 @@
   <a href="../README.md">Voltar</a>
 </p>
 
-Este documento é o plano de evolução do MoviesLib. Ele combina uma análise do código atual com o estudo da documentação oficial da API do TMDB e dos termos de uso.
+Este documento é o plano de evolução do Cinelux (antes MoviesLib). Ele combina uma análise do código atual com o estudo da documentação oficial da API do TMDB e dos termos de uso.
 
 - **Base da análise:** branch `feature/foundation-modernization`, novembro de 2026.
 - **Fontes:** endpoints, parâmetros e limites citados aqui foram conferidos na documentação oficial (lista em [Fontes](#fontes)). Quando a documentação não informa algo, isso está dito explicitamente.
@@ -341,16 +341,16 @@ Escalas usadas:
 
 | ID | Iniciativa | Fase | Impacto | Esforço | Prioridade | Status |
 |---|---|---|---|---|---|---|
-| I-01 | Crédito ao JustWatch | 0 | Crítico (risco de perder a API) | P | **P0** | Pendente |
-| I-02 | Página "Sobre" com logo do TMDB | 0 | Crítico (termos) | P | **P0** | Pendente |
-| I-03 | Licença comercial e política sem IA | 0 | Crítico (negócio) | — | **P0** | Pendente |
-| I-11 | Testes de interface no CI | 1 | Alto (manutenção) | M | P1 | Pendente |
-| I-05 | Filme em 1 requisição + classificação indicativa | 1 | Alto | P/M | P1 | Pendente |
-| I-04 | Imagens no tamanho certo | 1 | Alto (celular) | M | P1 | Pendente |
+| I-01 | Crédito ao JustWatch | 0 | Crítico (risco de perder a API) | P | **P0** | Concluído (D-10) |
+| I-02 | Página "Sobre" com logo do TMDB | 0 | Crítico (termos) | P | **P0** | Concluído (D-21) |
+| I-03 | Licença comercial e política sem IA | 0 | Crítico (negócio) | — | **P0** | Pendente (proprietário) |
+| I-11 | Testes de interface no CI | 1 | Alto (manutenção) | M | P1 | Concluído (D-35 a D-38) |
+| I-05 | Filme em 1 requisição + classificação indicativa | 1 | Alto | P/M | P1 | Em andamento: 1 requisição concluída (D-41) |
+| I-04 | Imagens no tamanho certo | 1 | Alto (celular) | M | P1 | Concluído (D-40) |
 | I-07 | Lançamentos BR e "Em breve" | 1 | Alto | P | P1 | Pendente |
 | I-06 | "Em alta" com tendência | 1 | Médio | P | P1 | Pendente (decisão de produto) |
-| I-08 | Cache no navegador | 1 | Médio/alto | M | P1 | Pendente |
-| I-09 | Proxy resistente | 1 | Alto (escala) | M | P1 | Pendente |
+| I-08 | Cache no navegador | 1 | Médio/alto | M | P1 | Concluído (D-41) |
+| I-09 | Proxy resistente | 1 | Alto (escala) | M | P1 | Concluído: cache na borda (D-19) e limite no firewall em modo Log (D-31, D-47) |
 | I-10 | Sinopse de reserva | 1 | Médio | P | P2 | Pendente |
 | I-12 | Páginas de pessoas | 2 | Muito alto | G | P1 | Pendente |
 | I-13 | Busca de filmes e pessoas | 2 | Alto | M | P1 | Pendente |

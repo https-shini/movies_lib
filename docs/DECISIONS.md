@@ -63,6 +63,7 @@ Cada decisão tem: contexto, decisão e consequência. As decisões D-01 a D-11 
 
 - **Contexto:** a seção 4.4 da identidade indica Sans 500 para o "título no card"; as seções 4.5 e 9.2 indicam Fraunces 600.
 - **Decisão:** Fraunces 600, que aparece em duas seções e na regra "Use Fraunces para todo nome de filme".
+- **Revisão (D-49):** com a identidade Sala Escura mantida pelo proprietário, o título no card usa Instrument Sans 600, como no visual publicado; Fraunces continua nos títulos de página, do destaque e do filme.
 
 ## D-10. Conformidade com os termos do TMDB
 

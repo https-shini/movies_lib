@@ -186,10 +186,11 @@ O CI está descrito no [README](../README.md#scripts).
 
 ## 9. Limitações atuais
 
-- O limite do firewall da Vercel em `/api` (300 requisições por minuto por IP) está em modo **Log**: registra, mas ainda não bloqueia (D-34).
+- O limite do firewall da Vercel em `/api` (300 requisições por minuto por IP) está em modo **Log**: registra, mas ainda não bloqueia. Com o tráfego atual não há evidência que justifique o modo Block (D-34, D-47).
 - A CSP não tem endpoint de coleta de relatórios: um bloqueio aparece só no console do navegador do visitante (D-43). Nos Previews da Vercel, a barra de ferramentas da Vercel (`vercel.live`) fica bloqueada pela CSP.
-- O JavaScript inicial ainda tem cerca de 116 KB com gzip: quase tudo é `react-dom` e `react-router`, que a divisão por rota não reduz.
-- A página de privacidade ainda não identifica o responsável pelos dados nem traz canal de contato: depende do proprietário preencher `src/config/legal.ts` (D-44).
+- O JavaScript inicial ainda tem cerca de 120 KB com gzip: quase tudo é `react-dom` e `react-router`, que a divisão por rota não reduz.
+- A página de privacidade ainda não identifica o responsável pelos dados, o canal de contato nem as bases legais: depende do proprietário preencher `src/config/legal.ts` (D-44, D-47 e `docs/PENDENCIAS_PROPRIETARIO.md`).
+- O Web Analytics depende de ativação no painel da Vercel; até lá, os eventos enviados pelo site são descartados. O Speed Insights já recebe dados.
 - Disponibilidade de streaming só para o Brasil.
 
 ## 10. Referências
