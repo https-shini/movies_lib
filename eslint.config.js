@@ -55,14 +55,7 @@ export default defineConfig([
 
   // Código executado no Node (função da Vercel, proxy local, configs e testes, inclusive E2E)
   {
-    files: [
-      "api/**",
-      "server/**",
-      "e2e/**",
-      "*.config.{js,ts}",
-      "tests/**",
-      "**/*.test.{js,ts,tsx}",
-    ],
+    files: ["api/**", "server/**", "e2e/**", "*.config.{js,ts}", "**/*.test.{js,ts,tsx}"],
     languageOptions: { globals: { ...globals.node, ...globals.browser } },
   },
 
