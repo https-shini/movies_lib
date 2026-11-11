@@ -84,5 +84,6 @@ export function detailsFrom(summary: MovieSummary): MovieDetails {
     recommendations: { ...emptyPage },
     similar: { ...emptyPage },
     "watch/providers": { results: {} },
+    release_dates: { results: [] },
   };
 }

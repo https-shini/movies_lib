@@ -180,5 +180,43 @@
         ]
       }
     }
+  },
+  "release_dates": {
+    "results": [
+      {
+        "iso_3166_1": "US",
+        "release_dates": [
+          {
+            "certification": "R",
+            "type": 3,
+            "release_date": "1999-10-15T00:00:00.000Z",
+            "note": "",
+            "iso_639_1": "",
+            "descriptors": []
+          }
+        ]
+      },
+      {
+        "iso_3166_1": "BR",
+        "release_dates": [
+          {
+            "certification": "",
+            "type": 1,
+            "release_date": "1999-10-29T00:00:00.000Z",
+            "note": "Festival",
+            "iso_639_1": "",
+            "descriptors": []
+          },
+          {
+            "certification": "18",
+            "type": 3,
+            "release_date": "1999-10-29T00:00:00.000Z",
+            "note": "",
+            "iso_639_1": "",
+            "descriptors": []
+          }
+        ]
+      }
+    ]
   }
 }
