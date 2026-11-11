@@ -345,7 +345,7 @@ Escalas usadas:
 | I-02 | Página "Sobre" com logo do TMDB | 0 | Crítico (termos) | P | **P0** | Concluído (D-21) |
 | I-03 | Licença comercial e política sem IA | 0 | Crítico (negócio) | — | **P0** | Pendente (proprietário) |
 | I-11 | Testes de interface no CI | 1 | Alto (manutenção) | M | P1 | Concluído (D-35 a D-38) |
-| I-05 | Filme em 1 requisição + classificação indicativa | 1 | Alto | P/M | P1 | Em andamento: 1 requisição concluída (D-41) |
+| I-05 | Filme em 1 requisição + classificação indicativa | 1 | Alto | P/M | P1 | Concluído (D-41, D-53) |
 | I-04 | Imagens no tamanho certo | 1 | Alto (celular) | M | P1 | Concluído (D-40) |
 | I-07 | Lançamentos BR e "Em breve" | 1 | Alto | P | P1 | Pendente |
 | I-06 | "Em alta" com tendência | 1 | Médio | P | P1 | Pendente (decisão de produto) |

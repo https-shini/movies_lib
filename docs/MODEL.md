@@ -93,7 +93,7 @@ Requisições canceladas (`AbortError`) são repassadas sem conversão.
 
 - `useAsync`: carregamento, dados, erro, código do erro e `reload`, com `AbortController` a cada nova consulta.
 - `useMovies`: listas, busca e descoberta, com paginação, "carregar mais" e remoção de duplicados.
-- `useMovie`: detalhes do filme numa chamada com `append_to_response=credits,videos,recommendations,similar,watch/providers` e vídeos em `pt`, `en` e sem idioma.
+- `useMovie`: detalhes do filme numa chamada com `append_to_response=credits,videos,recommendations,similar,watch/providers,release_dates` e vídeos em `pt`, `en` e sem idioma.
 - `useGenres`: gêneros. Onde assistir chega junto com os detalhes do filme.
 - `useDocumentTitle`: título da aba (`Duna · Cinelux`).
 
@@ -136,7 +136,7 @@ Os valores da URL são validados em `lib/discover.ts` e `lib/pagination.ts`: ord
 
 - O navegador recebe `max-age=60`; a Vercel consome o `s-maxage` (D-19).
 - Erros sempre com `no-store`: endpoint fora da lista recebe 404 `unknown_endpoint`, outros métodos recebem 405 (com `Allow: GET`; a função exporta todos os métodos para o proxy responder, D-43) e falha de conexão com o TMDB recebe 502.
-- Parâmetros aceitos: `language`, `region`, `page`, `query`, `include_adult`, `sort_by`, `with_genres`, `primary_release_year`, `primary_release_date.lte`, `vote_average.gte`, `vote_count.gte`, `append_to_response` (só `credits`, `videos`, `recommendations`, `similar` e `watch/providers`) e `include_video_language`. Os demais são descartados.
+- Parâmetros aceitos: `language`, `region`, `page`, `query`, `include_adult`, `sort_by`, `with_genres`, `primary_release_year`, `primary_release_date.lte`, `vote_average.gte`, `vote_count.gte`, `append_to_response` (só `credits`, `videos`, `recommendations`, `similar`, `watch/providers` e `release_dates`) e `include_video_language`. Os demais são descartados.
 
 | Variável       | Onde                                                            | Uso                                     |
 | -------------- | --------------------------------------------------------------- | --------------------------------------- |
