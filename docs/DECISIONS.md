@@ -348,3 +348,25 @@ Cada decisão tem: contexto, decisão e consequência. As decisões D-01 a D-11 
 
 - **Leitura:** FCP e bytes melhoraram de forma consistente; o LCP do Início melhorou pouco no laboratório. O salto do Filme na última linha não vem do preload (que só acrescenta uma consulta nessa página) e é tratado como variação da simulação até a medição em produção.
 - **Boas práticas 96 nos Previews:** a CSP em modo de relatório aponta o script da barra de ferramentas da Vercel (`vercel.live`), injetado só em deploys de Preview. Não é permitido na CSP; em produção esse script não existe.
+
+## D-43. 405 da Vercel e CSP em modo de bloqueio
+
+- **405 na Vercel:** a verificação em produção mostrou que um POST recebia 405 com `Cache-Control: public, max-age=0, must-revalidate` e sem `Allow`. Com só `GET` exportado em `api/tmdb.ts`, a própria Vercel respondia, sem chamar o proxy, e a correção da D-39 valia só no ambiente local. Agora `POST`, `PUT`, `PATCH`, `DELETE` e `OPTIONS` também chegam ao proxy, que responde 405 com `Allow: GET` e `no-store` (`api/tmdb.test.ts`).
+- **CSP em modo de bloqueio:** com o deploy de `48eb833` (CSP já sem o Google Fonts), um navegador percorreu o domínio público em 320, 375, 768, 1024 e 1440 px, em `/`, `/discover`, `/search?q=duna`, `/movie/550`, `/sobre`, `/privacidade`, uma rota inexistente e o trailer aberto: zero violações e zero erros de console. Antes disso, o deploy de `5a77a65` também tinha passado sem violações em 375 e 1440 px. O cabeçalho passou de `Content-Security-Policy-Report-Only` para `Content-Security-Policy`, com a mesma política.
+- **Efeitos conhecidos:** sem endpoint de relatórios, um bloqueio aparece só no console do visitante; a barra de ferramentas da Vercel, injetada só em Previews, fica bloqueada. Para liberar um domínio novo, a CSP do `vercel.json` precisa ser atualizada, e os testes E2E acusam o que faltar.
+- **`Permissions-Policy`:** sem `interest-cohort`, recurso abandonado pelo Chrome.
+
+## D-44. Privacidade: o que foi completado e o que depende do proprietário
+
+- **Completado com fatos verificados:** hospedagem e estatísticas pela Vercel nos EUA (região `iad1` dos deploys); o termo de busca vai ao TMDB pelo servidor, sem o IP do visitante; registros técnicos da hospedagem mantidos por até uma hora no plano atual (limite informado pela API da Vercel); direitos do titular pelo art. 18 da LGPD; cache de respostas só na memória da aba.
+- **Pendente do proprietário, sem nada inventado:**
+  - nome do responsável pelo tratamento e e-mail de contato, em `src/config/legal.ts`; a seção "Responsável e contato" só aparece quando os dois estiverem preenchidos;
+  - base legal do tratamento das estatísticas (decisão jurídica);
+  - ativação do Web Analytics no painel da Vercel (a API ainda responde `web_analytics_not_enabled`); o Speed Insights já recebe dados.
+
+## D-45. Dependências
+
+- **PR #5 (`@types/node` 26):** não aplicado. O projeto roda em Node 24 (`engines`), e os tipos de uma versão maior permitiriam usar APIs que não existem em execução. O Dependabot passa a ignorar versões maiores de `@types/node`.
+- **`@playwright/test`:** ignorado pelo Dependabot, porque a versão precisa andar junto com a imagem do CI (D-38); o job `e2e` falha com mensagem clara se divergirem.
+- **PR #4 (`actions/checkout` e `actions/setup-node` v7):** as duas versões usam Node 24, compatíveis com os runners. Revisado depois dos merges desta etapa (ver o relatório da conclusão).
+- **`actions/upload-artifact`:** a v4 roda em Node 20 e gera um aviso, mas funciona; não foi atualizado só para remover o aviso.
