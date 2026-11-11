@@ -10,6 +10,14 @@ updates:
     open-pull-requests-limit: 5
     commit-message:
       prefix: "chore(deps)"
+    ignore:
+      # Os tipos do Node acompanham a versão de execução (engines: node >= 24). Uma
+      # versão maior dos tipos permitiria usar APIs que o Node 24 não tem (D-45).
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+      # @playwright/test precisa andar junto com a imagem do CI
+      # (mcr.microsoft.com/playwright:vX-noble em quality.yml); atualizar à mão (D-38).
+      - dependency-name: "@playwright/test"
     groups:
       producao:
         dependency-type: production
