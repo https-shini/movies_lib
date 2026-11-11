@@ -21,14 +21,8 @@ test.describe("Proxy do TMDB (local, sem chave)", () => {
     test(`${method} recebe 405 e o cabeçalho Allow`, async ({ request }) => {
       const response = await request.fetch("/api/tmdb/genre/movie/list", { method });
 
-      expect(response.status()).toBe(405);
+      await expectJsonError(response, 405, "method_not_allowed");
       expect(response.headers().allow).toBe("GET");
-      expect(response.headers()["content-type"]).toContain("application/json");
-      expect(await response.json()).toMatchObject({ code: "method_not_allowed" });
-      // Achado do Bloco B (D-36): o 405 é o único erro do proxy sem `Cache-Control: no-store`.
-      // Não há risco de cache (a CDN só guarda GET e HEAD), mas a correção fica registrada.
-      // Quando o proxy passar a enviar no-store aqui, troque esta linha pela verificação de no-store.
-      expect(response.headers()["cache-control"]).toBeUndefined();
     });
   }
 
