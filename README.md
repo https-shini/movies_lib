@@ -160,7 +160,7 @@ npx playwright show-report
 
 ### Como funciona
 
-- **Tamanhos de tela:** cada teste de interface roda em cinco projetos, `mobile-320`, `mobile-375`, `tablet-768`, `desktop-1024` e `desktop-1440`, com essas larguras em pixels CSS. O projeto `proxy` testa o proxy por HTTP, uma vez.
+- **Tamanhos de tela:** cada teste de interface roda em sete projetos, `mobile-320`, `mobile-375`, `mobile-390`, `mobile-420`, `tablet-768`, `desktop-1024` e `desktop-1440`, com essas larguras em pixels CSS. O projeto `proxy` testa o proxy por HTTP, uma vez.
 - **Fixtures (`e2e/fixtures/`):** JSON no formato do TMDB, tipados com `src/types/tmdb.ts`. Se uma fixture sair do modelo, o `npm run typecheck` falha.
 - **Mocks (`e2e/helpers/tmdb.ts`):** `page.route` intercepta `/api/tmdb/**` no navegador e responde com a fixture do endpoint. Um teste troca a resposta com `tmdb.on("search/movie", { status: 503 })` ou segura uma resposta para observar o carregamento.
 - **Rede isolada (`e2e/helpers/test.ts`):** imagens do TMDB viram um PNG local; o player do YouTube e os scripts da Vercel viram respostas vazias. O teste falha se o app pedir outro domínio externo, um endpoint sem fixture, registrar erro no console ou violar a CSP.

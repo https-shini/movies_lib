@@ -18,6 +18,10 @@ updates:
       # @playwright/test precisa andar junto com a imagem do CI
       # (mcr.microsoft.com/playwright:vX-noble em quality.yml); atualizar à mão (D-38).
       - dependency-name: "@playwright/test"
+      # TypeScript 7 ainda não é aceito pelo typescript-eslint (peer typescript < 6.1.0).
+      # Voltar a aceitar quando o typescript-eslint suportar a nova versão maior (D-47).
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
     groups:
       producao:
         dependency-type: production

@@ -149,17 +149,24 @@ test.describe("Privacidade", () => {
     for (const heading of [
       "Estatísticas de visitas (Vercel Web Analytics)",
       "Desempenho (Vercel Speed Insights)",
+      "Para que usamos os dados",
       "Conteúdo de outros serviços",
+      "Cookies e armazenamento no navegador",
       "Onde os dados são tratados",
       "Registros técnicos",
+      "Por quanto tempo guardamos",
       "Seus direitos",
     ]) {
       await expect(page.getByRole("heading", { level: 2, name: heading })).toBeVisible();
     }
     await expect(page.getByText("Lei nº 13.709/2018, art. 18")).toBeVisible();
+    await expect(page.getByText(/tratados no exterior/)).toBeVisible();
+    await expect(page.getByText(/O Cinelux não grava cookies/)).toBeVisible();
     // O Google Fonts deixou de ser usado e não aparece mais entre os serviços externos.
     await expect(page.getByText("Google Fonts")).toHaveCount(0);
     // Enquanto o proprietário não preencher src/config/legal.ts, a seção não aparece.
     await expect(page.getByRole("heading", { name: "Responsável e contato" })).toHaveCount(0);
+    // As bases legais são escolha do controlador: sem preenchimento, a seção não aparece.
+    await expect(page.getByRole("heading", { name: "Bases legais" })).toHaveCount(0);
   });
 });

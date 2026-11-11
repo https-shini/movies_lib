@@ -104,23 +104,48 @@ export const ptBR = {
       "Ao abrir uma página, o seu navegador busca conteúdo diretamente nestes serviços, que recebem o endereço IP como em qualquer acesso à internet:",
     thirdParty: [
       "TMDB (image.tmdb.org): pôsteres, imagens de fundo e fotos do elenco.",
-      "YouTube (youtube-nocookie.com): o trailer, apenas quando você clica em assistir.",
+      "YouTube (youtube-nocookie.com): o trailer, apenas quando você clica em assistir. Durante a reprodução, o YouTube pode guardar dados no navegador, conforme a política dele.",
     ],
-    storageTitle: "O que guardamos",
+    purposesTitle: "Para que usamos os dados",
+    purposes: [
+      "Estatísticas de visitas: saber quais páginas são usadas e decidir o que melhorar.",
+      "Desempenho: encontrar páginas lentas e corrigir problemas de carregamento.",
+      "Consultas ao TMDB: mostrar o catálogo, as buscas e os detalhes de cada filme.",
+      "Registros técnicos: manter o site no ar e protegido contra abuso, como o excesso de consultas.",
+    ],
+    legalBasesTitle: "Bases legais",
+    legalBasesText: "Cada tratamento se apoia em uma das hipóteses do art. 7º da LGPD:",
+    legalBasisItem: "{purpose}: {basis}",
+    purposeNames: {
+      analytics: "Estatísticas de visitas",
+      performance: "Desempenho",
+      catalog: "Consultas ao TMDB",
+      logs: "Registros técnicos",
+    },
+    storageTitle: "Cookies e armazenamento no navegador",
     storageText:
-      "Nada no seu navegador além do necessário para a página funcionar. Buscas e filtros ficam apenas no endereço da página, para que você possa compartilhá-los. As respostas do catálogo ficam só na memória da aba aberta, por até 5 minutos.",
+      "O Cinelux não grava cookies. Buscas e filtros ficam apenas no endereço da página, para que você possa compartilhá-los. As respostas do catálogo ficam só na memória da aba aberta, por até 5 minutos, e somem ao fechá-la.",
     hostingTitle: "Onde os dados são tratados",
     hostingText:
-      "O site e o servidor que consulta o TMDB são hospedados pela Vercel Inc., nos Estados Unidos, que também processa as estatísticas de visitas e de desempenho. As consultas de filmes, inclusive o termo de busca, são enviadas ao TMDB pelo nosso servidor, sem o seu endereço IP.",
+      "O site e o servidor que consulta o TMDB são hospedados pela Vercel Inc., nos Estados Unidos, que também processa as estatísticas de visitas e de desempenho. As consultas de filmes, inclusive o termo de busca, são enviadas ao TMDB pelo nosso servidor, sem o seu endereço IP. Como esses serviços ficam fora do Brasil, os dados técnicos descritos nesta página são tratados no exterior.",
     logsTitle: "Registros técnicos",
     logsText:
       "Como qualquer servidor, a hospedagem registra dados técnicos das requisições, como o endereço da página pedida. No plano de hospedagem atual, esses registros são mantidos por até uma hora.",
+    retentionTitle: "Por quanto tempo guardamos",
+    retention: [
+      "Respostas do catálogo na memória da aba: até 5 minutos.",
+      "Código que representa o visitante nas estatísticas: descartado em até 24 horas.",
+      "Registros técnicos da hospedagem: até 1 hora.",
+      "Estatísticas agregadas de visitas e de desempenho, que não identificam ninguém: ficam no painel da hospedagem pelo período que o plano oferece.",
+    ],
     rightsTitle: "Seus direitos",
     rightsText:
       "A Lei Geral de Proteção de Dados (Lei nº 13.709/2018, art. 18) garante, entre outros, os direitos de confirmar se seus dados são tratados, acessá-los, corrigi-los, pedir anonimização, bloqueio ou eliminação, obter informações sobre compartilhamento e revogar o consentimento.",
     contactTitle: "Responsável e contato",
     contactController: "Responsável pelo tratamento: {controller}",
     contactEmail: "Pedidos sobre dados pessoais: {email}",
+    contactProcedure:
+      "Para exercer qualquer direito, envie um e-mail dizendo qual pedido quer fazer. A LGPD prevê que a declaração completa seja entregue em até 15 dias (art. 19, II).",
     updated: "Atualizado em 11 de novembro de 2026.",
   },
 

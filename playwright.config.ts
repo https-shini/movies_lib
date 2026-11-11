@@ -6,7 +6,8 @@ import { defineConfig, devices, type Project } from "@playwright/test";
  * - Rodam contra o build de produção servido por `vite preview`, nunca contra a Vercel.
  * - As respostas de /api/tmdb vêm de fixtures locais (e2e/fixtures), interceptadas no
  *   navegador; nenhum teste usa a rede externa nem uma chave do TMDB.
- * - Cada teste de interface roda nos cinco tamanhos de tela do Bloco B (D-33).
+ * - Cada teste de interface roda nos sete tamanhos de tela: os cinco do Bloco B (D-33)
+ *   e 390/420 px, celulares grandes comuns no Brasil (D-48).
  */
 
 const PORT = 4173;
@@ -17,6 +18,8 @@ const isCI = Boolean(process.env.CI);
 export const VIEWPORTS = [
   { name: "mobile-320", width: 320, height: 720, touch: true },
   { name: "mobile-375", width: 375, height: 812, touch: true },
+  { name: "mobile-390", width: 390, height: 844, touch: true },
+  { name: "mobile-420", width: 420, height: 900, touch: true },
   { name: "tablet-768", width: 768, height: 1024, touch: true },
   { name: "desktop-1024", width: 1024, height: 768, touch: false },
   { name: "desktop-1440", width: 1440, height: 900, touch: false },

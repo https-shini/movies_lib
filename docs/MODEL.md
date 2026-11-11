@@ -154,7 +154,7 @@ Todas as respostas recebem `X-Content-Type-Options`, `Referrer-Policy`, `X-Frame
 
 ### Testes unitários (Vitest)
 
-142 testes em 12 arquivos, ao lado do código, cobrem:
+155 testes em 15 arquivos, ao lado do código, cobrem:
 
 - proxy: lista de permissões, chave, token v4, tempo limite, cache por tipo e erros sem cache;
 - serviço: montagem de URLs, códigos de erro e cancelamento;
@@ -167,7 +167,7 @@ Todas as respostas recebem `X-Content-Type-Options`, `Referrer-Policy`, `X-Frame
 O Playwright (Chromium) testa o app como o visitante usa, a partir do build de produção servido pelo `vite preview`:
 
 ```text
-playwright.config.ts   webServer (build + vite preview, sem chave), 5 projetos de tela + projeto proxy
+playwright.config.ts   webServer (build + vite preview, sem chave), 7 projetos de tela + projeto proxy
 e2e/
 ├── fixtures/          JSON no formato do TMDB, tipados por src/types/tmdb.ts (index.ts)
 ├── helpers/
