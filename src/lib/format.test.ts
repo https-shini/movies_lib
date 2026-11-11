@@ -7,6 +7,7 @@ import {
   formatReleaseDate,
   formatRuntime,
   getReleaseYear,
+  textOr,
 } from "./format";
 
 describe("formatCurrency", () => {
@@ -92,5 +93,18 @@ describe("formatLanguage", () => {
   it("trata códigos inválidos", () => {
     expect(formatLanguage("")).toBe("Não informado");
     expect(formatLanguage(null)).toBe("Não informado");
+  });
+});
+
+describe("textOr", () => {
+  it("usa o texto quando ele existe", () => {
+    expect(textOr("Clube da Luta", "Sem título")).toBe("Clube da Luta");
+  });
+
+  it("usa o texto alternativo para vazio, só espaços, nulo ou indefinido", () => {
+    expect(textOr("", "Sem título")).toBe("Sem título");
+    expect(textOr("   ", "Sem título")).toBe("Sem título");
+    expect(textOr(null, "Sem título")).toBe("Sem título");
+    expect(textOr(undefined, "Sem título")).toBe("Sem título");
   });
 });

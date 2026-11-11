@@ -80,3 +80,11 @@ export function formatLanguage(code: string | null | undefined): string {
     return code.toUpperCase();
   }
 }
+
+/**
+ * O texto, ou `fallback` quando ele vier vazio. O TMDB devolve `""` (e não `null`) para
+ * campos sem tradução, como sinopse e personagem, então `??` não bastaria.
+ */
+export function textOr(value: string | null | undefined, fallback: string): string {
+  return value?.trim() ? value : fallback;
+}
