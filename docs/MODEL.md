@@ -125,7 +125,7 @@ Os valores da URL são validados em `lib/discover.ts` e `lib/pagination.ts`: ord
 | `search/movie`                  | 10 min                                                  |
 
 - O navegador recebe `max-age=60`; a Vercel consome o `s-maxage` (D-19).
-- Erros sempre com `no-store`: endpoint fora da lista recebe 404 `unknown_endpoint`, outros métodos recebem 405 e falha de conexão com o TMDB recebe 502.
+- Erros sempre com `no-store`: endpoint fora da lista recebe 404 `unknown_endpoint`, outros métodos recebem 405 (com `Allow: GET`) e falha de conexão com o TMDB recebe 502.
 - Parâmetros aceitos: `language`, `region`, `page`, `query`, `include_adult`, `sort_by`, `with_genres`, `primary_release_year`, `primary_release_date.lte`, `vote_average.gte`, `vote_count.gte`, `append_to_response` (só `credits`, `videos`, `recommendations`, `similar` e `watch/providers`) e `include_video_language`. Os demais são descartados.
 
 | Variável       | Onde                                                            | Uso                                     |
@@ -135,6 +135,10 @@ Os valores da URL são validados em `lib/discover.ts` e `lib/pagination.ts`: ord
 ## 7. Observabilidade e privacidade
 
 `src/components/layout/Observability.tsx` carrega o Vercel Web Analytics e o Speed Insights. Antes do envio, `lib/analytics.ts` remove o parâmetro `q` (termo de busca) da URL e agrupa `/movie/123` como `/movie/[id]`. Não há cookies nem armazenamento no navegador. O que é coletado está descrito em `/privacidade`.
+
+### Cabeçalhos de segurança
+
+Todas as respostas recebem `X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options`, `Permissions-Policy` e uma `Content-Security-Policy-Report-Only` (`vercel.json`). O `vite preview` envia os mesmos valores (`server/securityHeaders.ts`), e os testes E2E falham em qualquer violação da CSP (D-39).
 
 ## 8. Testes e qualidade
 
@@ -172,8 +176,7 @@ O CI está descrito no [README](../README.md#scripts).
 ## 9. Limitações atuais
 
 - O limite do firewall da Vercel em `/api` (300 requisições por minuto por IP) está em modo **Log**: registra, mas ainda não bloqueia (D-34).
-- A resposta 405 do proxy não envia `Cache-Control: no-store`, ao contrário dos demais erros (D-36).
-- Faltam cabeçalhos de segurança além do HSTS (CSP, `X-Content-Type-Options`, `Referrer-Policy`).
+- A Content-Security-Policy está em modo de relatório (`Report-Only`), sem endpoint de coleta: violações aparecem só no console do navegador (D-39).
 - Um único bundle de JavaScript (cerca de 120 KB com gzip), sem divisão por rota; pôsteres sem `srcset`; fontes do Google Fonts. São alvos do Bloco C.
 - A página de privacidade ainda não identifica o responsável pelos dados nem traz canal de contato.
 - Disponibilidade de streaming só para o Brasil.

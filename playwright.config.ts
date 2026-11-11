@@ -24,7 +24,7 @@ export const VIEWPORTS = [
 
 const viewportProjects: Project[] = VIEWPORTS.map(({ name, width, height, touch }) => ({
   name,
-  testIgnore: /proxy\.spec\.ts/,
+  testIgnore: /(proxy|headers)\.spec\.ts/,
   use: {
     ...devices["Desktop Chrome"],
     viewport: { width, height },
@@ -54,8 +54,8 @@ export default defineConfig({
   },
   projects: [
     ...viewportProjects,
-    // O proxy é testado por HTTP, uma única vez, sem navegador.
-    { name: "proxy", testMatch: /proxy\.spec\.ts/ },
+    // O proxy e os cabeçalhos são testados por HTTP, uma única vez, sem navegador.
+    { name: "proxy", testMatch: /(proxy|headers)\.spec\.ts/ },
   ],
   webServer: {
     command: `npm run build && npm run preview -- --port ${PORT} --strictPort`,

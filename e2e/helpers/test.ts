@@ -50,7 +50,40 @@ async function isolateNetwork(page: Page, blocked: string[]): Promise<void> {
   );
 }
 
-export const test = base.extend<{ tmdb: TmdbMock; consoleErrors: ConsoleGuard }>({
+declare global {
+  interface Window {
+    __cspViolations?: string[];
+  }
+}
+
+export const test = base.extend<{
+  tmdb: TmdbMock;
+  consoleErrors: ConsoleGuard;
+  cspViolations: undefined;
+}>({
+  // A CSP da produção também vale no `vite preview` (em modo de relatório): qualquer
+  // violação registrada pelo navegador faz o teste falhar (D-39).
+  cspViolations: [
+    async ({ page }, use) => {
+      await page.addInitScript(() => {
+        window.__cspViolations = [];
+        document.addEventListener("securitypolicyviolation", (event) => {
+          window.__cspViolations?.push(
+            `${event.effectiveDirective}: ${event.blockedURI || "(inline)"}`,
+          );
+        });
+      });
+
+      await use(undefined);
+
+      const violations = await page
+        .evaluate(() => window.__cspViolations ?? [])
+        .catch(() => [] as string[]);
+      expect(violations, "violações da Content-Security-Policy").toEqual([]);
+    },
+    { auto: true },
+  ],
+
   consoleErrors: [
     async ({ page }, use) => {
       const errors: string[] = [];

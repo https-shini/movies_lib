@@ -179,6 +179,8 @@ O navegador nunca recebe a chave. Todas as consultas vão para `/api/tmdb/<endpo
 - desiste após 8 segundos;
 - guarda respostas de sucesso no cache da Vercel (gêneros 24 h, listas 1 h, detalhes 6 h, busca 10 min) e nunca guarda erros.
 
+Todas as respostas levam cabeçalhos de segurança definidos no `vercel.json`: `X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options`, `Permissions-Policy` e uma Content-Security-Policy, por enquanto em modo de relatório. O `vite preview` usa os mesmos valores, e os testes E2E falham se a página violar a política.
+
 Não use o prefixo `VITE_` para segredos: variáveis com esse prefixo entram no código enviado ao navegador. Não envie o `.env` ao Git.
 
 ## Implantação
