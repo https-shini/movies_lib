@@ -40,6 +40,8 @@
 
 @media (min-width: 1200px) {
   .rail {
-    --rail-item: calc((min(100vw - 2 * var(--gutter), var(--shell)) - 6 * var(--space-4)) / 7);
+    --rail-item: calc(
+      (min(100vw - 2 * var(--gutter), var(--container-max)) - 6 * var(--space-4)) / 7
+    );
   }
 }

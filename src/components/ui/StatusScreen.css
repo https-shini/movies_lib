@@ -12,10 +12,10 @@
 }
 
 .status-screen__code {
-  color: var(--accent);
+  color: var(--color-accent-default);
   font-size: clamp(5rem, 3rem + 14vw, 12rem);
   font-style: italic;
-  line-height: 0.85;
+  line-height: var(--leading-numeral);
 }
 
 .status-screen__title {
@@ -25,7 +25,7 @@
 
 .status-screen__message {
   max-width: 48ch;
-  color: var(--paper-dim);
+  color: var(--color-text-secondary);
 }
 
 .status-screen__actions {
