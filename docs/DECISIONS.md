@@ -346,7 +346,7 @@ Cada decisão tem: contexto, decisão e consequência. As decisões D-01 a D-11 
   | Filme | PR #10 sem preload | 83 | 4,57 s | 1,86 s | 717 KB |
   | Filme | PR #10 com preload | 90 | 3,37 s | 1,93 s | 723 KB |
 
-- **Leitura:** FCP e bytes melhoraram de forma consistente; o LCP do Início melhorou pouco no laboratório. O salto do Filme na última linha não vem do preload (que só acrescenta uma consulta nessa página) e é tratado como variação da simulação até a medição em produção.
+- **Leitura:** FCP e bytes melhoraram de forma consistente; o LCP do Início melhorou pouco no laboratório. O salto do Filme na última linha não vem do preload (que só acrescenta uma consulta nessa página) e é tratado como variação da simulação até a medição em produção (registrada na D-46).
 - **Boas práticas 96 nos Previews:** a CSP em modo de relatório aponta o script da barra de ferramentas da Vercel (`vercel.live`), injetado só em deploys de Preview. Não é permitido na CSP; em produção esse script não existe.
 
 ## D-43. 405 da Vercel e CSP em modo de bloqueio
@@ -370,3 +370,19 @@ Cada decisão tem: contexto, decisão e consequência. As decisões D-01 a D-11 
 - **`@playwright/test`:** ignorado pelo Dependabot, porque a versão precisa andar junto com a imagem do CI (D-38); o job `e2e` falha com mensagem clara se divergirem.
 - **PR #4 (`actions/checkout` e `actions/setup-node` v7):** as duas versões usam Node 24, compatíveis com os runners. Revisado depois dos merges desta etapa (ver o relatório da conclusão).
 - **`actions/upload-artifact`:** a v4 roda em Node 20 e gera um aviso, mas funciona; não foi atualizado só para remover o aviso.
+
+## D-46. Resultado em produção
+
+- **Deploy:** `dpl_9uNuZx2z23iSs6EUbn7WuGahX2WE`, commit `ff288ef` da `main`, READY, servindo `movies-lib-vite.vercel.app` (11 de novembro de 2026).
+- **Lighthouse mobile no domínio público (mediana de 3):**
+
+  | Página | Medição | Desempenho | Acessibilidade | Boas práticas | SEO | LCP | FCP | CLS |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Início | Antes (D-32, `ed175bd`) | 81 | 100 | 100 | 100 | 4,5 s | 2,2 s | 0 |
+  | Início | Depois (`ff288ef`) | 84 | 100 | 100 | 100 | 3,92 s | 1,76 s | 0 |
+  | Filme | Antes (D-32, `ed175bd`) | 82 | 100 | 100 | 100 | 4,6 s | 2,1 s | 0 |
+  | Filme | Depois (`ff288ef`) | 89 | 100 | 100 | 100 | 3,43 s | 1,97 s | 0 |
+
+  As Boas práticas voltaram a 100: a queda para 96 nos Previews vinha só da barra de ferramentas da Vercel (D-42).
+- **Verificado no domínio público:** rotas e proxy com 200; cache da CDN (`MISS` e depois `HIT`); erros com `no-store`; `POST`, `PUT`, `DELETE` e `OPTIONS` com 405, `Allow: GET` e `no-store`; CSP em modo de bloqueio e demais cabeçalhos; nenhuma requisição ao Google Fonts; 50 de 50 verificações no navegador nos cinco tamanhos de tela; nenhuma violação da CSP.
+- **Observação:** com o trailer aberto em 320 px, o player do YouTube (dentro do iframe) registrou "Permissions policy violation: compute-pressure". É o navegador negando a um iframe de outro domínio um recurso que ele não tem por padrão; não vem da CSP nem afeta a página.
