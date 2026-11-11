@@ -247,7 +247,7 @@ const MovieDetails = ({ id }) => {
             title="Onde assistir"
             subtitle="Streaming, aluguel e compra no Brasil."
           />
-          <WatchProviders movieId={id} />
+          <WatchProviders providers={movie["watch/providers"]} />
         </section>
 
         <CastRail cast={cast} />

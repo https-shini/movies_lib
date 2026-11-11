@@ -1,43 +1,16 @@
 import { PiArrowUpRight } from "react-icons/pi";
-import { useWatchProviders } from "../../hooks/useWatchProviders";
 import { getLogoUrl } from "../../lib/images";
 import { getWatchProvidersForRegion } from "../../lib/watchProviders";
 import { messages } from "../../i18n";
 import StateMessage from "../ui/StateMessage";
 import "./WatchProviders.css";
 
-const ProviderSkeleton = () => (
-  <div className="providers__groups" aria-hidden="true">
-    {[0, 1].map((group) => (
-      <div key={group} className="providers__group">
-        <span className="skeleton skeleton--text" style={{ width: "6rem" }} />
-        <div className="providers__list">
-          {[0, 1, 2].map((item) => (
-            <span key={item} className="skeleton providers__logo" />
-          ))}
-        </div>
-      </div>
-    ))}
-  </div>
-);
-
-const WatchProviders = ({ movieId, region = "BR" }) => {
-  const { data, isLoading, error, reload } = useWatchProviders(movieId);
-  const availability = getWatchProvidersForRegion(data, region);
-
-  if (isLoading) return <ProviderSkeleton />;
-
-  if (error) {
-    return (
-      <StateMessage
-        tone="error"
-        compact
-        title="Não foi possível consultar onde assistir"
-        message={error}
-        onRetry={reload}
-      />
-    );
-  }
+/**
+ * Onde assistir no Brasil. Os dados chegam junto com os detalhes do filme
+ * (`append_to_response=watch/providers`), sem uma segunda requisição (D-41).
+ */
+const WatchProviders = ({ providers, region = "BR" }) => {
+  const availability = getWatchProvidersForRegion(providers, region);
 
   if (!availability.groups.length) {
     return (
