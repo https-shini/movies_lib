@@ -1,4 +1,4 @@
-import { hasLegalContact, legalContact } from "../config/legal";
+import { definedLegalBases, hasLegalContact, legalContact } from "../config/legal";
 import { interpolate, messages } from "../i18n";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
 import "./Legal.css";
@@ -6,6 +6,7 @@ import "./Legal.css";
 /** O que é coletado, por quem e para quê (LGPD). */
 const Privacy = () => {
   const text = messages.privacy;
+  const bases = definedLegalBases();
   useDocumentTitle(text.title);
 
   return (
@@ -42,6 +43,36 @@ const Privacy = () => {
           <p>{text.speedText}</p>
         </section>
 
+        <section className="legal__section" aria-labelledby="privacy-purposes">
+          <h2 id="privacy-purposes" className="legal__title display">
+            {text.purposesTitle}
+          </h2>
+          <ul className="legal__list" role="list">
+            {text.purposes.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </section>
+
+        {bases.length > 0 && (
+          <section className="legal__section" aria-labelledby="privacy-legal-bases">
+            <h2 id="privacy-legal-bases" className="legal__title display">
+              {text.legalBasesTitle}
+            </h2>
+            <p>{text.legalBasesText}</p>
+            <ul className="legal__list" role="list">
+              {bases.map(({ purpose, basis }) => (
+                <li key={purpose}>
+                  {interpolate(text.legalBasisItem, {
+                    purpose: text.purposeNames[purpose],
+                    basis,
+                  })}
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
         <section className="legal__section" aria-labelledby="privacy-third-party">
           <h2 id="privacy-third-party" className="legal__title display">
             {text.thirdPartyTitle}
@@ -75,6 +106,17 @@ const Privacy = () => {
           <p>{text.logsText}</p>
         </section>
 
+        <section className="legal__section" aria-labelledby="privacy-retention">
+          <h2 id="privacy-retention" className="legal__title display">
+            {text.retentionTitle}
+          </h2>
+          <ul className="legal__list" role="list">
+            {text.retention.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </section>
+
         <section className="legal__section" aria-labelledby="privacy-rights">
           <h2 id="privacy-rights" className="legal__title display">
             {text.rightsTitle}
@@ -94,6 +136,7 @@ const Privacy = () => {
                 {legalContact.email}
               </a>
             </p>
+            <p>{text.contactProcedure}</p>
           </section>
         )}
 
