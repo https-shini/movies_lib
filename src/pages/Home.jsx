@@ -1,8 +1,8 @@
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import { Link } from "react-router";
 import { PiArrowRight } from "react-icons/pi";
-import { fetchTmdb } from "../services/tmdb";
-import { useAsyncData } from "../hooks/useAsyncData";
+import { useGenres } from "../hooks/useGenres";
+import { useMovies } from "../hooks/useMovies";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
 import FeaturedHero from "../components/movie/FeaturedHero";
 import MovieRail from "../components/movie/MovieRail";
@@ -11,44 +11,36 @@ import SectionHeader from "../components/ui/SectionHeader";
 import StateMessage from "../components/ui/StateMessage";
 import "./Home.css";
 
+const POPULAR = { kind: "list", list: "popular" };
+const TOP_RATED = { kind: "list", list: "top_rated" };
+const NOW_PLAYING = { kind: "list", list: "now_playing" };
+
 const Home = () => {
   useDocumentTitle("");
 
-  const loadPopular = useCallback(
-    (signal) => fetchTmdb("movie/popular", { params: { language: "pt-BR", region: "BR" }, signal }),
-    [],
-  );
-  const loadTopRated = useCallback(
-    (signal) => fetchTmdb("movie/top_rated", { params: { language: "pt-BR" }, signal }),
-    [],
-  );
-  const loadNowPlaying = useCallback(
-    (signal) => fetchTmdb("movie/now_playing", { params: { language: "pt-BR", region: "BR" }, signal }),
-    [],
-  );
-  const loadGenres = useCallback(
-    (signal) => fetchTmdb("genre/movie/list", { params: { language: "pt-BR" }, signal }),
-    [],
-  );
-
-  const popular = useAsyncData(loadPopular);
-  const topRated = useAsyncData(loadTopRated);
-  const nowPlaying = useAsyncData(loadNowPlaying);
-  const genres = useAsyncData(loadGenres);
+  const popular = useMovies(POPULAR);
+  const topRated = useMovies(TOP_RATED);
+  const nowPlaying = useMovies(NOW_PLAYING);
+  const genres = useGenres();
 
   const genresById = useMemo(
-    () => new Map((genres.data?.genres ?? []).map(({ id, name }) => [id, name])),
+    () => new Map((genres.data ?? []).map(({ id, name }) => [id, name])),
     [genres.data],
   );
 
-  const popularMovies = popular.data?.results ?? [];
+  const popularMovies = popular.movies;
   const [featured, ...trending] = popularMovies;
 
   return (
     <main className="home">
       {popular.error ? (
         <div className="shell home__hero-error">
-          <StateMessage tone="error" title="Não foi possível carregar os destaques" message={popular.error} onRetry={popular.reload} />
+          <StateMessage
+            tone="error"
+            title="Não foi possível carregar os destaques"
+            message={popular.error}
+            onRetry={popular.reload}
+          />
         </div>
       ) : (
         <FeaturedHero movie={featured} genresById={genresById} isLoading={popular.isLoading} />
@@ -64,7 +56,11 @@ const Home = () => {
             movies={trending}
             isLoading={popular.isLoading}
             onRetry={popular.reload}
-            link={<Link to="/discover" className="text-link">Ver tudo</Link>}
+            link={
+              <Link to="/discover" className="text-link">
+                Ver tudo
+              </Link>
+            }
           />
         )}
 
@@ -74,10 +70,14 @@ const Home = () => {
             index="02"
             title="Os 10 mais bem avaliados"
             subtitle="Clássicos e favoritos com as maiores notas do público."
-            aside={<Link to="/discover?sort=vote_average.desc" className="text-link">Ranking completo</Link>}
+            aside={
+              <Link to="/discover?sort=vote_average.desc" className="text-link">
+                Ranking completo
+              </Link>
+            }
           />
           <RankedList
-            movies={topRated.data?.results}
+            movies={topRated.movies}
             isLoading={topRated.isLoading}
             error={topRated.error}
             onRetry={topRated.reload}
@@ -89,11 +89,15 @@ const Home = () => {
           index="03"
           title="Nos cinemas"
           subtitle="Em cartaz nas salas brasileiras."
-          movies={nowPlaying.data?.results}
+          movies={nowPlaying.movies}
           isLoading={nowPlaying.isLoading}
           error={nowPlaying.error}
           onRetry={nowPlaying.reload}
-          link={<Link to="/discover?sort=primary_release_date.desc" className="text-link">Lançamentos</Link>}
+          link={
+            <Link to="/discover?sort=primary_release_date.desc" className="text-link">
+              Lançamentos
+            </Link>
+          }
         />
 
         <section className="section" aria-labelledby="genres-title">
@@ -104,21 +108,29 @@ const Home = () => {
             subtitle="Um atalho para o catálogo filtrado."
           />
           {genres.error ? (
-            <StateMessage tone="error" compact title="Não foi possível carregar os gêneros" message={genres.error} onRetry={genres.reload} />
+            <StateMessage
+              tone="error"
+              compact
+              title="Não foi possível carregar os gêneros"
+              message={genres.error}
+              onRetry={genres.reload}
+            />
           ) : (
             <ul className="genre-index" role="list" aria-busy={genres.isLoading}>
               {genres.isLoading
                 ? Array.from({ length: 12 }, (_, index) => (
-                  <li key={index}><span className="genre-index__link skeleton" aria-hidden="true" /></li>
-                ))
-                : genres.data?.genres?.map((genre) => (
-                  <li key={genre.id}>
-                    <Link className="genre-index__link" to={`/discover?genre=${genre.id}`}>
-                      <span>{genre.name}</span>
-                      <PiArrowRight aria-hidden="true" />
-                    </Link>
-                  </li>
-                ))}
+                    <li key={index}>
+                      <span className="genre-index__link skeleton" aria-hidden="true" />
+                    </li>
+                  ))
+                : genres.data?.map((genre) => (
+                    <li key={genre.id}>
+                      <Link className="genre-index__link" to={`/discover?genre=${genre.id}`}>
+                        <span>{genre.name}</span>
+                        <PiArrowRight aria-hidden="true" />
+                      </Link>
+                    </li>
+                  ))}
             </ul>
           )}
         </section>

@@ -25,8 +25,13 @@
 .featured__media::after {
   position: absolute;
   inset: 0;
-  background:
-    linear-gradient(180deg, rgb(12 11 10 / 15%) 0%, rgb(12 11 10 / 35%) 40%, rgb(12 11 10 / 96%) 82%, var(--ink-0) 100%);
+  background: linear-gradient(
+    180deg,
+    rgb(12 11 10 / 15%) 0%,
+    rgb(12 11 10 / 35%) 40%,
+    rgb(12 11 10 / 96%) 82%,
+    var(--ink-0) 100%
+  );
   content: "";
 }
 
@@ -115,7 +120,12 @@
 @media (min-width: 700px) {
   .featured__media::after {
     background:
-      linear-gradient(90deg, rgb(12 11 10 / 92%) 0%, rgb(12 11 10 / 55%) 45%, rgb(12 11 10 / 0%) 75%),
+      linear-gradient(
+        90deg,
+        rgb(12 11 10 / 92%) 0%,
+        rgb(12 11 10 / 55%) 45%,
+        rgb(12 11 10 / 0%) 75%
+      ),
       linear-gradient(180deg, transparent 55%, var(--ink-0) 100%);
   }
 

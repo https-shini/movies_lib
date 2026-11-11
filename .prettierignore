@@ -1,0 +1,7 @@
+dist/
+coverage/
+node_modules/
+.vercel/
+package-lock.json
+*.md
+docs/

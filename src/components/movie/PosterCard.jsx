@@ -1,14 +1,14 @@
 import { Link } from "react-router";
 import { PiFilmSlate } from "react-icons/pi";
-import { getPosterUrl } from "../../services/tmdb";
-import { getReleaseYear } from "../../utils/formatters";
+import { getReleaseYear } from "../../lib/format";
+import { getPosterUrl } from "../../lib/images";
 import Rating from "../ui/Rating";
 import "./PosterCard.css";
 
 export const getMovieTitle = (movie) => movie?.title || movie?.name || "Título não informado";
 
-export const Poster = ({ path, title, className = "", eager = false }) => {
-  const src = getPosterUrl(path);
+export const Poster = ({ path, title, className = "", eager = false, size = "w342" }) => {
+  const src = getPosterUrl(path, size);
 
   return (
     <div className={`poster ${className}`}>
