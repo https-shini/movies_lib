@@ -31,10 +31,3 @@ ajustado no mesmo commit).
   Depois de ativar, a contagem aparece no painel em alguns minutos.
 - **Firewall:** a regra "Rate Limit API" está em modo Log (D-47). Só mudar para Block depois de
   observar os eventos da regra no painel (Firewall) e confirmar que não há falsos positivos.
-
-## Identidade visual
-
-- A especificação `docs/Cinelux_Identidade_Visual.md` (v3.1.0, paleta "ouro") difere da
-  identidade em uso (`src/styles/tokens.css`, "Sala Escura", acento vermelhão). O arquivo
-  `tokens.css` original da especificação não existe no histórico do repositório. Trocar a
-  paleta é uma decisão de produto: ver a proposta na D-49 antes de pedir a migração.
