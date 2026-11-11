@@ -183,3 +183,70 @@ Cada decisão tem: contexto, decisão e consequência. As decisões D-01 a D-11 
 
 - **Contexto:** o workflow rodava em pushes para `main` e `feature/**` e em PRs para `main`. As branches deste plano (`chore/`, `test/`, `perf/`, `feat/`) e os PRs empilhados ficariam sem verificação.
 - **Decisão:** rodar em todo `pull_request` (qualquer destino), em push para `main` e sob demanda (`workflow_dispatch`).
+
+---
+
+## Retomada: auditoria e Parada A
+
+## D-28. Auditoria antes da retomada (7 de novembro de 2026)
+
+- **Contexto:** antes do Bloco B, o estado real do repositório, dos PRs, do CI e da Vercel foi auditado em modo somente leitura.
+- **Achados principais:**
+  - PRs #1, #2 e #3 abertos, em rascunho e empilhados, sem conflitos e com CI verde.
+  - A `main` pública mantinha um `dist/` versionado com uma chave v3 do TMDB em texto claro.
+  - A produção servia a `main` de 2024: só `/` respondia; as rotas diretas e o proxy davam 404.
+  - Sem regra de limite de requisições, sem cabeçalhos de segurança além do HSTS, Web Analytics possivelmente inativo e página de privacidade incompleta para a LGPD.
+  - README, `MODEL.md` e `index.html` ainda com o nome MoviesLib e estrutura antiga.
+- **Decisão:** bloquear o Bloco B até a conclusão da Parada A, com a ordem: chave, Preview, merges, firewall, produção e PR de documentação.
+
+## D-29. Rotação da chave do TMDB
+
+- **Evidência (11 de novembro de 2026, 13h28 UTC):** com autorização do responsável, uma única chamada ao TMDB com a chave exposta no histórico da `main` recebeu **401** (revogada). No mesmo momento, o proxy, usando o valor salvo na Vercel, recebeu **200** sem cache: a Vercel guarda outra chave, válida.
+- A variável `TMDB_API_KEY` (Secret, Production e Preview) tem a última alteração em 7 de novembro às 03h42 UTC, anterior à auditoria; por isso a troca foi comprovada pelo teste e não pelo horário.
+- Nenhum valor de chave foi exibido ou registrado. O histórico do Git não foi reescrito (C7): a chave antiga continua nele, mas está revogada.
+- **Preview revalidado:** redeploy `dpl_FBVGtpNzLPebZFbAFD8R7zQ2fHQZ` (commit `8a1523b`, READY às 13h29 UTC), com rotas, proxy e cache verificados por HTTP e 50 de 50 verificações no navegador em 320, 375, 768, 1024 e 1440 px.
+
+## D-30. Merges dos PRs empilhados
+
+- **Método:** merge commit, sem squash, para preservar o histórico de cada PR e evitar que os PRs seguintes reapresentassem commits já integrados.
+- **Ordem e resultado:**
+
+  | PR | Origem | Commit do merge |
+  |---|---|---|
+  | #1 | `feature/foundation-modernization` | `735fd1a` |
+  | #2 | `feature/cinelux` | `631fd21` |
+  | #3 | `chore/pre-launch-compliance` | `ed175bd` |
+
+- Os PRs #2 e #3 tiveram o destino trocado para `main` antes do merge. Como trocar o destino não dispara o CI (o commit é o mesmo), o resultado de cada merge foi verificado localmente antes da integração: formatação, lint, tipos, testes (128 e 142) e build.
+- A `main` final é idêntica a `chore/pre-launch-compliance` e não contém mais `dist/`. O CI da `main` passou nos merges.
+- As branches de origem foram mantidas; podem ser apagadas depois, sem dependências pendentes.
+
+## D-31. Regra de limite no firewall da Vercel
+
+- **Pedido:** caminho `/api` (prefixo), agrupado por IP, 300 requisições por minuto (janela fixa de 60 s), ação **Log**.
+- **Resultado:** a API da Vercel respondeu 404 ("Seawall Config not found") ao criar a configuração por PATCH e por PUT, inclusive com o corpo mínimo. O projeto não tem configuração de firewall e ela não pôde ser criada pela API.
+- **Decisão:** não usar alternativa diferente do pedido. A regra fica como ação manual no painel (projeto `movies-lib`, aba Firewall), com exatamente estes parâmetros. Depois de criada, a regra pode ser conferida pela API.
+- Revisar o limite após uma semana de registros.
+
+## D-32. Produção após a Parada A
+
+- **Deploy:** `dpl_9BegGtnk8QaRcGmZBjkD6webJf5V`, commit `ed175bd`, READY às 13h33 UTC, servindo `movies-lib-vite.vercel.app`.
+- **HTTP:** `/`, `/discover`, `/search`, `/sobre`, `/privacidade`, `/movie/550`, `/robots.txt`, `/sitemap.xml` e `/api/tmdb/genre/movie/list` respondem 200 com o tipo de conteúdo correto. Proxy: segunda chamada servida do cache (`HIT`), POST com 405, endpoint fora da lista com 404 e `no-store`, erros nunca em cache, parâmetros fora da lista descartados. Sem `noindex` em produção.
+- **Navegador:** 50 de 50 verificações nos cinco tamanhos, sem erros no console nem rolagem horizontal.
+- **Lighthouse mobile (mediana de 3 execuções):**
+
+  | Página | Desempenho | Acessibilidade | Boas práticas | SEO | LCP | FCP | CLS | TBT |
+  |---|---|---|---|---|---|---|---|---|
+  | Início | 81 | 100 | 100 | 100 | 4,5 s | 2,2 s | 0 | 70 ms |
+  | Filme | 82 | 100 | 100 | 100 | 4,6 s | 2,1 s | 0 | 30 ms |
+
+  Linha de base do Preview (Bloco A, depois): Início 77 e Filme 81 em desempenho, SEO 58 nas duas. O SEO 58 era efeito do `noindex` e do login da Vercel no Preview, como previsto; o desempenho está dentro do ruído. O INP não é medido em laboratório; o TBT é a referência.
+- **Analytics:** os envios de visualização e de métricas recebem 200, com o termo de busca removido e a rota `/movie/[id]` agrupada. Porém a API de consulta respondeu `web_analytics_not_enabled`: **o Web Analytics não está ativado no projeto** e as visitas não são registradas. A ativação do Speed Insights não pôde ser confirmada pela API. Ativar os dois no painel é ação manual.
+
+## D-33. Escopo do Bloco B e tamanhos de tela
+
+- **Escopo aprovado:** testes de interface com Playwright (`@playwright/test`, única dependência nova), executados no CI contra o build de produção (`vite preview`), com respostas do `/api/tmdb` simuladas por fixtures locais, sem rede real e sem chave.
+- **Cobertura:** rotas (inclusive acesso direto e 404), busca, descoberta (gênero, ordenação, painel de filtros e remoção de filtros), paginação, trailer (abrir e fechar), tratamento de erros (falha do proxy e "Tentar novamente") e responsividade, sem rolagem horizontal, em cinco tamanhos de tela.
+- **Fora do escopo:** qualquer mudança de funcionalidade ou de layout.
+- **Tamanhos:** 320, **375**, 768, 1024 e 1440 px, como decidido pelo responsável. O item I-11 do Roadmap previa 390 px; prevalece o 375 px do prompt do pré-lançamento, mais recente, que representa a largura dos iPhones compactos.
+- **Consequência registrada:** o CSS atual tem pontos de quebra em `max-width: 380px` e `max-width: 420px`. O 375 px exercita a regra de 380 px (assim como o 320 px), mas a faixa de 381 a 420 px, onde ficaria o 390 px, não é coberta por nenhum dos cinco tamanhos. Se essa faixa precisar de proteção, a forma é acrescentar um sexto tamanho (390 ou 414 px), não trocar o 375.
