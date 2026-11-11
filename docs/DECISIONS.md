@@ -330,3 +330,21 @@ Cada decisão tem: contexto, decisão e consequência. As decisões D-01 a D-11 
 - **Cache no cliente:** compartilhamento de pedidos iguais em andamento, sucessos guardados por 5 minutos (até 100 entradas), cancelamento só quando todos os interessados desistem e erros fora do cache. Os testes que exigiam o mesmo `AbortSignal` do chamador no `fetch` foram trocados por testes de comportamento: cancelar o único interessado cancela a requisição, e a desistência de um não cancela a dos outros.
 - **Pré-carregamento:** os `loader` das rotas disparam as consultas das páginas em paralelo com o download do código. Na primeira versão, um erro no pré-carregamento era descartado e a página consultava de novo, uma segunda tentativa silenciosa que os testes E2E de erro pegaram. Agora o erro de um pré-carregamento fica guardado por 10 segundos e é entregue uma única vez à página.
 - **Divisão por rota:** Início e 404 no pacote principal, as demais páginas sob demanda; estatísticas carregadas depois. **Resultado medido:** JavaScript inicial com gzip de 118,4 KB para 116,1 KB (−2%). O restante é `react-dom` e `react-router`. O ganho maior está na página de filme, cujo código passa a chegar em paralelo com os dados.
+
+## D-42. Preload dos dados do Início e medições do PR de desempenho
+
+- **Onde estava o tempo:** o LCP no celular (cerca de 4,6 s) era quase todo "atraso para começar a baixar a imagem" (cerca de 3 s): HTML, depois JavaScript, depois a consulta ao proxy, e só então a imagem do destaque. Esse é o custo da arquitetura de SPA sem renderização no servidor.
+- **Decisão:** o `index.html` faz `preload` de `/api/tmdb/movie/popular?language=pt-BR&page=1&region=BR`, a mesma URL de `getMovieList("popular", 1)` (garantido por `server/indexPreload.test.ts`). Verificado no navegador: o Início faz uma única requisição, porque o app reaproveita a do preload. Nas demais rotas o custo é uma consulta com cache na CDN e um aviso (não erro) no console por preload não usado.
+- **Medições (Lighthouse mobile, mediana de 3, deploys autenticados da Vercel):**
+
+  | Página | Deploy | Desempenho | LCP | FCP | Bytes |
+  | --- | --- | --- | --- | --- | --- |
+  | Início | `main` (`5a77a65`) | 81 | 4,60 s | 2,09 s | 1553 KB |
+  | Início | PR #10 sem preload | 83 | 4,58 s | 1,80 s | 1321 KB |
+  | Início | PR #10 com preload | 83 | 4,50 s | 1,83 s | 1321 KB |
+  | Filme | `main` (`5a77a65`) | 81 | 4,72 s | 2,08 s | 746 KB |
+  | Filme | PR #10 sem preload | 83 | 4,57 s | 1,86 s | 717 KB |
+  | Filme | PR #10 com preload | 90 | 3,37 s | 1,93 s | 723 KB |
+
+- **Leitura:** FCP e bytes melhoraram de forma consistente; o LCP do Início melhorou pouco no laboratório. O salto do Filme na última linha não vem do preload (que só acrescenta uma consulta nessa página) e é tratado como variação da simulação até a medição em produção.
+- **Boas práticas 96 nos Previews:** a CSP em modo de relatório aponta o script da barra de ferramentas da Vercel (`vercel.live`), injetado só em deploys de Preview. Não é permitido na CSP; em produção esse script não existe.
