@@ -1,0 +1,109 @@
+import { FEATURED_MOVIE } from "../fixtures/index.ts";
+import { expect, test } from "../helpers/test.ts";
+
+const TMDB_NOTICE =
+  "This product uses TMDB and the TMDB APIs but is not endorsed, certified, or otherwise approved by TMDB.";
+
+test.describe("Rotas", () => {
+  const directRoutes = [
+    { path: "/", heading: FEATURED_MOVIE.title, title: "Cinelux · Seu acervo de cinema" },
+    { path: "/discover?genre=18", heading: "Filmes de drama", title: "Descobrir filmes · Cinelux" },
+    { path: "/search?q=duna", heading: "Resultados para “duna”", title: "Busca: duna · Cinelux" },
+    { path: "/movie/550", heading: "Clube da Luta", title: "Clube da Luta · Cinelux" },
+    { path: "/sobre", heading: "Sobre o Cinelux", title: "Sobre · Cinelux" },
+    { path: "/privacidade", heading: "Privacidade", title: "Privacidade · Cinelux" },
+  ];
+
+  for (const { path, heading, title } of directRoutes) {
+    test(`abre ${path} diretamente pela URL`, async ({ page }) => {
+      const response = await page.goto(path);
+
+      expect(response?.status()).toBe(200);
+      await expect(page.getByRole("heading", { level: 1 })).toHaveText(heading);
+      await expect(page).toHaveTitle(title);
+    });
+  }
+
+  test("restaura os filtros de Descobrir a partir da URL", async ({ page, tmdb }) => {
+    await page.goto("/discover?genre=18&sort=vote_average.desc&year=1999");
+
+    await expect(page.getByRole("button", { name: "Drama", exact: true })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    await expect(page.getByLabel("Ordenar por")).toHaveValue("vote_average.desc");
+    await expect(page.getByRole("button", { name: "Remover filtro Ano 1999" })).toBeVisible();
+
+    const call = tmdb.callsTo("discover/movie").at(-1);
+    expect(call?.searchParams.get("with_genres")).toBe("18");
+    expect(call?.searchParams.get("sort_by")).toBe("vote_average.desc");
+    expect(call?.searchParams.get("primary_release_year")).toBe("1999");
+  });
+
+  test("mostra a página 404 para endereços inexistentes", async ({ page }) => {
+    await page.goto("/rota-que-nao-existe");
+
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Esta cena foi cortada");
+    await expect(page).toHaveTitle("Página não encontrada · Cinelux");
+
+    await page.getByRole("link", { name: "Descobrir filmes" }).click();
+    await expect(page).toHaveURL("/discover");
+  });
+
+  test("mostra a página 404 para filmes com ID inválido, sem consultar a API", async ({
+    page,
+    tmdb,
+  }) => {
+    await page.goto("/movie/abc");
+
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Esta cena foi cortada");
+    expect(tmdb.calls.filter((url) => url.pathname.startsWith("/api/tmdb/movie/abc"))).toEqual([]);
+  });
+});
+
+test.describe("Rodapé e créditos", () => {
+  test("rodapé com navegação e créditos do TMDB e do JustWatch", async ({ page }) => {
+    await page.goto("/");
+
+    const footer = page.getByRole("contentinfo");
+    const nav = footer.getByRole("navigation", { name: "Rodapé" });
+    for (const [name, href] of [
+      ["Início", "/"],
+      ["Descobrir", "/discover"],
+      ["Buscar", "/search"],
+      ["Sobre", "/sobre"],
+      ["Privacidade", "/privacidade"],
+    ] as const) {
+      await expect(nav.getByRole("link", { name, exact: true })).toHaveAttribute("href", href);
+    }
+
+    for (const [name, href] of [
+      ["TMDB", "https://www.themoviedb.org/"],
+      ["JustWatch", "https://www.justwatch.com/"],
+    ] as const) {
+      const link = footer.getByRole("link", { name, exact: true });
+      await expect(link).toHaveAttribute("href", href);
+      await expect(link).toHaveAttribute("target", "_blank");
+      await expect(link).toHaveAttribute("rel", "noopener noreferrer");
+    }
+
+    await nav.getByRole("link", { name: "Sobre", exact: true }).click();
+    await expect(page).toHaveURL("/sobre");
+  });
+
+  test("página Sobre com o logo e o aviso exigidos pelo TMDB", async ({ page }) => {
+    await page.goto("/sobre");
+
+    const logo = page.getByRole("img", { name: "The Movie Database (TMDB)" });
+    await expect(logo).toBeVisible();
+    await expect(logo).toHaveAttribute("src", "/tmdb-logo.svg");
+    expect(await logo.evaluate((img: HTMLImageElement) => img.naturalWidth)).toBeGreaterThan(0);
+
+    const notice = page.locator('blockquote[lang="en"]');
+    await expect(notice).toHaveText(TMDB_NOTICE);
+    await expect(page.getByRole("link", { name: /Visitar o JustWatch/ })).toHaveAttribute(
+      "href",
+      "https://www.justwatch.com/",
+    );
+  });
+});
