@@ -1,0 +1,20 @@
+{
+  "page": 2,
+  "results": [
+    {
+      "id": 841,
+      "title": "Duna",
+      "original_title": "Dune",
+      "overview": "Adaptação de David Lynch para o romance de Frank Herbert.",
+      "poster_path": "/fixture-poster-841.jpg",
+      "backdrop_path": "/fixture-backdrop-841.jpg",
+      "release_date": "1984-12-14",
+      "vote_average": 6.3,
+      "vote_count": 2600,
+      "genre_ids": [878, 12],
+      "popularity": 42.5
+    }
+  ],
+  "total_pages": 2,
+  "total_results": 3
+}

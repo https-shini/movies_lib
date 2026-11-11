@@ -7,7 +7,14 @@ import globals from "globals";
 import tseslint from "typescript-eslint";
 
 export default defineConfig([
-  globalIgnores(["dist/", "coverage/", "node_modules/", ".vercel/"]),
+  globalIgnores([
+    "dist/",
+    "coverage/",
+    "node_modules/",
+    ".vercel/",
+    "playwright-report/",
+    "test-results/",
+  ]),
 
   js.configs.recommended,
 
@@ -46,9 +53,16 @@ export default defineConfig([
     },
   },
 
-  // Código executado no Node (função da Vercel, proxy local, configs e testes)
+  // Código executado no Node (função da Vercel, proxy local, configs e testes, inclusive E2E)
   {
-    files: ["api/**", "server/**", "*.config.{js,ts}", "tests/**", "**/*.test.{js,ts,tsx}"],
+    files: [
+      "api/**",
+      "server/**",
+      "e2e/**",
+      "*.config.{js,ts}",
+      "tests/**",
+      "**/*.test.{js,ts,tsx}",
+    ],
     languageOptions: { globals: { ...globals.node, ...globals.browser } },
   },
 

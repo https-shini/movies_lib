@@ -250,3 +250,49 @@ Cada decisão tem: contexto, decisão e consequência. As decisões D-01 a D-11 
 - **Fora do escopo:** qualquer mudança de funcionalidade ou de layout.
 - **Tamanhos:** 320, **375**, 768, 1024 e 1440 px, como decidido pelo responsável. O item I-11 do Roadmap previa 390 px; prevalece o 375 px do prompt do pré-lançamento, mais recente, que representa a largura dos iPhones compactos.
 - **Consequência registrada:** o CSS atual tem pontos de quebra em `max-width: 380px` e `max-width: 420px`. O 375 px exercita a regra de 380 px (assim como o 320 px), mas a faixa de 381 a 420 px, onde ficaria o 390 px, não é coberta por nenhum dos cinco tamanhos. Se essa faixa precisar de proteção, a forma é acrescentar um sexto tamanho (390 ou 414 px), não trocar o 375.
+
+---
+
+## Bloco B: testes de interface (E2E)
+
+## D-34. Firewall confirmado e conclusão da Parada A
+
+- **Evidência (11 de novembro de 2026):** o registro de auditoria da Vercel mostra a configuração do firewall do projeto `movies-lib` alterada como rascunho e **publicada como versão 1 às 13h57 UTC**, com uma regra `rules.insert` (`rule_rate_limit_api_sfdxnK`, "Rate Limit API"): caminho com prefixo `/api`, `rate_limit` com janela fixa de 60 s, limite de 300, chave `ip`, ação `log`, ativa.
+- **Divergência registrada:** a leitura da configuração ativa pela API (`GET /v1/security/firewall/config/active`) continua respondendo 404 ("Seawall Config not found") mesmo depois da publicação. A confirmação foi feita pelo registro de auditoria, que traz os parâmetros publicados. Nenhuma alteração foi feita no firewall pela API.
+- **Parada A concluída:** chave rotacionada (D-29), Preview validado, PRs #1 a #3 integrados (D-30), firewall publicado (este item), produção validada (D-32) e documentação integrada pelo PR #6 (merge `a91a988`).
+- A D-31 continua valendo como histórico: a criação pela API não foi possível e a regra foi criada no painel.
+
+## D-35. Arquitetura dos testes E2E
+
+- **Atualização:** a forma de instalar o Chromium no CI mudou na D-38.
+
+- **Ferramenta:** `@playwright/test` **1.63.0**, versão fixa, só com o Chromium. É a mesma versão do Playwright e do Chromium já instalados no ambiente de desenvolvimento usado no projeto, publicada há mais de dois meses; a mais recente (1.65.0) fica para o Dependabot.
+- **Alvo:** o build de produção servido pelo `vite preview` (`webServer` do Playwright), sempre um servidor novo e com `TMDB_API_KEY` vazia. A variável vazia no ambiente tem prioridade sobre um `.env` local (verificado com um `.env` temporário).
+- **Dados:** fixtures JSON em `e2e/fixtures/`, tipadas com `src/types/tmdb.ts` pelo `index.ts`; uma fixture fora do modelo quebra o `typecheck` (verificado alterando um campo de propósito). Filmes que só aparecem em listas recebem detalhes mínimos derivados do resumo; IDs desconhecidos recebem 404 no formato do TMDB.
+- **Mock:** `page.route` em `/api/tmdb/**`, no navegador. Cada teste pode trocar a resposta de um endpoint (`tmdb.on`) por todas as chamadas ou pelas próximas N, e segurar uma resposta para observar o carregamento.
+- **Determinismo:** imagens do TMDB viram um PNG local de 1 px; Google Fonts e scripts da Vercel viram respostas vazias; o player do YouTube vira uma página vazia. Qualquer outro domínio externo, endpoint sem fixture ou erro no console faz o teste falhar.
+- **Seletores:** papéis, nomes acessíveis e rótulos (`getByRole`, `getByLabel`), sem classes CSS.
+- **Tamanhos:** cinco projetos (320, 375, 768, 1024 e 1440 px, pixels CSS, `deviceScaleFactor` 1, toque ligado até 768 px). O proxy tem um projeto próprio, sem navegador.
+- **Sem novas tentativas** (`retries: 0`), local e no CI: um teste instável deve falhar e ser corrigido. Trace e captura de tela só em falhas.
+- **CI:** job `e2e` independente do `quality`, no mesmo workflow e com os mesmos gatilhos (D-27); relatório e traces enviados como artefato só em falha, por 7 dias.
+
+## D-36. Achados durante o Bloco B
+
+- **405 sem `no-store`:** o proxy responde 405 (métodos diferentes de GET) sem `Cache-Control`, ao contrário dos outros erros. Não há risco de cache (CDNs só guardam GET e HEAD), mas é uma inconsistência. A correção (acrescentar `Cache-Control: no-store` na resposta 405 de `server/tmdbProxy.ts`) muda o proxy e **depende de autorização**; até lá, o teste do 405 afirma explicitamente a ausência do cabeçalho, para que a correção futura o atualize.
+- **Foco no `<dialog>` nativo:** com `showModal`, depois do último controle o Chromium leva o foco para fora do documento (a interface do navegador) antes de voltar ao diálogo. Nenhum elemento da página atrás do diálogo recebe foco; o teste verifica essa garantia, e não um ciclo restrito ao diálogo, que não é o comportamento do HTML.
+- **Botão "Buscar" abaixo de 480 px:** o CSS esconde o botão de envio da busca; o envio é pelo teclado (`enterKeyHint="search"`). Os testes seguem esse comportamento em 320 e 375 px.
+- **Faixa de 381 a 420 px:** continua fora dos cinco tamanhos (D-33).
+
+## D-37. Resultado do Bloco B
+
+- **Testes:** 56 testes de interface por tamanho de tela × 5 tamanhos = 280, mais 16 do proxy: **296**. Em duas execuções locais seguidas: 291 aprovados, 0 reprovados e 5 pulados por não se aplicarem ao layout (busca do cabeçalho em 320, 375 e 768 px; barra inferior em 1024 e 1440 px).
+- **Por área (por tamanho):** acessibilidade 9, rotas e créditos 11, responsividade 10, estados 7, descobrir 7, busca 6, filme 4, início 2.
+- **Fora do escopo dos testes:** o cache da CDN e o firewall da Vercel (só existem na Vercel) e consultas reais ao TMDB (sem chave nos testes). Esses pontos seguem verificados por `curl` nos Previews e na produção (D-29 e D-32).
+
+## D-38. Imagem oficial do Playwright no CI
+
+- **Falha (execução #190 do PR #7):** o job `quality` passou; o `e2e` falhou em `npx playwright install --with-deps chromium` depois de 10 minutos, antes de rodar qualquer teste. O runner (`ubuntu-latest`, agora Ubuntu 26.04, região `eastus2`) não resolveu o DNS de nenhum espelho do Ubuntu (`azure.archive.ubuntu.com`, `archive.ubuntu.com`, `security.ubuntu.com`) durante toda a etapa, e o `apt` encerrou com o código 100. Os pacotes que faltavam eram só 9 pacotes de fontes. Classificação: dependências do sistema, por um problema externo de rede do runner.
+- **Decisão:** rodar o job `e2e` dentro da imagem oficial `mcr.microsoft.com/playwright:v1.63.0-noble` (Ubuntu 24.04, suportado pela 1.63.0), que já traz o Chromium da mesma versão e as dependências do sistema. O job deixa de depender do `apt` e do download do navegador. Essa é uma das duas formas recomendadas na documentação do Playwright para CI.
+- **Cache removido:** a documentação do Playwright desaconselha cachear os navegadores no CI. Os passos de cache da D-35 saíram junto com a instalação.
+- **Versão sincronizada:** a tag da imagem precisa acompanhar o `@playwright/test`. Um passo do job compara as duas versões e falha com uma mensagem clara se divergirem (o Dependabot atualiza o `package.json`, mas não a imagem).
+- **Sem mudança na cobertura:** os mesmos testes, os mesmos cinco tamanhos, nenhuma nova tentativa e o mesmo upload de relatório e traces em falha. O job `quality` não mudou.

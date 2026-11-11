@@ -40,3 +40,44 @@ jobs:
         run: npm test
       - name: Build application
         run: npm run build
+
+  # Testes de interface (Playwright) com fixtures locais: sem rede externa e sem chave
+  # do TMDB. Job independente do `quality`, para uma falha não esconder a outra (D-35).
+  # Roda na imagem oficial do Playwright, que já traz o Chromium e as dependências do
+  # sistema: o job não depende do apt nem do download do navegador (D-38).
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    container:
+      # Manter a tag igual à versão de @playwright/test no package.json.
+      image: mcr.microsoft.com/playwright:v1.63.0-noble
+    env:
+      PLAYWRIGHT_IMAGE_VERSION: 1.63.0
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Check Playwright version against the image
+        run: |
+          installed=$(node -p "require('@playwright/test/package.json').version")
+          if [ "$installed" != "$PLAYWRIGHT_IMAGE_VERSION" ]; then
+            echo "::error::@playwright/test $installed, imagem $PLAYWRIGHT_IMAGE_VERSION. Atualize a tag da imagem no workflow."
+            exit 1
+          fi
+      - name: Run E2E tests
+        run: npm run test:e2e
+      - name: Upload report and traces on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7

@@ -13,3 +13,8 @@ pnpm-debug.log*
 .idea/
 .DS_Store
 Thumbs.db
+
+# Playwright (relatórios e traces locais)
+playwright-report/
+test-results/
+blob-report/
