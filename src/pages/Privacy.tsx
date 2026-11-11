@@ -1,4 +1,5 @@
-import { messages } from "../i18n";
+import { hasLegalContact, legalContact } from "../config/legal";
+import { interpolate, messages } from "../i18n";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
 import "./Legal.css";
 
@@ -59,6 +60,42 @@ const Privacy = () => {
           </h2>
           <p>{text.storageText}</p>
         </section>
+
+        <section className="legal__section" aria-labelledby="privacy-hosting">
+          <h2 id="privacy-hosting" className="legal__title display">
+            {text.hostingTitle}
+          </h2>
+          <p>{text.hostingText}</p>
+        </section>
+
+        <section className="legal__section" aria-labelledby="privacy-logs">
+          <h2 id="privacy-logs" className="legal__title display">
+            {text.logsTitle}
+          </h2>
+          <p>{text.logsText}</p>
+        </section>
+
+        <section className="legal__section" aria-labelledby="privacy-rights">
+          <h2 id="privacy-rights" className="legal__title display">
+            {text.rightsTitle}
+          </h2>
+          <p>{text.rightsText}</p>
+        </section>
+
+        {hasLegalContact() && (
+          <section className="legal__section" aria-labelledby="privacy-contact">
+            <h2 id="privacy-contact" className="legal__title display">
+              {text.contactTitle}
+            </h2>
+            <p>{interpolate(text.contactController, { controller: legalContact.controller })}</p>
+            <p>
+              {interpolate(text.contactEmail, { email: "" })}
+              <a className="text-link" href={`mailto:${legalContact.email}`}>
+                {legalContact.email}
+              </a>
+            </p>
+          </section>
+        )}
 
         <p className="legal__footer mono">{text.updated}</p>
       </div>

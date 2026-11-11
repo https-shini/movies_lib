@@ -108,8 +108,20 @@ export const ptBR = {
     ],
     storageTitle: "O que guardamos",
     storageText:
-      "Nada no seu navegador além do necessário para a página funcionar. Buscas e filtros ficam apenas no endereço da página, para que você possa compartilhá-los.",
-    updated: "Atualizado em 7 de novembro de 2026.",
+      "Nada no seu navegador além do necessário para a página funcionar. Buscas e filtros ficam apenas no endereço da página, para que você possa compartilhá-los. As respostas do catálogo ficam só na memória da aba aberta, por até 5 minutos.",
+    hostingTitle: "Onde os dados são tratados",
+    hostingText:
+      "O site e o servidor que consulta o TMDB são hospedados pela Vercel Inc., nos Estados Unidos, que também processa as estatísticas de visitas e de desempenho. As consultas de filmes, inclusive o termo de busca, são enviadas ao TMDB pelo nosso servidor, sem o seu endereço IP.",
+    logsTitle: "Registros técnicos",
+    logsText:
+      "Como qualquer servidor, a hospedagem registra dados técnicos das requisições, como o endereço da página pedida. No plano de hospedagem atual, esses registros são mantidos por até uma hora.",
+    rightsTitle: "Seus direitos",
+    rightsText:
+      "A Lei Geral de Proteção de Dados (Lei nº 13.709/2018, art. 18) garante, entre outros, os direitos de confirmar se seus dados são tratados, acessá-los, corrigi-los, pedir anonimização, bloqueio ou eliminação, obter informações sobre compartilhamento e revogar o consentimento.",
+    contactTitle: "Responsável e contato",
+    contactController: "Responsável pelo tratamento: {controller}",
+    contactEmail: "Pedidos sobre dados pessoais: {email}",
+    updated: "Atualizado em 11 de novembro de 2026.",
   },
 
   errors: {

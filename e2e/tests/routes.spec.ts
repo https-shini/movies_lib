@@ -139,3 +139,27 @@ test.describe("Fontes", () => {
     expect(new Set(fontRequests)).toEqual(new Set([new URL(page.url()).host]));
   });
 });
+
+test.describe("Privacidade", () => {
+  test("descreve hospedagem, registros e direitos, sem inventar o responsável", async ({
+    page,
+  }) => {
+    await page.goto("/privacidade");
+
+    for (const heading of [
+      "Estatísticas de visitas (Vercel Web Analytics)",
+      "Desempenho (Vercel Speed Insights)",
+      "Conteúdo de outros serviços",
+      "Onde os dados são tratados",
+      "Registros técnicos",
+      "Seus direitos",
+    ]) {
+      await expect(page.getByRole("heading", { level: 2, name: heading })).toBeVisible();
+    }
+    await expect(page.getByText("Lei nº 13.709/2018, art. 18")).toBeVisible();
+    // O Google Fonts deixou de ser usado e não aparece mais entre os serviços externos.
+    await expect(page.getByText("Google Fonts")).toHaveCount(0);
+    // Enquanto o proprietário não preencher src/config/legal.ts, a seção não aparece.
+    await expect(page.getByRole("heading", { name: "Responsável e contato" })).toHaveCount(0);
+  });
+});
