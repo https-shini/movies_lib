@@ -53,7 +53,7 @@ src/
 └── test/             utilitários dos testes
 ```
 
-A camada de dados (`services`, `hooks`, `lib`, `types`, `i18n`), o proxy e as páginas `About` e `Privacy` estão em TypeScript `strict`. Os demais componentes e páginas ainda são `.jsx`, aceitos pelo `allowJs` até as fases de componentes do Cinelux.
+Todo o código (dados, componentes, páginas, proxy e testes) está em TypeScript `strict`, sem `allowJs`. Os textos da interface ficam em `src/i18n/pt-BR.ts` e os estilos usam só os tokens de `src/styles/tokens.css` (D-50 e D-51).
 
 ## 4. Rotas
 

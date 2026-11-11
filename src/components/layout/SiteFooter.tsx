@@ -28,7 +28,7 @@ const SiteFooter = () => (
         </a>
         . {text.notice} {text.availabilityBy}{" "}
         <a href="https://www.justwatch.com/" target="_blank" rel="noopener noreferrer">
-          JustWatch
+          {messages.watchProvidersCredit.justWatch}
         </a>
         .
       </p>

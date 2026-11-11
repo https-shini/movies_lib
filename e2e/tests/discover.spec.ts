@@ -31,7 +31,7 @@ test.describe("Descobrir", () => {
   test("ordena pelo seletor e aplica o mínimo de votos da nota", async ({ page, tmdb }) => {
     await page.goto("/discover");
 
-    await page.getByLabel("Ordenar por").selectOption({ label: "Melhor avaliados" });
+    await page.getByLabel("Ordenar por").selectOption({ label: "Mais bem avaliados" });
 
     await expect(page).toHaveURL("/discover?sort=vote_average.desc");
     const call = tmdb.callsTo("discover/movie").at(-1);

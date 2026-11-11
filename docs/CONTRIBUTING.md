@@ -1,66 +1,46 @@
-<h1 align="center"> Contributing/Contribuindo </h1>
+<h1 align="center">Contribuindo com o Cinelux</h1>
 
 <p align="center">
   <a href="#pt-br">Português</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-  <a href="#en-us-">English</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+  <a href="#en-us">English</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
   <a href="https://github.com/https-shini/movies_lib">Voltar</a>
 </p>
 
-<br>
-
 ## PT-BR
-Se você deseja contribuir com o projeto, siga estas etapas:
 
-1. **Crie um fork:**
-   - No repositório do projeto, clique no botão "Fork" localizado no canto superior direito da página. Isso criará uma cópia do repositório em sua própria conta do GitHub.
+### Passo a passo
 
-2. **Crie sua branch de funcionalidade:**
-   - No seu fork do projeto, crie uma nova branch para sua contribuição executando o seguinte comando no terminal:
-     ```
-     git checkout -b my-new-feature
-     ```
+1. Faça um fork do repositório e crie uma branch a partir da `main`:
+   ```bash
+   git checkout -b feature/minha-melhoria
+   ```
+2. Instale as dependências com `npm ci` e configure o `.env` a partir do `.env.example` (veja o README).
+3. Faça as alterações seguindo as regras abaixo.
+4. Antes de enviar, rode as verificações. Elas são as mesmas do CI:
+   ```bash
+   npm run format:check
+   npm run check
+   npm run test:e2e
+   ```
+5. Faça commits pequenos no padrão [Conventional Commits](https://www.conventionalcommits.org/pt-br/), em português (ex.: `fix(busca): mantém o termo ao trocar de página`).
+6. Abra um pull request para a `main` explicando o que mudou, por quê e como foi testado.
 
-3. **Adicione os arquivos modificados:**
-   - Faça as alterações desejadas no código-fonte e adicione os arquivos modificados à sua branch executando o seguinte comando:
-     ```
-     git add .
-     ```
+### Regras do projeto
 
-4. **Faça um commit com suas alterações:**
-   - Faça um commit das alterações com uma mensagem descritiva utilizando o seguinte comando:
-     ```
-     git commit -m "Add some feature"
-     ```
+- **TypeScript `strict`** em todo o código; não há arquivos `.js` ou `.jsx` no app.
+- **Textos da interface** só em `src/i18n/pt-BR.ts`, nunca escritos direto nos componentes.
+- **Estilos** só com os tokens de `src/styles/tokens.css`: nada de cor, tamanho de fonte, peso, raio ou sombra escritos direto. Os breakpoints ficam em `src/styles/breakpoints.ts`.
+- **Dados do TMDB** só por `src/services/tmdb.ts`, que chama o proxy `/api/tmdb`. A chave nunca vai para o navegador, o código ou os commits.
+- **Segurança:** não enfraqueça a CSP nem os cabeçalhos do `vercel.json` para um teste passar; os testes E2E falham em qualquer violação.
+- **Testes:** funcionalidade nova vem com teste unitário e, se mudar a interface, com teste E2E nos sete tamanhos de tela. Não desative testes para o CI passar.
+- Decisões que fogem dos documentos ficam registradas em `docs/DECISIONS.md`.
 
-5. **Faça um push da sua branch:**
-   - Envie suas alterações para o seu fork do repositório executando o seguinte comando:
-     ```
-     git push origin my-new-feature
-     ```
+## en-US
 
-6. **Envie um Pull Request para esse repositório:**
-   - Navegue até a página do seu fork do projeto no GitHub e clique no botão "Pull Request".
-   - Adicione um título e uma descrição clara que explique suas alterações e sugestões de maneira detalhada e compreensível.
+1. Fork the repository and create a branch from `main`.
+2. Run `npm ci` and create `.env` from `.env.example` (see the README).
+3. Before opening a pull request, run `npm run format:check`, `npm run check` and `npm run test:e2e`.
+4. Use small [Conventional Commits](https://www.conventionalcommits.org/) (the project writes them in Portuguese).
+5. Open a pull request to `main` describing what changed, why, and how it was tested.
 
-Ao seguir estas etapas, você estará contribuindo com o projeto e enviando suas sugestões de funcionalidades ou correções de bugs para análise e inclusão no repositório principal. Seus esforços são muito apreciados! 🚀
-> Depois que seu pull request for mergeado, você pode apagar sua branch. 
-
-> [!NOTE]
-> Não se esqueça de favoritar o projeto!
-
-## en-US 🇺🇸
-1. Fork it!
-2. Create your feature branch: `git checkout -b my-new-feature`
-3. Add files changed:  `git add .`
-4. Commit your changes: `git commit -m "Add some feature"`
-5. Push to the branch: `git push origin my-new-feature`
-6. Submit a pull request
-
-- Add a title and a clear description of your suggestion.
-
-**After your pull request is merged** 
-
-> After your pull request is merged, you can safely delete your branch.
-
-> [!NOTE]
-> Don't forget to star the project!
+Project rules: strict TypeScript, UI text only in `src/i18n/pt-BR.ts`, styles only through the tokens in `src/styles/tokens.css`, TMDB data only through `src/services/tmdb.ts` and the `/api/tmdb` proxy (the API key never reaches the browser), and no weakening of the CSP or security headers.

@@ -1,25 +1,27 @@
 import { PiArrowUpRight } from "react-icons/pi";
+import { messages } from "../../i18n";
 import { getLogoUrl } from "../../lib/images";
 import { getWatchProvidersForRegion } from "../../lib/watchProviders";
-import { messages } from "../../i18n";
+import type { WatchProvidersResponse } from "../../types/tmdb";
 import StateMessage from "../ui/StateMessage";
 import "./WatchProviders.css";
+
+const text = messages.providers;
+
+interface WatchProvidersProps {
+  providers: WatchProvidersResponse | undefined;
+  region?: string | undefined;
+}
 
 /**
  * Onde assistir no Brasil. Os dados chegam junto com os detalhes do filme
  * (`append_to_response=watch/providers`), sem uma segunda requisição (D-41).
  */
-const WatchProviders = ({ providers, region = "BR" }) => {
+const WatchProviders = ({ providers, region = "BR" }: WatchProvidersProps) => {
   const availability = getWatchProvidersForRegion(providers, region);
 
   if (!availability.groups.length) {
-    return (
-      <StateMessage
-        compact
-        title="Sem opções informadas no Brasil"
-        message="O TMDB não lista serviços de streaming, aluguel ou compra para este filme na região."
-      />
-    );
+    return <StateMessage compact title={text.emptyTitle} message={text.emptyMessage} />;
   }
 
   return (
@@ -57,7 +59,7 @@ const WatchProviders = ({ providers, region = "BR" }) => {
       </div>
 
       <p className="providers__note">
-        A disponibilidade muda com frequência. Confirme preços e planos na plataforma.
+        {text.note}
         {availability.link && (
           <>
             {" "}
@@ -67,7 +69,7 @@ const WatchProviders = ({ providers, region = "BR" }) => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              Ver no TMDB <PiArrowUpRight aria-hidden="true" />
+              {text.tmdbLink} <PiArrowUpRight aria-hidden="true" />
             </a>
           </>
         )}

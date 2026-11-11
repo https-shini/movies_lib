@@ -40,7 +40,7 @@ export default defineConfig([
 
   // Código de interface: hooks e acessibilidade
   {
-    files: ["src/**/*.{js,jsx,ts,tsx}"],
+    files: ["src/**/*.{ts,tsx}"],
     extends: [reactHooks.configs.flat["recommended-latest"], jsxA11y.configs.recommended],
     languageOptions: {
       globals: globals.browser,
@@ -66,10 +66,9 @@ export default defineConfig([
     languageOptions: { globals: { ...globals.node, ...globals.browser } },
   },
 
-  // Arquivos JavaScript ainda não migrados (removidos ao fim da Fase 5)
+  // Configuração em JavaScript (este arquivo): o app inteiro já é TypeScript.
   {
-    files: ["**/*.{js,jsx}"],
-    languageOptions: { parserOptions: { ecmaFeatures: { jsx: true } } },
+    files: ["**/*.js"],
     rules: {
       "no-unused-vars": ["error", { argsIgnorePattern: "^_", varsIgnorePattern: "^_" }],
     },

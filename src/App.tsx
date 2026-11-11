@@ -1,5 +1,6 @@
 import { lazy, Suspense } from "react";
 import { Outlet, ScrollRestoration } from "react-router";
+import { messages } from "./i18n";
 import AppHeader from "./components/layout/AppHeader";
 import MobileTabBar from "./components/layout/MobileTabBar";
 import SiteFooter from "./components/layout/SiteFooter";
@@ -11,7 +12,7 @@ function App() {
   return (
     <div className="app">
       <a className="skip-link" href="#main-content">
-        Pular para o conteúdo
+        {messages.common.skipToContent}
       </a>
       <AppHeader />
       <div id="main-content" className="app__content" tabIndex={-1}>

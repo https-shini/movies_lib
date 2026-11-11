@@ -1,29 +1,35 @@
 import { PiArrowUpRight } from "react-icons/pi";
-import { getYouTubeEmbedUrl } from "../../lib/movie";
+import { interpolate, messages } from "../../i18n";
+import { getYouTubeEmbedUrl, getYouTubeWatchUrl } from "../../lib/movie";
 import Dialog from "../ui/Dialog";
+
+const text = messages.movie;
+
+interface TrailerDialogProps {
+  open: boolean;
+  onClose: () => void;
+  videoKey: string;
+  title: string;
+}
 
 /**
  * Reproduz o trailer na própria página. O iframe só existe enquanto o
  * diálogo está aberto, então o vídeo para ao fechar.
  */
-const TrailerDialog = ({ open, onClose, videoKey, title }) => {
+const TrailerDialog = ({ open, onClose, videoKey, title }: TrailerDialogProps) => {
   const embedUrl = getYouTubeEmbedUrl(videoKey);
+  const watchUrl = getYouTubeWatchUrl(videoKey);
 
   return (
     <Dialog
       open={open}
       onClose={onClose}
       variant="media"
-      title={`Trailer: ${title}`}
+      title={interpolate(text.trailerTitle, { title })}
       footer={
-        videoKey && (
-          <a
-            className="btn btn--quiet"
-            href={`https://www.youtube.com/watch?v=${encodeURIComponent(videoKey)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Abrir no YouTube <PiArrowUpRight aria-hidden="true" />
+        watchUrl && (
+          <a className="btn btn--quiet" href={watchUrl} target="_blank" rel="noopener noreferrer">
+            {text.openYouTube} <PiArrowUpRight aria-hidden="true" />
           </a>
         )
       }
@@ -32,7 +38,7 @@ const TrailerDialog = ({ open, onClose, videoKey, title }) => {
         <div className="trailer-frame">
           <iframe
             src={embedUrl}
-            title={`Trailer de ${title}`}
+            title={interpolate(text.trailerFrame, { title })}
             allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
             allowFullScreen
             referrerPolicy="strict-origin-when-cross-origin"

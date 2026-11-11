@@ -1,8 +1,9 @@
 import { useMemo } from "react";
 import { Link } from "react-router";
 import { PiArrowRight } from "react-icons/pi";
+import { messages } from "../i18n";
 import { useGenres } from "../hooks/useGenres";
-import { useMovies } from "../hooks/useMovies";
+import { useMovies, type MovieSource } from "../hooks/useMovies";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
 import FeaturedHero from "../components/movie/FeaturedHero";
 import MovieRail from "../components/movie/MovieRail";
@@ -11,9 +12,11 @@ import SectionHeader from "../components/ui/SectionHeader";
 import StateMessage from "../components/ui/StateMessage";
 import "./Home.css";
 
-const POPULAR = { kind: "list", list: "popular" };
-const TOP_RATED = { kind: "list", list: "top_rated" };
-const NOW_PLAYING = { kind: "list", list: "now_playing" };
+const text = messages.home;
+
+const POPULAR: MovieSource = { kind: "list", list: "popular" };
+const TOP_RATED: MovieSource = { kind: "list", list: "top_rated" };
+const NOW_PLAYING: MovieSource = { kind: "list", list: "now_playing" };
 
 const Home = () => {
   useDocumentTitle("");
@@ -28,8 +31,7 @@ const Home = () => {
     [genres.data],
   );
 
-  const popularMovies = popular.movies;
-  const [featured, ...trending] = popularMovies;
+  const [featured, ...trending] = popular.movies;
 
   return (
     <main className="home">
@@ -37,7 +39,7 @@ const Home = () => {
         <div className="shell home__hero-error">
           <StateMessage
             tone="error"
-            title="Não foi possível carregar os destaques"
+            title={text.featuredError}
             message={popular.error}
             onRetry={popular.reload}
           />
@@ -51,14 +53,14 @@ const Home = () => {
           <MovieRail
             id="trending-title"
             index="01"
-            title="Em alta"
-            subtitle="O que todo mundo está assistindo agora."
+            title={text.trendingTitle}
+            subtitle={text.trendingSubtitle}
             movies={trending}
             isLoading={popular.isLoading}
             onRetry={popular.reload}
             link={
               <Link to="/discover" className="text-link">
-                Ver tudo
+                {text.seeAll}
               </Link>
             }
           />
@@ -68,11 +70,11 @@ const Home = () => {
           <SectionHeader
             id="ranked-title"
             index="02"
-            title="Os 10 mais bem avaliados"
-            subtitle="Clássicos e favoritos com as maiores notas do público."
+            title={text.rankedTitle}
+            subtitle={text.rankedSubtitle}
             aside={
               <Link to="/discover?sort=vote_average.desc" className="text-link">
-                Ranking completo
+                {text.rankedLink}
               </Link>
             }
           />
@@ -87,15 +89,15 @@ const Home = () => {
         <MovieRail
           id="now-playing-title"
           index="03"
-          title="Nos cinemas"
-          subtitle="Em cartaz nas salas brasileiras."
+          title={text.nowPlayingTitle}
+          subtitle={text.nowPlayingSubtitle}
           movies={nowPlaying.movies}
           isLoading={nowPlaying.isLoading}
           error={nowPlaying.error}
           onRetry={nowPlaying.reload}
           link={
             <Link to="/discover?sort=primary_release_date.desc" className="text-link">
-              Lançamentos
+              {text.nowPlayingLink}
             </Link>
           }
         />
@@ -104,14 +106,14 @@ const Home = () => {
           <SectionHeader
             id="genres-title"
             index="04"
-            title="Explore por gênero"
-            subtitle="Um atalho para o catálogo filtrado."
+            title={text.genresTitle}
+            subtitle={text.genresSubtitle}
           />
           {genres.error ? (
             <StateMessage
               tone="error"
               compact
-              title="Não foi possível carregar os gêneros"
+              title={text.genresError}
               message={genres.error}
               onRetry={genres.reload}
             />
