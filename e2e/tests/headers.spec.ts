@@ -30,7 +30,10 @@ test.describe("Cabeçalhos de segurança", () => {
     expect(expected["referrer-policy"]).toBe("strict-origin-when-cross-origin");
     expect(expected["x-frame-options"]).toBe("DENY");
 
-    const csp = expected["content-security-policy-report-only"] ?? "";
+    const csp = expected["content-security-policy"] ?? "";
+    // Em modo de bloqueio desde a D-43, depois de zero violações em produção.
+    expect(expected).not.toHaveProperty("content-security-policy-report-only");
+    expect(csp).not.toBe("");
     const directives = Object.fromEntries(
       csp.split(";").map((part) => {
         const [name = "", ...values] = part.trim().split(/\s+/);

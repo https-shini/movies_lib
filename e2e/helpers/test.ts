@@ -58,7 +58,7 @@ export const test = base.extend<{
   consoleErrors: ConsoleGuard;
   cspViolations: undefined;
 }>({
-  // A CSP da produção também vale no `vite preview` (em modo de relatório): qualquer
+  // A CSP da produção também vale no `vite preview` (em modo de bloqueio, D-43): qualquer
   // violação registrada pelo navegador faz o teste falhar (D-39).
   cspViolations: [
     async ({ page }, use) => {
