@@ -312,3 +312,21 @@ Cada decisão tem: contexto, decisão e consequência. As decisões D-01 a D-11 
 - **Mesma política nos testes:** `server/securityHeaders.ts` lê o `vercel.json` e o `vite preview` envia os mesmos cabeçalhos. Todo teste de interface falha se o navegador registrar uma violação da CSP (verificado retirando `image.tmdb.org` da política de propósito: os testes falharam). `e2e/tests/headers.spec.ts` confere os cabeçalhos servidos.
 - **Modo de relatório:** a CSP fica em `Report-Only` até ser verificada no domínio público sem violações; a troca para o modo de bloqueio é só renomear o cabeçalho.
 - **405 com `no-store`:** o proxy passou a enviar `Cache-Control: no-store` também no 405, como nos demais erros. A pendência da D-36 está resolvida e os testes (unitário e E2E) agora exigem o cabeçalho.
+
+## D-40. Imagens responsivas e fontes no próprio site
+
+- **Medição antes de escolher:** a largura exibida de cada imagem foi medida nos cinco tamanhos de tela. Os cards ocupam de 132 a 200 px; o ranking, de 56 a 64 px; o pôster do filme, 112 px até 899 px de tela e até 280 px acima; os backdrops ocupam a largura da tela.
+- **Escolhas (`POSTER_VARIANTS` em `src/lib/images.ts`):**
+  - cards: `w185`/`w342`, com `sizes="(min-width: 700px) 200px, 45vw"`;
+  - ranking: `w92`/`w185` (antes `w342`);
+  - pôster do filme: `w185`/`w342`/`w500` (antes sempre `w500`);
+  - backdrops do filme e do destaque: `w780`/`w1280` (antes sempre `w1280`).
+- **Exceção:** o pôster do destaque no celular continua `w500` sem `srcset`. Em telas de alta densidade, um `srcset` escolheria um arquivo maior e pioraria o LCP.
+- **Fontes:** os mesmos `woff2` que o Google Fonts servia, nos subconjuntos latin e latin-ext, ficam em `src/assets/fonts` (com hash no build) e são declarados em `src/styles/fonts.css` com `font-display: swap` e `unicode-range`. Saem o CSS bloqueante e as conexões com `fonts.googleapis.com` e `fonts.gstatic.com`. As licenças OFL originais das três famílias acompanham os arquivos, sem alterações (os três textos diferem só na formatação). A CSP passou a permitir estilos e fontes só do próprio site, e a página de privacidade deixou de citar o Google Fonts.
+
+## D-41. Uma requisição no filme, cache no cliente e divisão por rota
+
+- **Filme:** `append_to_response` inclui `watch/providers` (já permitido pelo proxy): 1 requisição em vez de 2. O componente `WatchProviders` recebe os dados prontos; o hook e a função de serviço separados foram removidos.
+- **Cache no cliente:** compartilhamento de pedidos iguais em andamento, sucessos guardados por 5 minutos (até 100 entradas), cancelamento só quando todos os interessados desistem e erros fora do cache. Os testes que exigiam o mesmo `AbortSignal` do chamador no `fetch` foram trocados por testes de comportamento: cancelar o único interessado cancela a requisição, e a desistência de um não cancela a dos outros.
+- **Pré-carregamento:** os `loader` das rotas disparam as consultas das páginas em paralelo com o download do código. Na primeira versão, um erro no pré-carregamento era descartado e a página consultava de novo, uma segunda tentativa silenciosa que os testes E2E de erro pegaram. Agora o erro de um pré-carregamento fica guardado por 10 segundos e é entregue uma única vez à página.
+- **Divisão por rota:** Início e 404 no pacote principal, as demais páginas sob demanda; estatísticas carregadas depois. **Resultado medido:** JavaScript inicial com gzip de 118,4 KB para 116,1 KB (−2%). O restante é `react-dom` e `react-router`. O ganho maior está na página de filme, cujo código passa a chegar em paralelo com os dados.

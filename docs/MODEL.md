@@ -28,7 +28,6 @@ Navegador
   │                    API do TMDB
   │
   ├─ image.tmdb.org      pôsteres, fundos e fotos (direto do navegador)
-  ├─ Google Fonts        fontes
   ├─ youtube-nocookie    trailer, só quando a pessoa escolhe assistir
   └─ /_vercel/insights e /_vercel/speed-insights   estatísticas sem cookies
 ```
@@ -94,8 +93,8 @@ Requisições canceladas (`AbortError`) são repassadas sem conversão.
 
 - `useAsync`: carregamento, dados, erro, código do erro e `reload`, com `AbortController` a cada nova consulta.
 - `useMovies`: listas, busca e descoberta, com paginação, "carregar mais" e remoção de duplicados.
-- `useMovie`: detalhes do filme numa chamada com `append_to_response=credits,videos,recommendations,similar` e vídeos em `pt`, `en` e sem idioma.
-- `useGenres` e `useWatchProviders`: gêneros e onde assistir.
+- `useMovie`: detalhes do filme numa chamada com `append_to_response=credits,videos,recommendations,similar,watch/providers` e vídeos em `pt`, `en` e sem idioma.
+- `useGenres`: gêneros. Onde assistir chega junto com os detalhes do filme.
 - `useDocumentTitle`: título da aba (`Duna · Cinelux`).
 
 ### Requisições por página
@@ -103,9 +102,20 @@ Requisições canceladas (`AbortError`) são repassadas sem conversão.
 | Página  | Consultas ao proxy                                                       |
 | ------- | ------------------------------------------------------------------------ |
 | Início  | `movie/popular`, `movie/top_rated`, `movie/now_playing`, `genre/movie/list` |
-| Filme   | `movie/{id}` (com os complementos) e `movie/{id}/watch/providers`        |
+| Filme   | `movie/{id}` (com os complementos, inclusive onde assistir): 1 requisição |
 | Buscar  | `search/movie` (ou `movie/popular` como sugestão, sem termo)             |
 | Descobrir | `discover/movie` e `genre/movie/list`                                  |
+
+### Cache e pré-carregamento (D-41)
+
+- **Cache no cliente (`services/tmdb.ts`):** pedidos iguais em andamento compartilham a mesma requisição, e respostas bem-sucedidas ficam guardadas por 5 minutos (até 100). Erros não ficam guardados, então "Tentar novamente" sempre consulta de novo. Uma requisição só é cancelada quando todos os interessados desistem.
+- **Pré-carregamento (`services/prefetch.ts`):** o `loader` de cada rota dispara as mesmas consultas da página, em paralelo com o download do código dela, e devolve `null` na hora. O erro de um pré-carregamento fica guardado por 10 segundos para a página recebê-lo, sem repetir a requisição.
+- **Divisão por rota:** Início e 404 estão no pacote principal; Descobrir, Busca, Filme, Sobre e Privacidade são carregados sob demanda, com `RouteFallback` no primeiro carregamento. Web Analytics e Speed Insights carregam depois da página.
+
+### Imagens e fontes (D-40)
+
+- **Pôsteres:** `srcset` e `sizes` medidos nos cinco tamanhos de tela (`POSTER_VARIANTS` em `lib/images.ts`): cards com `w185`/`w342`, ranking com `w92`/`w185` e pôster do filme com `w185` a `w500`. Os backdrops usam `w780`/`w1280`.
+- **Fontes:** Fraunces, Instrument Sans e IBM Plex Mono servidas pelo próprio site (`src/assets/fonts`, `src/styles/fonts.css`), nos subconjuntos latin e latin-ext, com `font-display: swap`. Não há requisições ao Google.
 
 ### Regras de descoberta
 
@@ -177,7 +187,7 @@ O CI está descrito no [README](../README.md#scripts).
 
 - O limite do firewall da Vercel em `/api` (300 requisições por minuto por IP) está em modo **Log**: registra, mas ainda não bloqueia (D-34).
 - A Content-Security-Policy está em modo de relatório (`Report-Only`), sem endpoint de coleta: violações aparecem só no console do navegador (D-39).
-- Um único bundle de JavaScript (cerca de 120 KB com gzip), sem divisão por rota; pôsteres sem `srcset`; fontes do Google Fonts. São alvos do Bloco C.
+- O JavaScript inicial ainda tem cerca de 116 KB com gzip: quase tudo é `react-dom` e `react-router`, que a divisão por rota não reduz.
 - A página de privacidade ainda não identifica o responsável pelos dados nem traz canal de contato.
 - Disponibilidade de streaming só para o Brasil.
 
