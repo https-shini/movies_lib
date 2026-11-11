@@ -19,10 +19,7 @@
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",
     "skipLibCheck": true,
-    "noEmit": true,
-
-    "allowJs": true,
-    "checkJs": false
+    "noEmit": true
   },
   "include": ["src", "vitest.setup.ts"]
 }
