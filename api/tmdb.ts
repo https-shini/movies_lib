@@ -9,6 +9,17 @@ import { handleTmdbProxy } from "../server/tmdbProxy.js";
  * (rotas coringa em api/ não funcionam fora do Next.js; ver D-08).
  * A chave fica em TMDB_API_KEY (tipo Secret) e nunca chega ao navegador.
  */
-export function GET(request: Request): Promise<Response> {
+function handler(request: Request): Promise<Response> {
   return handleTmdbProxy(request, { apiKey: process.env.TMDB_API_KEY });
 }
+
+export const GET = handler;
+
+// Os demais métodos também passam pelo proxy, que responde 405 com `Allow: GET` e
+// `Cache-Control: no-store`. Sem estes exports, a Vercel responderia o 405 sozinha,
+// sem esses cabeçalhos (D-43).
+export const POST = handler;
+export const PUT = handler;
+export const PATCH = handler;
+export const DELETE = handler;
+export const OPTIONS = handler;
