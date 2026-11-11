@@ -77,3 +77,9 @@
     padding-top: var(--space-6);
   }
 }
+
+/* Primeiro carregamento de uma página dividida (RouteFallback): ocupa a tela. */
+.route-fallback {
+  min-height: 100vh;
+  background: var(--ink-0);
+}

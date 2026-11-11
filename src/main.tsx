@@ -4,36 +4,54 @@ import "./styles/base.css";
 import "./styles/ui.css";
 import "./styles/layout.css";
 
-import { StrictMode } from "react";
+import { StrictMode, type ComponentType } from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
 
 import App from "./App";
 import Home from "./pages/Home";
-import Movie from "./pages/Movie";
-import Search from "./pages/Search";
-import Discover from "./pages/Discover";
 import NotFound from "./pages/NotFound";
 import RouteError from "./pages/RouteError";
-import About from "./pages/About";
-import Privacy from "./pages/Privacy";
+import RouteFallback from "./pages/RouteFallback";
+import { prefetchDiscover, prefetchHome, prefetchMovie, prefetchSearch } from "./services/prefetch";
+
+/**
+ * Início e 404 ficam no pacote principal; as demais páginas são carregadas sob demanda
+ * (D-41). Os loaders só disparam o pré-carregamento dos dados e devolvem null na hora.
+ */
+const page = (load: () => Promise<{ default: ComponentType }>) => async () => ({
+  Component: (await load()).default,
+});
 
 const router = createBrowserRouter([
   {
     element: <App />,
     errorElement: <RouteError />,
+    HydrateFallback: RouteFallback,
     children: [
       {
         // Mantém a navegação visível se uma página falhar ao renderizar.
         errorElement: <RouteError />,
         children: [
-          { index: true, element: <Home /> },
-          { path: "discover", element: <Discover /> },
-          { path: "movie/:id", element: <Movie /> },
-          { path: "search", element: <Search /> },
-          { path: "sobre", element: <About /> },
-          { path: "privacidade", element: <Privacy /> },
+          { index: true, element: <Home />, loader: prefetchHome },
+          {
+            path: "discover",
+            lazy: page(() => import("./pages/Discover")),
+            loader: ({ request }) => prefetchDiscover(request),
+          },
+          {
+            path: "movie/:id",
+            lazy: page(() => import("./pages/Movie")),
+            loader: ({ params }) => prefetchMovie(params.id),
+          },
+          {
+            path: "search",
+            lazy: page(() => import("./pages/Search")),
+            loader: ({ request }) => prefetchSearch(request),
+          },
+          { path: "sobre", lazy: page(() => import("./pages/About")) },
+          { path: "privacidade", lazy: page(() => import("./pages/Privacy")) },
           { path: "*", element: <NotFound /> },
         ],
       },
