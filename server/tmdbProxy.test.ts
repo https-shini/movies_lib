@@ -154,6 +154,8 @@ describe("handleTmdbProxy", () => {
       fetchImpl: fetchStub(),
     });
     expect(response.status).toBe(405);
+    expect(response.headers.get("Allow")).toBe("GET");
+    expect(response.headers.get("Cache-Control")).toBe("no-store");
   });
 
   it("repassa erros do TMDB sem guardar em cache", async () => {

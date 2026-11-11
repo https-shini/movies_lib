@@ -172,6 +172,7 @@ export async function handleTmdbProxy(
   if (request.method !== "GET") {
     return json({ code: "method_not_allowed", status_message: "Método não permitido." }, 405, {
       Allow: "GET",
+      "Cache-Control": "no-store",
     });
   }
 

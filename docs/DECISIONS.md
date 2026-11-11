@@ -296,3 +296,19 @@ Cada decisão tem: contexto, decisão e consequência. As decisões D-01 a D-11 
 - **Cache removido:** a documentação do Playwright desaconselha cachear os navegadores no CI. Os passos de cache da D-35 saíram junto com a instalação.
 - **Versão sincronizada:** a tag da imagem precisa acompanhar o `@playwright/test`. Um passo do job compara as duas versões e falha com uma mensagem clara se divergirem (o Dependabot atualiza o `package.json`, mas não a imagem).
 - **Sem mudança na cobertura:** os mesmos testes, os mesmos cinco tamanhos, nenhuma nova tentativa e o mesmo upload de relatório e traces em falha. O job `quality` não mudou.
+
+---
+
+## Conclusão: segurança e desempenho
+
+## D-39. Cabeçalhos de segurança e CSP em modo de relatório
+
+- **Cabeçalhos em todas as respostas** (`vercel.json`, regra `/(.*)`):
+  - `X-Content-Type-Options: nosniff`;
+  - `Referrer-Policy: strict-origin-when-cross-origin` (o player do YouTube continua recebendo a origem);
+  - `X-Frame-Options: DENY` (o site não precisa ser exibido em iframe);
+  - `Permissions-Policy` desligando câmera, microfone, localização, pagamento e USB;
+  - `Content-Security-Policy-Report-Only` com `default-src 'self'`, scripts só do próprio site, imagens do `image.tmdb.org`, player do `youtube-nocookie.com`, `object-src 'none'`, `frame-ancestors 'none'` e sem `unsafe-inline` nem `unsafe-eval`.
+- **Mesma política nos testes:** `server/securityHeaders.ts` lê o `vercel.json` e o `vite preview` envia os mesmos cabeçalhos. Todo teste de interface falha se o navegador registrar uma violação da CSP (verificado retirando `image.tmdb.org` da política de propósito: os testes falharam). `e2e/tests/headers.spec.ts` confere os cabeçalhos servidos.
+- **Modo de relatório:** a CSP fica em `Report-Only` até ser verificada no domínio público sem violações; a troca para o modo de bloqueio é só renomear o cabeçalho.
+- **405 com `no-store`:** o proxy passou a enviar `Cache-Control: no-store` também no 405, como nos demais erros. A pendência da D-36 está resolvida e os testes (unitário e E2E) agora exigem o cabeçalho.
