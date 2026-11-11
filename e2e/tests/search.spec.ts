@@ -79,6 +79,24 @@ test.describe("Busca", () => {
     await expect(results(page)).toHaveCount(searchDuna[1].results.length);
   });
 
+  test("busca termos com &, # e ? sem quebrar o endereço nem a consulta", async ({
+    page,
+    tmdb,
+  }) => {
+    const term = "Velozes & Furiosos #9?";
+    await page.goto(`/search?q=${encodeURIComponent(term)}`);
+
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(`Resultados para “${term}”`);
+    await expect(page.getByRole("searchbox", { name: "Buscar filmes pelo título" })).toHaveValue(
+      term,
+    );
+    await expect(page.getByText("Nenhum filme encontrado")).toBeVisible();
+    expect(new URL(page.url()).searchParams.get("q")).toBe(term);
+
+    const [call] = tmdb.callsTo("search/movie");
+    expect(call?.searchParams.get("query")).toBe(term);
+  });
+
   test("mostra o estado vazio quando nada é encontrado", async ({ page }) => {
     await page.goto("/search?q=filme%20que%20n%C3%A3o%20existe");
 

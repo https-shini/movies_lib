@@ -154,13 +154,14 @@ Todas as respostas recebem `X-Content-Type-Options`, `Referrer-Policy`, `X-Frame
 
 ### Testes unitários (Vitest)
 
-155 testes em 15 arquivos, ao lado do código, cobrem:
+168 testes em 18 arquivos, ao lado do código, cobrem:
 
 - proxy: lista de permissões, chave, token v4, tempo limite, cache por tipo e erros sem cache;
 - serviço: montagem de URLs, códigos de erro e cancelamento;
 - hooks `useMovies` e `useMovie`;
 - regras de `lib/`: formatação, imagens, descoberta, paginação, trailer, onde assistir e analytics;
-- i18n: interpolação de valores e nome da marca sem tradução.
+- i18n: interpolação de valores e nome da marca sem tradução;
+- componentes (Testing Library): estados de erro e vazio, grade de pôsteres (carregamento, erro, vazio, pôster e título ausentes) e paginação.
 
 ### Testes de interface (E2E)
 
@@ -177,9 +178,9 @@ e2e/
 ```
 
 - **Fluxo:** o navegador carrega o app real; as chamadas a `/api/tmdb/<endpoint>` são interceptadas antes de chegar ao servidor e respondidas com fixtures. Os testes também conferem os parâmetros enviados (idioma, região, filtros, página e complementos dos detalhes).
-- **Tamanhos:** 320, 375, 768, 1024 e 1440 px de largura. Testes que dependem do layout (campo de busca do cabeçalho a partir de 900 px, barra inferior abaixo disso) são pulados, com o motivo, onde o elemento não existe.
+- **Tamanhos:** 320, 375, 390, 420, 768, 1024 e 1440 px de largura. Testes que dependem do layout (campo de busca do cabeçalho a partir de 900 px, barra inferior abaixo disso) são pulados, com o motivo, onde o elemento não existe.
 - **Proxy:** o projeto `proxy` chama o `/api/tmdb` do `vite preview` por HTTP. Sem chave, nenhuma consulta chega ao TMDB; os testes cobrem método, lista de endpoints, chave ausente e `Cache-Control` dos erros.
-- **Cobertura:** início; busca pelo campo da página, pelo cabeçalho e pela barra inferior; filme, trailer e onde assistir; descoberta (gênero, ordenação, filtros, paginação); carregamento, vazio, erros 503, 429, 504 e chave ausente com "Tentar novamente"; rotas diretas e 404; rodapé e créditos; teclado, foco e nomes acessíveis; rolagem horizontal e diálogos em todas as larguras.
+- **Cobertura:** início; busca pelo campo da página, pelo cabeçalho e pela barra inferior; filme, trailer e onde assistir; descoberta (gênero, ordenação, filtros, paginação); carregamento, vazio, erros 503, 429, 504 e chave ausente com "Tentar novamente"; rotas diretas e 404; rodapé e créditos; teclado, foco e nomes acessíveis; alvos de toque de 44 × 44 px; alto contraste do sistema (`forced-colors`); busca com `&`, `#` e `?`; rolagem horizontal e diálogos em todas as larguras.
 
 O CI está descrito no [README](../README.md#scripts).
 

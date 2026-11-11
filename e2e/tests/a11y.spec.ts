@@ -41,6 +41,39 @@ function findUnnamedControls(page: Page): Promise<string[]> {
   });
 }
 
+/**
+ * Controles com área de toque menor que 44 × 44 px (seção 11 da identidade). A área
+ * efetiva soma a camada invisível `::before` usada para ampliar o toque sem mudar o
+ * visual (base.css). Links dentro de parágrafos são exceção (WCAG 2.5.8).
+ */
+function findSmallTargets(page: Page, min = 44): Promise<string[]> {
+  return page.evaluate((minSize) => {
+    const px = (value: string) => (value.endsWith("px") ? Number.parseFloat(value) : 0);
+    return Array.from(
+      document.querySelectorAll<HTMLElement>('a[href], button, input:not([type="hidden"]), select'),
+    )
+      .filter((element) => element.getClientRects().length > 0)
+      .filter((element) => !element.closest("dialog:not([open])"))
+      .filter(
+        (element) => !(element.tagName === "A" && element.closest("p") && !element.matches(".btn")),
+      )
+      .flatMap((element) => {
+        const rect = element.getBoundingClientRect();
+        const layer = getComputedStyle(element, "::before");
+        const hasLayer = layer.content !== "none" && layer.position === "absolute";
+        const extraX = hasLayer ? -Math.min(0, px(layer.left)) - Math.min(0, px(layer.right)) : 0;
+        const extraY = hasLayer ? -Math.min(0, px(layer.top)) - Math.min(0, px(layer.bottom)) : 0;
+        const width = Math.round(rect.width + extraX);
+        const height = Math.round(rect.height + extraY);
+        if (width >= minSize && height >= minSize) return [];
+        const name = (element.getAttribute("aria-label") ?? element.textContent).trim();
+        return [
+          `${element.tagName.toLowerCase()}.${element.className} "${name.slice(0, 24)}" ${String(width)}x${String(height)}`,
+        ];
+      });
+  }, min);
+}
+
 test.describe("Acessibilidade e teclado", () => {
   test("o primeiro Tab mostra o link para pular ao conteúdo", async ({ page }) => {
     await page.goto("/");
@@ -134,4 +167,53 @@ test.describe("Acessibilidade e teclado", () => {
       expect(await findUnnamedControls(page)).toEqual([]);
     });
   }
+  const targetPages = [
+    "/",
+    "/discover?genre=18",
+    "/search?q=duna",
+    "/movie/550",
+    "/sobre",
+    "/privacidade",
+  ];
+  for (const path of targetPages) {
+    test(`alvos de toque com pelo menos 44 × 44 px em ${path}`, async ({ page }) => {
+      await page.goto(path);
+      await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+      await expect(page.locator('[aria-busy="true"]')).toHaveCount(0);
+
+      expect(await findSmallTargets(page)).toEqual([]);
+    });
+  }
+
+  test("estados selecionados continuam visíveis no alto contraste do sistema", async ({ page }) => {
+    await page.emulateMedia({ forcedColors: "active" });
+    await page.goto("/discover?genre=18");
+
+    const pressed = page.getByRole("button", { name: "Drama", exact: true });
+    const other = page.getByRole("button", { name: "Todos", exact: true });
+    await expect(pressed).toHaveAttribute("aria-pressed", "true");
+
+    const pageBackground = await page.evaluate(
+      () => getComputedStyle(document.body).backgroundColor,
+    );
+    const pressedBackground = await pressed.evaluate(
+      (element) => getComputedStyle(element).backgroundColor,
+    );
+    // Sem o ajuste, o navegador pinta o chip selecionado com a cor de fundo da página
+    // (Canvas) e ele fica igual aos demais.
+    expect(pressedBackground).not.toBe(pageBackground);
+    expect(pressedBackground).not.toBe("rgba(0, 0, 0, 0)");
+    await expect(other).toHaveAttribute("aria-pressed", "false");
+
+    if (isDesktopLayout(page)) {
+      const active = page.getByRole("navigation", { name: "Principal" }).getByRole("link", {
+        name: "Descobrir",
+      });
+      const underline = await active.evaluate(
+        (element) => getComputedStyle(element, "::after").backgroundColor,
+      );
+      expect(underline).not.toBe("rgba(0, 0, 0, 0)");
+      expect(underline).not.toBe(pageBackground);
+    }
+  });
 });

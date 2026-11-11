@@ -98,6 +98,53 @@ button:disabled {
   margin-inline: auto;
 }
 
+/*
+ * Área de toque mínima de 44 × 44 px (seção 11 da identidade) para controles que são
+ * visualmente menores. A camada invisível aumenta só a área que recebe o toque ou o
+ * clique; o tamanho e o espaçamento visíveis continuam os mesmos.
+ */
+.chip::before,
+.search-box__clear::before,
+.app-header__link::before {
+  position: absolute;
+  inset: min(0px, calc((100% - var(--tap-target)) / 2));
+  content: "";
+}
+
+/*
+ * Alto contraste do sistema (forced-colors). O navegador troca as cores por cores do
+ * sistema; aqui garantimos que estados indicados só por cor continuem visíveis.
+ */
+@media (forced-colors: active) {
+  :focus-visible {
+    outline-color: Highlight;
+  }
+
+  :root :is(.btn, .icon-btn, .chip, .input, .select) {
+    border: var(--border-width) solid ButtonText;
+  }
+
+  :root :is(.chip[aria-pressed="true"], .chip--active, .count-badge),
+  :root .app-header__link.active::after {
+    forced-color-adjust: none;
+    border-color: Highlight;
+    color: HighlightText;
+    background: Highlight;
+  }
+
+  :root :is(.tabbar__item[aria-current="page"], .app-header__link.active) {
+    color: Highlight;
+  }
+
+  :root .skeleton {
+    border: var(--border-width) dashed GrayText;
+  }
+
+  :root :is(.poster-card, .ranked__item):focus-visible {
+    outline: var(--border-width-strong) solid Highlight;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
