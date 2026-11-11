@@ -1,0 +1,45 @@
+.rail {
+  --rail-item: clamp(132px, 36vw, 188px);
+
+  display: grid;
+  grid-auto-columns: var(--rail-item);
+  grid-auto-flow: column;
+  gap: var(--space-4);
+  margin: 0 calc(var(--gutter) * -1);
+  padding: var(--space-1) var(--gutter) var(--space-3);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-padding-inline: var(--gutter);
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.rail::-webkit-scrollbar {
+  display: none;
+}
+
+.rail > li {
+  min-width: 0;
+  scroll-snap-align: start;
+}
+
+.rail--wide {
+  --rail-item: clamp(124px, 30vw, 156px);
+}
+
+.rail-controls {
+  display: none;
+  gap: var(--space-2);
+}
+
+@media (min-width: 900px) and (hover: hover) and (pointer: fine) {
+  .rail-controls {
+    display: flex;
+  }
+}
+
+@media (min-width: 1200px) {
+  .rail {
+    --rail-item: calc((min(100vw - 2 * var(--gutter), var(--shell)) - 6 * var(--space-4)) / 7);
+  }
+}

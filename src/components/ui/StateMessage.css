@@ -1,0 +1,64 @@
+.state {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-4);
+  padding: var(--space-7) var(--space-5);
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius-md);
+  text-align: center;
+}
+
+.state__icon {
+  color: var(--paper-faint);
+  font-size: 2rem;
+}
+
+.state--error .state__icon {
+  color: var(--danger);
+}
+
+.state__body {
+  display: grid;
+  max-width: 46ch;
+  gap: var(--space-2);
+}
+
+.state__title {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.state__message {
+  color: var(--paper-dim);
+  font-size: var(--text-sm);
+}
+
+.state__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
+}
+
+.state--compact {
+  grid-template-columns: auto 1fr;
+  justify-items: start;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  text-align: left;
+}
+
+.state--compact .state__icon {
+  font-size: 1.4rem;
+}
+
+.state--compact .state__title {
+  font-size: var(--text-md);
+}
+
+.state--compact .state__actions {
+  grid-column: 1 / -1;
+}

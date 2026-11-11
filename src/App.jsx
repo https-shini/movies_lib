@@ -1,13 +1,19 @@
-import { Outlet } from "react-router-dom";
-import Navbar from "./components/Navbar";
-
-import "./App.css";
+import { Outlet, ScrollRestoration } from "react-router";
+import AppHeader from "./components/layout/AppHeader";
+import MobileTabBar from "./components/layout/MobileTabBar";
+import SiteFooter from "./components/layout/SiteFooter";
 
 function App() {
   return (
-    <div className="app-container">
-      <Navbar />
-      <Outlet />
+    <div className="app">
+      <a className="skip-link" href="#main-content">Pular para o conteúdo</a>
+      <AppHeader />
+      <div id="main-content" className="app__content" tabIndex={-1}>
+        <Outlet />
+      </div>
+      <SiteFooter />
+      <MobileTabBar />
+      <ScrollRestoration />
     </div>
   );
 }

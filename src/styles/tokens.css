@@ -1,0 +1,76 @@
+/*
+ * Sala Escura — tokens do sistema visual.
+ * Tinta quente como fundo, marfim como "papel" do texto e um único acento
+ * vermelho, a luz da cabine de projeção. Todas as cores de texto têm contraste AA.
+ */
+:root {
+  color-scheme: dark;
+
+  /* Superfícies */
+  --ink-0: #0c0b0a;
+  --ink-1: #141210;
+  --ink-2: #1c1916;
+  --ink-3: #27231f;
+
+  /* Texto */
+  --paper: #ede6d6;
+  --paper-dim: #b4ab9b;
+  --paper-faint: #8a8275;
+
+  /* Acento */
+  --accent: #ff5b3a;
+  --accent-strong: #ff7556;
+  --accent-ink: #1a0804;
+  --accent-wash: rgb(255 91 58 / 12%);
+
+  /* Estados */
+  --danger: #ff8a73;
+  --success: #9fd8a8;
+
+  /* Linhas */
+  --line: rgb(237 230 214 / 11%);
+  --line-strong: rgb(237 230 214 / 22%);
+
+  /* Tipografia */
+  --font-display: "Fraunces", "Iowan Old Style", Georgia, serif;
+  --font-ui: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-md: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+  --text-2xl: clamp(1.6rem, 1.3rem + 1.4vw, 2.25rem);
+  --text-3xl: clamp(2.1rem, 1.5rem + 3vw, 3.75rem);
+  --text-4xl: clamp(2.6rem, 1.6rem + 5vw, 5.5rem);
+
+  /* Espaçamento (escala de 4px) */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4.5rem;
+
+  /* Layout */
+  --gutter: clamp(1rem, 0.6rem + 2vw, 2.5rem);
+  --shell: 1320px;
+  --header-h: 64px;
+  --tabbar-h: 64px;
+
+  /* Forma */
+  --radius-xs: 3px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-pill: 999px;
+
+  /* Movimento */
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --dur-fast: 140ms;
+  --dur-med: 240ms;
+
+  --shadow-pop: 0 18px 50px -12px rgb(0 0 0 / 70%);
+}

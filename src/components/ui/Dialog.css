@@ -1,0 +1,123 @@
+.dialog {
+  width: min(100% - 2rem, 560px);
+  max-width: none;
+  max-height: min(100dvh - 2rem, 760px);
+  padding: 0;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-md);
+  color: var(--paper);
+  background: var(--ink-1);
+  box-shadow: var(--shadow-pop);
+}
+
+.dialog::backdrop {
+  background: rgb(6 5 4 / 72%);
+  backdrop-filter: blur(3px);
+}
+
+.dialog[open] {
+  animation: dialog-in var(--dur-med) var(--ease-out);
+}
+
+.dialog__box {
+  display: flex;
+  max-height: inherit;
+  flex-direction: column;
+}
+
+.dialog__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-5) var(--space-5) var(--space-4);
+  border-bottom: 1px solid var(--line);
+}
+
+.dialog__title {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+}
+
+.dialog__description {
+  margin-top: var(--space-1);
+  color: var(--paper-dim);
+  font-size: var(--text-sm);
+}
+
+.dialog__close {
+  margin: -6px -6px 0 0;
+}
+
+.dialog__body {
+  overflow-y: auto;
+  padding: var(--space-5);
+  overscroll-behavior: contain;
+}
+
+.dialog__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  border-top: 1px solid var(--line);
+}
+
+/* Painel inferior no celular */
+@media (max-width: 599px) {
+  .dialog--sheet {
+    width: 100%;
+    max-height: 88dvh;
+    margin: auto 0 0;
+    border-width: 1px 0 0;
+    border-radius: 16px 16px 0 0;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .dialog--sheet[open] {
+    animation: sheet-in var(--dur-med) var(--ease-out);
+  }
+
+  .dialog--sheet .dialog__header::before {
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    width: 36px;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--line-strong);
+    transform: translateX(-50%);
+    content: "";
+  }
+
+  .dialog--sheet .dialog__footer > * {
+    flex: 1;
+  }
+}
+
+/* Vídeo: ocupa a largura disponível em proporção 16:9 */
+.dialog--media {
+  width: min(100% - 1.5rem, 1040px);
+  max-height: none;
+  background: var(--ink-0);
+}
+
+.dialog--media .dialog__body {
+  padding: 0;
+}
+
+@keyframes dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.985);
+  }
+}
+
+@keyframes sheet-in {
+  from {
+    transform: translateY(100%);
+  }
+}
