@@ -59,3 +59,39 @@ export function posterSrcSet(
 
   return entries.length > 0 ? entries.join(", ") : undefined;
 }
+
+/** `srcset` de backdrops (imagens de fundo), com as larguras reais de cada arquivo. */
+export function backdropSrcSet(
+  path: string | null | undefined,
+  sizes: readonly Exclude<BackdropSize, "original">[],
+): string | undefined {
+  const entries = sizes
+    .map((size) => {
+      const url = getBackdropUrl(path, size);
+      return url ? `${url} ${size.slice(1)}w` : null;
+    })
+    .filter((entry): entry is string => entry !== null);
+
+  return entries.length > 0 ? entries.join(", ") : undefined;
+}
+
+/**
+ * Variantes de pôster com `srcset` e `sizes` medidos nos cinco tamanhos de tela (D-40):
+ * - card: grades e faixas, de 132 a 200 px de largura;
+ * - thumb: miniaturas do ranking, de 56 a 64 px;
+ * - detail: pôster da página do filme, 112 px até 899 px de tela e até 280 px acima.
+ */
+export const POSTER_VARIANTS = {
+  card: { src: "w342", srcSet: ["w185", "w342"], sizes: "(min-width: 700px) 200px, 45vw" },
+  thumb: { src: "w185", srcSet: ["w92", "w185"], sizes: "64px" },
+  detail: {
+    src: "w500",
+    srcSet: ["w185", "w342", "w500"],
+    sizes: "(min-width: 900px) 280px, 112px",
+  },
+} as const satisfies Record<
+  string,
+  { src: PosterSize; srcSet: readonly Exclude<PosterSize, "original">[]; sizes: string }
+>;
+
+export type PosterVariant = keyof typeof POSTER_VARIANTS;

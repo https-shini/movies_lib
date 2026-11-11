@@ -1,5 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { getBackdropUrl, getLogoUrl, getPosterUrl, getProfileUrl, posterSrcSet } from "./images";
+import {
+  backdropSrcSet,
+  getBackdropUrl,
+  getLogoUrl,
+  getPosterUrl,
+  getProfileUrl,
+  POSTER_VARIANTS,
+  posterSrcSet,
+} from "./images";
 
 describe("URLs de imagens do TMDB", () => {
   it("usa w342 por padrão no pôster (grid) e aceita outros tamanhos", () => {
@@ -24,5 +32,22 @@ describe("URLs de imagens do TMDB", () => {
       "https://image.tmdb.org/t/p/w185/a.jpg 185w, https://image.tmdb.org/t/p/w342/a.jpg 342w",
     );
     expect(posterSrcSet(null, ["w185"])).toBeUndefined();
+  });
+});
+
+describe("variantes de pôster e srcset de backdrop", () => {
+  it("monta srcset com as larguras de cada variante", () => {
+    expect(posterSrcSet("/p.jpg", POSTER_VARIANTS.thumb.srcSet)).toBe(
+      "https://image.tmdb.org/t/p/w92/p.jpg 92w, https://image.tmdb.org/t/p/w185/p.jpg 185w",
+    );
+    expect(POSTER_VARIANTS.card.srcSet).toEqual(["w185", "w342"]);
+    expect(POSTER_VARIANTS.detail.src).toBe("w500");
+  });
+
+  it("monta srcset de backdrop e ignora caminho vazio", () => {
+    expect(backdropSrcSet("/b.jpg", ["w780", "w1280"])).toBe(
+      "https://image.tmdb.org/t/p/w780/b.jpg 780w, https://image.tmdb.org/t/p/w1280/b.jpg 1280w",
+    );
+    expect(backdropSrcSet(null, ["w780"])).toBeUndefined();
   });
 });

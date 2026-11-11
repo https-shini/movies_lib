@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 import { PiArrowUpRight } from "react-icons/pi";
 import { getReleaseYear } from "../../lib/format";
-import { getBackdropUrl, getPosterUrl } from "../../lib/images";
+import { backdropSrcSet, getBackdropUrl, getPosterUrl } from "../../lib/images";
 import Rating from "../ui/Rating";
 import { getMovieTitle } from "./PosterCard";
 import "./FeaturedHero.css";
@@ -42,7 +42,13 @@ const FeaturedHero = ({ movie, genresById, isLoading }) => {
       <div className="featured__media">
         {(backdrop || poster) && (
           <picture>
-            {backdrop && <source media="(min-width: 700px)" srcSet={backdrop} />}
+            {backdrop && (
+              <source
+                media="(min-width: 700px)"
+                srcSet={backdropSrcSet(movie.backdrop_path, ["w780", "w1280"])}
+                sizes="100vw"
+              />
+            )}
             <img src={poster ?? backdrop} alt="" fetchPriority="high" />
           </picture>
         )}

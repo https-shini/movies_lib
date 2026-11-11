@@ -51,7 +51,12 @@ const RankedList = ({ movies, isLoading, error, onRetry, limit = 10 }) => {
               <span className="ranked__number display" aria-label={`${index + 1}º lugar`}>
                 {index + 1}
               </span>
-              <Poster path={movie.poster_path} title={title} className="ranked__poster" />
+              <Poster
+                path={movie.poster_path}
+                title={title}
+                className="ranked__poster"
+                variant="thumb"
+              />
               <div className="ranked__body">
                 <h3 className="ranked__title">{title}</h3>
                 <p className="ranked__meta">
