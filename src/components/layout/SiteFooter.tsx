@@ -17,6 +17,7 @@ const SiteFooter = () => (
         <Link to="/">{text.home}</Link>
         <Link to="/discover">{text.discover}</Link>
         <Link to="/pessoas">{text.people}</Link>
+        <Link to="/minha-lista">{messages.watchlist.navLabel}</Link>
         <Link to="/search">{text.search}</Link>
         <Link to="/sobre">{text.about}</Link>
         <Link to="/privacidade">{text.privacy}</Link>

@@ -17,6 +17,7 @@ import ImageGallery from "../components/title/ImageGallery";
 import SectionNav from "../components/title/SectionNav";
 import Rating from "../components/ui/Rating";
 import SectionHeader from "../components/ui/SectionHeader";
+import ShareButton from "../components/ui/ShareButton";
 import StateMessage from "../components/ui/StateMessage";
 import NotFound from "./NotFound";
 import "./Person.css";
@@ -307,6 +308,7 @@ const PersonProfile = ({ id }: { id: string }) => {
               </dl>
             )}
             <ExternalLinks ids={person.external_ids} homepage={person.homepage} imdb="name" />
+            <ShareButton title={person.name} />
           </div>
         </header>
 

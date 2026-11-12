@@ -1,6 +1,6 @@
 import { useState, type SyntheticEvent } from "react";
 import { Link, NavLink, useLocation, useNavigate } from "react-router";
-import { PiMagnifyingGlass } from "react-icons/pi";
+import { PiBookmarkSimple, PiMagnifyingGlass } from "react-icons/pi";
 import { interpolate, messages } from "../../i18n";
 import BrandMark from "./BrandMark";
 import "./AppHeader.css";
@@ -80,6 +80,14 @@ const AppHeader = () => {
 
         <div className="app-header__actions">
           {!isSearchPage && <HeaderSearch />}
+          <Link
+            to="/minha-lista"
+            className="icon-btn"
+            aria-label={messages.watchlist.navLabel}
+            title={messages.watchlist.navLabel}
+          >
+            <PiBookmarkSimple aria-hidden="true" />
+          </Link>
           <Link
             to="/search"
             className="icon-btn app-header__search-link"
