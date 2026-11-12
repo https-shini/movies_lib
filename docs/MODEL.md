@@ -111,7 +111,7 @@ Requisições canceladas (`AbortError`) são repassadas sem conversão.
 
 | Página    | Consultas ao proxy                                                                 |
 | --------- | ---------------------------------------------------------------------------------- |
-| Início    | `movie/popular`, `movie/top_rated`, `movie/now_playing`, `tv/popular`, `person/popular`, `genre/movie/list` |
+| Início    | Na abertura: `movie/popular` e `genre/movie/list`. Ao rolar, uma vez cada: `tv/popular`, `movie/top_rated`, `movie/now_playing` e `person/popular` (D-57) |
 | Filme     | `movie/{id}` com os complementos: 1 requisição                                      |
 | Série     | `tv/{id}` com os complementos: 1 requisição                                         |
 | Pessoa    | `person/{id}`: 1 requisição (2 quando a biografia só existe em inglês)             |
@@ -176,7 +176,7 @@ Todas as respostas recebem `X-Content-Type-Options`, `Referrer-Policy`, `X-Frame
 
 ### Testes unitários (Vitest)
 
-223 testes em 23 arquivos, ao lado do código, cobrem:
+225 testes em 24 arquivos, ao lado do código, cobrem:
 
 - proxy: lista de permissões, chave, token v4, tempo limite, cache por tipo e erros sem cache;
 - serviço: montagem de URLs, códigos de erro e cancelamento;
