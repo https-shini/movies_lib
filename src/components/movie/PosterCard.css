@@ -144,3 +144,15 @@
     gap: var(--space-7) var(--space-5);
   }
 }
+
+/* Selo que diferencia séries de filmes em listas mistas. */
+.poster-card__badge {
+  position: absolute;
+  top: var(--space-2);
+  left: var(--space-2);
+  padding: 3px 7px;
+  border-radius: var(--radius-xs);
+  color: var(--color-accent-on);
+  background: var(--color-accent-default);
+  font-size: var(--text-2xs);
+}

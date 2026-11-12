@@ -21,8 +21,28 @@ export function pickRelatedMovies(
   return source.filter((item) => item.id !== movie?.id).slice(0, limit);
 }
 
-const DIRECTOR_JOBS = ["Director"];
-const WRITER_JOBS = ["Screenplay", "Writer", "Story", "Novel", "Author"];
+export interface CrewPerson {
+  id: number;
+  name: string;
+}
+
+/** Pessoas únicas da equipe técnica para as funções informadas, na ordem do TMDB. */
+export function pickCrew(
+  credits: Pick<Credits, "crew"> | null | undefined,
+  jobs: readonly string[],
+  limit = 3,
+): CrewPerson[] {
+  const people: CrewPerson[] = [];
+
+  for (const person of credits?.crew ?? []) {
+    if (!jobs.includes(person.job) || !person.name) continue;
+    if (people.some((item) => item.name === person.name)) continue;
+    people.push({ id: person.id, name: person.name });
+    if (people.length === limit) break;
+  }
+
+  return people;
+}
 
 /** Nomes únicos da equipe técnica para as funções informadas, na ordem do TMDB. */
 export function pickCrewNames(
@@ -30,16 +50,11 @@ export function pickCrewNames(
   jobs: readonly string[],
   limit = 3,
 ): string[] {
-  const names: string[] = [];
-
-  for (const person of credits?.crew ?? []) {
-    if (!jobs.includes(person.job) || !person.name || names.includes(person.name)) continue;
-    names.push(person.name);
-    if (names.length === limit) break;
-  }
-
-  return names;
+  return pickCrew(credits, jobs, limit).map((person) => person.name);
 }
+
+export const DIRECTOR_JOBS = ["Director"];
+export const WRITER_JOBS = ["Screenplay", "Writer", "Story", "Novel", "Author"];
 
 export function pickDirectors(credits: Pick<Credits, "crew"> | null | undefined): string[] {
   return pickCrewNames(credits, DIRECTOR_JOBS, 2);

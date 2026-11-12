@@ -229,7 +229,9 @@
 
   /* 8. Camadas e estados [reconstruído] -------------------------------------- */
   --layer-behind: -1;
+  --layer-sticky: 20; /* atalhos de seção presos abaixo do cabeçalho */
   --layer-bars: 30; /* cabeçalho e barra inferior */
   --layer-skip-link: 50;
   --opacity-disabled: 0.4;
+  --opacity-backdrop: 0.45; /* imagem de fundo atrás de texto */
 }

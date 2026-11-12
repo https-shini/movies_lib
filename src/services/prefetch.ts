@@ -4,16 +4,25 @@
  * O cache de src/services/tmdb.ts entrega a resposta ao hook, sem repetir a requisição.
  * Nada aqui bloqueia a navegação: os loaders devolvem null na hora.
  */
-import { readDiscoverFilters } from "../lib/discover";
+import { readDiscoverFilters, readDiscoverMedia } from "../lib/discover";
 import { normalizePage } from "../lib/pagination";
 import {
   discoverMovies,
+  discoverTv,
+  getCollection,
   getMovieDetails,
   getMovieGenres,
   getMovieList,
+  getPersonDetails,
+  getPopularPeople,
+  getPopularTv,
+  getTvDetails,
+  getTvGenres,
   prefetch,
   PREFETCH,
   searchMovies,
+  searchPeople,
+  searchTv,
 } from "./tmdb";
 
 function searchParamsOf(request: Request): URLSearchParams {
@@ -25,6 +34,31 @@ export function prefetchHome(): null {
   prefetch(getMovieList("top_rated", 1, PREFETCH));
   prefetch(getMovieList("now_playing", 1, PREFETCH));
   prefetch(getMovieGenres(PREFETCH));
+  prefetch(getPopularTv(1, PREFETCH));
+  prefetch(getPopularPeople(1, PREFETCH));
+  return null;
+}
+
+const isId = (id: string | undefined): id is string => Boolean(id && /^\d+$/.test(id));
+
+export function prefetchTv(id: string | undefined): null {
+  if (isId(id)) prefetch(getTvDetails(id, PREFETCH));
+  return null;
+}
+
+export function prefetchPerson(id: string | undefined): null {
+  if (isId(id)) prefetch(getPersonDetails(id, PREFETCH));
+  return null;
+}
+
+export function prefetchCollection(id: string | undefined): null {
+  if (isId(id)) prefetch(getCollection(id, PREFETCH));
+  return null;
+}
+
+export function prefetchPeople(request: Request): null {
+  const page = normalizePage(searchParamsOf(request).get("page") ?? "1");
+  prefetch(getPopularPeople(page, PREFETCH));
   return null;
 }
 
@@ -33,22 +67,43 @@ export function prefetchMovie(id: string | undefined): null {
   return null;
 }
 
+/** Categoria ativa da busca, lida de `?tipo=` (filmes por padrão). */
+export type SearchCategory = "movies" | "series" | "people";
+
+export function readSearchCategory(params: URLSearchParams): SearchCategory {
+  const tipo = params.get("tipo");
+  return tipo === "series" ? "series" : tipo === "pessoas" ? "people" : "movies";
+}
+
 export function prefetchSearch(request: Request): null {
   const params = searchParamsOf(request);
   const query = (params.get("q") ?? "").trim();
-  if (query) {
-    prefetch(searchMovies(query, normalizePage(params.get("page") ?? "1"), PREFETCH));
-  } else {
+  if (!query) {
     prefetch(getMovieList("popular", 1, PREFETCH));
+    return null;
   }
+
+  // As três categorias são consultadas para mostrar a contagem de cada uma; a página
+  // da URL vale só para a categoria ativa.
+  const category = readSearchCategory(params);
+  const page = normalizePage(params.get("page") ?? "1");
+  prefetch(searchMovies(query, category === "movies" ? page : 1, PREFETCH));
+  prefetch(searchTv(query, category === "series" ? page : 1, PREFETCH));
+  prefetch(searchPeople(query, category === "people" ? page : 1, PREFETCH));
   return null;
 }
 
 export function prefetchDiscover(request: Request): null {
   const params = searchParamsOf(request);
-  prefetch(getMovieGenres(PREFETCH));
-  prefetch(
-    discoverMovies(readDiscoverFilters(params), normalizePage(params.get("page") ?? "1"), PREFETCH),
-  );
+  const filters = readDiscoverFilters(params);
+  const page = normalizePage(params.get("page") ?? "1");
+
+  if (readDiscoverMedia(params) === "tv") {
+    prefetch(getTvGenres(PREFETCH));
+    prefetch(discoverTv(filters, page, PREFETCH));
+  } else {
+    prefetch(getMovieGenres(PREFETCH));
+    prefetch(discoverMovies(filters, page, PREFETCH));
+  }
   return null;
 }

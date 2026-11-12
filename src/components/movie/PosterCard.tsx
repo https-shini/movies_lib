@@ -3,6 +3,7 @@ import { PiFilmSlate } from "react-icons/pi";
 import { messages } from "../../i18n";
 import { getReleaseYear, textOr } from "../../lib/format";
 import { getPosterUrl, POSTER_VARIANTS, posterSrcSet, type PosterVariant } from "../../lib/images";
+import { mediaPath } from "../../lib/media";
 import type { MovieSummary } from "../../types/tmdb";
 import Rating from "../ui/Rating";
 import "./PosterCard.css";
@@ -70,9 +71,12 @@ const PosterCard = ({ movie, eager = false, priority = false }: PosterCardProps)
   const year = getReleaseYear(movie.release_date);
 
   return (
-    <Link to={`/movie/${movie.id}`} className="poster-card">
+    <Link to={mediaPath(movie.media_type, movie.id)} className="poster-card">
       <div className="poster-card__media">
         <Poster path={movie.poster_path} title={title} eager={eager} priority={priority} />
+        {movie.media_type === "tv" && (
+          <span className="poster-card__badge mono">{messages.title.seriesBadge}</span>
+        )}
         <Rating value={movie.vote_average} className="poster-card__rating" />
       </div>
       <h3 className="poster-card__title">{title}</h3>

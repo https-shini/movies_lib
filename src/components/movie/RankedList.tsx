@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 import { interpolate, messages } from "../../i18n";
 import { getReleaseYear } from "../../lib/format";
+import { mediaPath } from "../../lib/media";
 import type { MovieSummary } from "../../types/tmdb";
 import StateMessage from "../ui/StateMessage";
 import Rating from "../ui/Rating";
@@ -51,7 +52,7 @@ const RankedList = ({ movies, isLoading, error, onRetry, limit = 10 }: RankedLis
         const title = getMovieTitle(movie);
         return (
           <li key={movie.id}>
-            <Link to={`/movie/${movie.id}`} className="ranked__item">
+            <Link to={mediaPath(movie.media_type, movie.id)} className="ranked__item">
               <span
                 className="ranked__number display"
                 aria-label={interpolate(text.position, { position: index + 1 })}

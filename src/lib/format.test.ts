@@ -8,6 +8,7 @@ import {
   formatRuntime,
   getReleaseYear,
   textOr,
+  formatAgeRating,
 } from "./format";
 
 describe("formatCurrency", () => {
@@ -106,5 +107,13 @@ describe("textOr", () => {
     expect(textOr("   ", "Sem título")).toBe("Sem título");
     expect(textOr(null, "Sem título")).toBe("Sem título");
     expect(textOr(undefined, "Sem título")).toBe("Sem título");
+  });
+});
+
+describe("formatAgeRating", () => {
+  it("escreve a classificação indicativa por extenso", () => {
+    expect(formatAgeRating("L")).toBe("Livre");
+    expect(formatAgeRating("16")).toBe("16 anos");
+    expect(formatAgeRating(null)).toBe("Não informada");
   });
 });

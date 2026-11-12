@@ -114,6 +114,7 @@
 }
 
 .chip[aria-pressed="true"],
+.chip[aria-current="page"],
 .chip--active {
   border-color: var(--color-accent-default);
   color: var(--color-accent-on);
@@ -237,6 +238,18 @@
 
 .text-link:hover {
   text-decoration-thickness: 2px;
+}
+
+/* Nome de pessoa dentro de um texto ou ficha: leva ao perfil. */
+.person-link {
+  text-decoration: underline;
+  text-decoration-color: var(--color-border-strong);
+  text-underline-offset: 4px;
+  transition: text-decoration-color var(--duration-fast) ease;
+}
+
+.person-link:hover {
+  text-decoration-color: var(--color-accent-default);
 }
 
 /* Esqueletos de carregamento -------------------------------------------- */

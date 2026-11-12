@@ -1,11 +1,14 @@
 import { useState, type SyntheticEvent } from "react";
-import { useSearchParams } from "react-router";
+import { Link, useSearchParams } from "react-router";
 import { PiMagnifyingGlass, PiX } from "react-icons/pi";
 import { interpolate, locale, messages } from "../i18n";
-import { normalizePage } from "../lib/pagination";
+import { getTotalPages, normalizePage } from "../lib/pagination";
 import { useMovies, type MovieSource } from "../hooks/useMovies";
+import { usePeople } from "../hooks/usePeople";
+import { readSearchCategory, type SearchCategory } from "../services/prefetch";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
 import PosterGrid from "../components/movie/PosterGrid";
+import PeopleGrid from "../components/person/PeopleGrid";
 import SectionHeader from "../components/ui/SectionHeader";
 import Pagination from "../components/ui/Pagination";
 import "./Search.css";
@@ -93,15 +96,83 @@ const Suggestions = () => {
   );
 };
 
+/** Valor de `?tipo=` de cada categoria; filmes é o padrão e não aparece na URL. */
+const CATEGORY_PARAM: Record<SearchCategory, string | null> = {
+  movies: null,
+  series: "series",
+  people: "pessoas",
+};
+
+function searchUrl(query: string, category: SearchCategory, page = 1): string {
+  const params = new URLSearchParams({ q: query });
+  const tipo = CATEGORY_PARAM[category];
+  if (tipo) params.set("tipo", tipo);
+  if (page > 1) params.set("page", String(page));
+  return `/search?${params.toString()}`;
+}
+
 const Search = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = (searchParams.get("q") ?? "").trim();
   const page = normalizePage(searchParams.get("page") ?? "1");
+  const category = readSearchCategory(searchParams);
+  const pageOf = (target: SearchCategory) => (category === target ? page : 1);
 
   useDocumentTitle(query ? interpolate(text.resultTitle, { query }) : text.title);
 
-  const results = useMovies(query ? { kind: "search", query } : null, { initialPage: page });
-  const { movies, isLoading, error, reload, totalResults, totalPages } = results;
+  // As três categorias são consultadas para mostrar quantos resultados cada uma tem.
+  const movies = useMovies(query ? { kind: "search", query } : null, {
+    initialPage: pageOf("movies"),
+  });
+  const series = useMovies(query ? { kind: "tvSearch", query } : null, {
+    initialPage: pageOf("series"),
+  });
+  const people = usePeople(query, pageOf("people"));
+
+  const categories: {
+    key: SearchCategory;
+    label: string;
+    count: number | null;
+  }[] = [
+    {
+      key: "movies",
+      label: text.categories.movies,
+      count: movies.isLoading || movies.error ? null : movies.totalResults,
+    },
+    {
+      key: "series",
+      label: text.categories.series,
+      count: series.isLoading || series.error ? null : series.totalResults,
+    },
+    {
+      key: "people",
+      label: text.categories.people,
+      count: people.isLoading || people.error ? null : (people.data?.total_results ?? 0),
+    },
+  ];
+
+  const active =
+    category === "people"
+      ? {
+          isLoading: people.isLoading,
+          error: people.error,
+          total: people.data?.total_results ?? 0,
+          totalPages: getTotalPages(people.data),
+          hasResults: (people.data?.results.length ?? 0) > 0,
+        }
+      : (() => {
+          const list = category === "series" ? series : movies;
+          return {
+            isLoading: list.isLoading,
+            error: list.error,
+            total: list.totalResults,
+            totalPages: list.totalPages,
+            hasResults: list.movies.length > 0,
+          };
+        })();
+
+  const hasOtherResults = categories.some((item) => item.key !== category && (item.count ?? 0) > 0);
+  const emptyMessage = hasOtherResults ? text.emptyOtherCategories : text.emptyMessage;
 
   const search = (nextQuery: string) => {
     setSearchParams(nextQuery ? new URLSearchParams({ q: nextQuery }) : new URLSearchParams());
@@ -109,6 +180,8 @@ const Search = () => {
 
   const changePage = (nextPage: number) => {
     const nextParams = new URLSearchParams({ q: query });
+    const tipo = CATEGORY_PARAM[category];
+    if (tipo) nextParams.set("tipo", tipo);
     if (nextPage > 1) nextParams.set("page", String(nextPage));
     setSearchParams(nextParams);
   };
@@ -133,24 +206,77 @@ const Search = () => {
 
         {query ? (
           <div className="search__results">
+            <nav className="search__categories" aria-label={text.categoriesLabel}>
+              <ul className="search__category-list" role="list">
+                {categories.map(({ key, label, count }) => (
+                  <li key={key}>
+                    <Link
+                      to={searchUrl(query, key)}
+                      className="chip"
+                      aria-current={key === category ? "page" : undefined}
+                      aria-label={
+                        count === null
+                          ? label
+                          : interpolate(text.categoryCount, {
+                              count: count.toLocaleString(locale),
+                              category: label,
+                            })
+                      }
+                    >
+                      {label}
+                      {count !== null && (
+                        <span className="search__category-count" aria-hidden="true">
+                          {count.toLocaleString(locale)}
+                        </span>
+                      )}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+
             <p className="search__count mono" aria-live="polite">
-              {isLoading
+              {active.isLoading
                 ? messages.common.searching
-                : error
+                : active.error
                   ? ""
-                  : interpolate(text.results, { count: totalResults.toLocaleString(locale) })}
+                  : interpolate(text.results, { count: active.total.toLocaleString(locale) })}
             </p>
-            <PosterGrid
-              label={text.resultsLabel}
-              movies={movies}
-              isLoading={isLoading}
-              error={error}
-              onRetry={reload}
-              emptyTitle={text.emptyTitle}
-              emptyMessage={text.emptyMessage}
-            />
-            {!isLoading && !error && movies.length > 0 && (
-              <Pagination page={page} totalPages={totalPages} onPageChange={changePage} />
+
+            {category === "people" ? (
+              <PeopleGrid
+                label={text.peopleLabel}
+                people={people.data?.results ?? []}
+                isLoading={people.isLoading}
+                error={people.error}
+                onRetry={people.reload}
+                emptyTitle={text.emptyPeopleTitle}
+                emptyMessage={emptyMessage}
+              />
+            ) : category === "series" ? (
+              <PosterGrid
+                label={text.seriesLabel}
+                movies={series.movies}
+                isLoading={series.isLoading}
+                error={series.error}
+                onRetry={series.reload}
+                emptyTitle={text.emptySeriesTitle}
+                emptyMessage={emptyMessage}
+              />
+            ) : (
+              <PosterGrid
+                label={text.resultsLabel}
+                movies={movies.movies}
+                isLoading={movies.isLoading}
+                error={movies.error}
+                onRetry={movies.reload}
+                emptyTitle={text.emptyTitle}
+                emptyMessage={emptyMessage}
+              />
+            )}
+
+            {!active.isLoading && !active.error && active.hasResults && (
+              <Pagination page={page} totalPages={active.totalPages} onPageChange={changePage} />
             )}
           </div>
         ) : (

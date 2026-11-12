@@ -16,6 +16,7 @@ const SiteFooter = () => (
       <nav className="site-footer__nav" aria-label={text.navLabel}>
         <Link to="/">{text.home}</Link>
         <Link to="/discover">{text.discover}</Link>
+        <Link to="/pessoas">{text.people}</Link>
         <Link to="/search">{text.search}</Link>
         <Link to="/sobre">{text.about}</Link>
         <Link to="/privacidade">{text.privacy}</Link>
