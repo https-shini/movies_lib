@@ -15,7 +15,6 @@ import {
   getMovieList,
   getPersonDetails,
   getPopularPeople,
-  getPopularTv,
   getTvDetails,
   getTvGenres,
   prefetch,
@@ -30,12 +29,10 @@ function searchParamsOf(request: Request): URLSearchParams {
 }
 
 export function prefetchHome(): null {
+  // Só o que aparece na primeira tela: o destaque, a faixa "Em alta" e os gêneros do
+  // destaque. As seções abaixo da dobra buscam seus dados quando chegam perto da tela.
   prefetch(getMovieList("popular", 1, PREFETCH));
-  prefetch(getMovieList("top_rated", 1, PREFETCH));
-  prefetch(getMovieList("now_playing", 1, PREFETCH));
   prefetch(getMovieGenres(PREFETCH));
-  prefetch(getPopularTv(1, PREFETCH));
-  prefetch(getPopularPeople(1, PREFETCH));
   return null;
 }
 
