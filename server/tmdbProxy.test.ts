@@ -70,14 +70,37 @@ describe("buildUpstreamRequest", () => {
     expect(url.searchParams.get("append_to_response")).toBe("credits,videos,release_dates");
   });
 
-  it.each(["account/123", "authentication/token/new", "movie/abc", "", null])(
-    "rejeita endpoints fora da lista de permissões: %s",
-    (path) => {
-      expect(() =>
-        buildUpstreamRequest({ path, searchParams: new URLSearchParams(), apiKey: "key" }),
-      ).toThrow(/não permitido/);
-    },
-  );
+  it("aceita os complementos de séries e pessoas e os parâmetros de imagem e de séries", () => {
+    const { url } = buildUpstreamRequest({
+      path: "person/287",
+      searchParams: new URLSearchParams(
+        "append_to_response=combined_credits,images,external_ids,aggregate_credits,content_ratings,reviews&include_image_language=pt,null&first_air_date_year=2011",
+      ),
+      apiKey: "server-key",
+    });
+
+    expect(url.searchParams.get("append_to_response")).toBe(
+      "combined_credits,images,external_ids,aggregate_credits,content_ratings",
+    );
+    expect(url.searchParams.get("include_image_language")).toBe("pt,null");
+    expect(url.searchParams.get("first_air_date_year")).toBe("2011");
+  });
+
+  it.each([
+    "account/123",
+    "authentication/token/new",
+    "movie/abc",
+    "tv/top_rated",
+    "person/1/movie_credits",
+    "search/multi",
+    "trending/all/week",
+    "",
+    null,
+  ])("rejeita endpoints fora da lista de permissões: %s", (path) => {
+    expect(() =>
+      buildUpstreamRequest({ path, searchParams: new URLSearchParams(), apiKey: "key" }),
+    ).toThrow(/não permitido/);
+  });
 });
 
 describe("handleTmdbProxy", () => {
@@ -104,6 +127,14 @@ describe("handleTmdbProxy", () => {
     ["/api/tmdb/movie/550", 21600],
     ["/api/tmdb/movie/550/watch/providers", 21600],
     ["/api/tmdb/search/movie?query=duna", 600],
+    ["/api/tmdb/tv/1399", 21600],
+    ["/api/tmdb/tv/popular", 3600],
+    ["/api/tmdb/person/287", 21600],
+    ["/api/tmdb/person/popular", 3600],
+    ["/api/tmdb/collection/10", 21600],
+    ["/api/tmdb/search/person?query=pitt", 600],
+    ["/api/tmdb/discover/tv", 3600],
+    ["/api/tmdb/genre/tv/list", 86400],
   ])("define s-maxage e stale-while-revalidate por tipo de dado: %s", async (path, seconds) => {
     const fetchImpl = fetchStub().mockResolvedValue(okResponse());
     const response = await handleTmdbProxy(request(path), { apiKey: "key", fetchImpl });
