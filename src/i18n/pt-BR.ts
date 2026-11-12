@@ -511,6 +511,8 @@ export const ptBR = {
     lede: "Filmes e séries que você salvou para ver depois. A lista fica só neste navegador, sem cadastro.",
     save: "Salvar na lista",
     saved: "Na sua lista",
+    added: "{title} entrou na sua lista",
+    removed: "{title} saiu da sua lista",
     navLabel: "Minha lista",
     count: { one: "{count} título", other: "{count} títulos" },
     listLabel: "Títulos salvos",
@@ -522,6 +524,12 @@ export const ptBR = {
     clearDescription: "Os títulos salvos neste navegador serão removidos. Não é possível desfazer.",
     clearConfirm: "Limpar tudo",
     clearCancel: "Cancelar",
+  },
+
+  toast: {
+    region: "Avisos",
+    dismiss: "Fechar aviso",
+    undo: "Desfazer",
   },
 
   share: {

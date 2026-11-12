@@ -39,11 +39,29 @@
     --coral-300: #ff8585;
     --mint-300: #9fd8a8; /* [atual] */
 
+    /* Paleta expandida [redesign, D-59]. Derivada do grafite e do dourado: um azul de lente
+       (secundária, frio, para informação e links de apoio), uma brasa (terciária, quente,
+       para "em alta" e alertas) e um violeta de projeção (destaques editoriais raros).
+       Os tons 300 servem para texto e ícone sobre o fundo; os 500, para preenchimentos. */
+    --azure-300: #9cc2ff;
+    --azure-500: #5b8def;
+    --ember-300: #ffb07a;
+    --ember-500: #f0844a;
+    --violet-300: #c3b2ff;
+    --violet-500: #8f73f0;
+    --gold-300: #fae3a6;
+    --gold-700: #b8902f;
+
     /* Canais RGB para variações com transparência */
     --rgb-ink: 8 10 15;
     --rgb-ink-deep: 4 5 8;
     --rgb-paper: 244 245 247;
     --rgb-gold: 244 201 93;
+    --rgb-azure: 91 141 239;
+    --rgb-ember: 240 132 74;
+    --rgb-violet: 143 115 240;
+    --rgb-mint: 159 216 168;
+    --rgb-coral: 255 133 133;
 
     /* Superfícies */
     --color-bg: var(--ink-0);
@@ -64,10 +82,31 @@
     --color-accent-on: var(--gold-950);
     --color-accent-subtle: rgb(var(--rgb-gold) / 14%);
 
-    /* Estados */
+    /* Secundária e terciária [D-59] */
+    --color-secondary: var(--azure-300);
+    --color-secondary-strong: var(--azure-500);
+    --color-secondary-subtle: rgb(var(--rgb-azure) / 16%);
+    --color-tertiary: var(--ember-300);
+    --color-tertiary-strong: var(--ember-500);
+    --color-tertiary-subtle: rgb(var(--rgb-ember) / 16%);
+    --color-editorial: var(--violet-300);
+    --color-editorial-subtle: rgb(var(--rgb-violet) / 16%);
+
+    /* Estados semânticos: texto/ícone, fundo suave e borda de cada um */
     --color-danger: var(--coral-300);
+    --color-danger-subtle: rgb(var(--rgb-coral) / 14%);
+    --color-danger-border: rgb(var(--rgb-coral) / 40%);
     --color-success: var(--mint-300);
+    --color-success-subtle: rgb(var(--rgb-mint) / 14%);
+    --color-success-border: rgb(var(--rgb-mint) / 40%);
+    --color-warning: var(--ember-300);
+    --color-warning-subtle: var(--color-tertiary-subtle);
+    --color-warning-border: rgb(var(--rgb-ember) / 40%);
+    --color-info: var(--azure-300);
+    --color-info-subtle: var(--color-secondary-subtle);
+    --color-info-border: rgb(var(--rgb-azure) / 40%);
     --color-hover-tint: rgb(var(--rgb-paper) / 5%);
+    --color-pressed-tint: rgb(var(--rgb-paper) / 9%);
 
     /* Linhas */
     --color-border: var(--line-500); /* [original] bordas sólidas de cards e campos */
@@ -111,6 +150,32 @@
     --gradient-panel:
       radial-gradient(ellipse at 80% 15%, rgb(var(--rgb-gold) / 18%), transparent 42%),
       linear-gradient(125deg, var(--ink-2), #0c111a 72%);
+
+    /* Gradientes de marca [D-59] */
+    --gradient-accent: linear-gradient(
+      135deg,
+      var(--gold-300) 0%,
+      var(--gold-500) 45%,
+      var(--ember-500) 100%
+    );
+    --gradient-accent-text: linear-gradient(
+      100deg,
+      var(--gold-300),
+      var(--gold-500) 55%,
+      var(--ember-300)
+    );
+    --gradient-cool: linear-gradient(
+      135deg,
+      rgb(var(--rgb-azure) / 22%),
+      rgb(var(--rgb-violet) / 14%) 60%,
+      transparent
+    );
+    --gradient-spotlight: radial-gradient(
+      ellipse 70% 60% at 50% 0%,
+      rgb(var(--rgb-gold) / 12%),
+      transparent 70%
+    );
+    --gradient-fade-end: linear-gradient(90deg, transparent, var(--color-bg));
 
     /* 2. Tipografia e pesos ----------------------------------------------------- */
 
@@ -186,6 +251,11 @@
     /* Layout [atual] */
     --gutter: clamp(1rem, 0.6rem + 2vw, 2.5rem);
     --container-max: 1320px;
+    /* Contêineres [D-59] */
+    --container-prose: 72ch;
+    --container-narrow: 880px;
+    --container-wide: 1600px;
+    --section-gap: clamp(var(--space-7), 2rem + 3vw, var(--space-8));
     --header-h: 64px;
     --tabbar-h: 64px;
     --tap-target: 44px; /* alvo mínimo de toque [especificação, 11] */
@@ -207,6 +277,11 @@
     --ring-selected: inset 0 0 0 var(--border-width-strong) var(--color-accent-default);
     --focus-halo: 0 0 0 4px var(--color-accent-subtle); /* [reconstruído] campos em foco */
     --focus-halo-sm: 0 0 0 3px var(--color-accent-subtle);
+    /* Escala de elevação [D-59]: 1 cards, 2 cards em foco/hover, 3 menus e dicas, 4 diálogos */
+    --elevation-1: 0 1px 2px rgb(0 0 0 / 30%), 0 6px 16px -10px rgb(0 0 0 / 50%);
+    --elevation-2: 0 2px 4px rgb(0 0 0 / 30%), 0 18px 36px -18px rgb(0 0 0 / 70%);
+    --elevation-3: 0 4px 10px rgb(0 0 0 / 30%), 0 24px 48px -20px rgb(0 0 0 / 75%);
+    --elevation-4: var(--elevation-overlay);
 
     /* 6. Breakpoints [reconstruído] ---------------------------------------------
    * Variáveis CSS não funcionam dentro de @media; os valores abaixo são a referência
@@ -227,6 +302,13 @@
     --duration-fast: 140ms;
     --duration-base: 240ms;
     --duration-shimmer: 1.4s;
+    /* [D-59] */
+    --ease-emphasized: cubic-bezier(0.2, 0, 0, 1);
+    --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+    --duration-instant: 80ms;
+    --duration-slow: 360ms;
+    --duration-enter: 420ms;
+    --stagger: 40ms;
 
     /* 8. Camadas e estados [reconstruído] -------------------------------------- */
     --layer-behind: -1;
@@ -235,6 +317,10 @@
     --layer-skip-link: 50;
     --opacity-disabled: 0.4;
     --opacity-backdrop: 0.45; /* imagem de fundo atrás de texto */
+    --opacity-muted: 0.72;
+    --opacity-subtle: 0.5;
+    --layer-dropdown: 40;
+    --layer-toast: 60;
 
     /* 9. Vidro (Liquid Glass) [reconstruído sobre a paleta original, D-56] ----------
    * Superfícies translúcidas com brilho de borda e profundidade. O desfoque do fundo
@@ -248,7 +334,10 @@
     --glass-tint-subtle: rgb(var(--rgb-paper) / 4%);
     --glass-border: rgb(var(--rgb-paper) / 12%);
     --glass-border-strong: rgb(var(--rgb-paper) / 22%);
-    --glass-filter: saturate(170%) blur(20px);
+    --blur-sm: 8px;
+    --blur-md: 14px;
+    --blur-lg: 20px;
+    --glass-filter: saturate(170%) blur(var(--blur-lg));
     --glass-sheen: linear-gradient(
       140deg,
       rgb(var(--rgb-paper) / 8%) 0%,

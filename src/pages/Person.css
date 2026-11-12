@@ -173,13 +173,6 @@
     gap: var(--space-3);
   }
 
-  .filmography__badge {
-    padding: 3px 7px;
-    border: var(--border-width) solid var(--color-border-strong);
-    border-radius: var(--radius-xs);
-    color: var(--color-text-secondary);
-    font-size: var(--text-2xs);
-  }
 
   @media (max-width: 420px) {
     .filmography__row {
