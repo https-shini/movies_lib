@@ -1,0 +1,64 @@
+/* Cabeçalho da coleção: painel com a imagem de fundo e o texto por cima. */
+.collection-hero {
+  position: relative;
+  display: grid;
+  width: min(100% - 2 * var(--gutter), var(--container-max));
+  min-height: min(56svh, 460px);
+  margin: var(--space-5) auto 0;
+  align-items: end;
+  overflow: hidden;
+  isolation: isolate;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--gradient-panel);
+}
+
+.collection-hero__media {
+  position: absolute;
+  inset: 0;
+  z-index: var(--layer-behind);
+  border-radius: 0;
+}
+
+.collection-hero__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 25%;
+}
+
+.collection-hero__media::after {
+  position: absolute;
+  inset: 0;
+  background: var(--gradient-hero-scrim);
+  content: "";
+}
+
+.collection-hero__content {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-3);
+  padding: var(--space-7) var(--space-5) var(--space-5);
+}
+
+.collection-hero__title {
+  font-size: var(--text-3xl);
+  text-wrap: balance;
+}
+
+.collection-hero__title-skeleton {
+  width: min(24rem, 85%);
+  height: clamp(2.2rem, 5vw, 3.5rem);
+}
+
+.collection-hero__overview {
+  max-width: var(--measure-prose);
+  color: var(--color-text-secondary);
+  font-size: var(--text-lg);
+}
+
+@media (min-width: 900px) {
+  .collection-hero__content {
+    padding: var(--space-8) var(--space-7) var(--space-7);
+  }
+}

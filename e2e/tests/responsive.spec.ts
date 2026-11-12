@@ -11,6 +11,12 @@ test.describe("Responsividade", () => {
     "/search",
     "/search?q=duna",
     "/movie/550",
+    "/serie/1396",
+    "/pessoa/287",
+    "/pessoas",
+    "/colecao/2344",
+    "/search?q=duna&tipo=series",
+    "/discover?tipo=series",
     "/sobre",
     "/privacidade",
     "/rota-que-nao-existe",
@@ -51,11 +57,24 @@ test.describe("Responsividade", () => {
       await expect(searchIcon).toBeVisible();
 
       const tabs = tabBar.getByRole("link");
-      await expect(tabs).toHaveText(["Início", "Descobrir", "Buscar"]);
+      await expect(tabs).toHaveText(["Início", "Descobrir", "Pessoas", "Buscar"]);
       await expect(tabBar.getByRole("link", { name: "Descobrir" })).toHaveAttribute(
         "aria-current",
         "page",
       );
+      // Todos os itens na mesma linha e dentro da tela (a barra não quebra em duas linhas).
+      const boxes = await tabs.evaluateAll((links) =>
+        links.map((link) => {
+          const { top, right, bottom } = link.getBoundingClientRect();
+          return { top: Math.round(top), right, bottom };
+        }),
+      );
+      const screen = page.viewportSize() ?? { width: 0, height: 0 };
+      expect(new Set(boxes.map((box) => box.top)).size).toBe(1);
+      for (const box of boxes) {
+        expect(box.right).toBeLessThanOrEqual(screen.width);
+        expect(box.bottom).toBeLessThanOrEqual(screen.height);
+      }
       // Alvos de toque de pelo menos 44 px de altura.
       for (const box of await tabs.evaluateAll((links) =>
         links.map((link) => link.getBoundingClientRect().height),

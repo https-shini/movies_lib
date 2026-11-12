@@ -150,3 +150,59 @@ export function buildDiscoverParams(
 
   return params;
 }
+
+/** Tipo de obra em Descobrir: filmes (padrão) ou séries (`?tipo=series`). */
+export type DiscoverMedia = "movie" | "tv";
+
+export function readDiscoverMedia(searchParams: URLSearchParams): DiscoverMedia {
+  return searchParams.get("tipo") === "series" ? "tv" : "movie";
+}
+
+/** Parâmetros da URL de Descobrir para um tipo de obra e seus filtros. */
+export function toDiscoverUrlParams(
+  media: DiscoverMedia,
+  filters: Partial<DiscoverFilters>,
+): URLSearchParams {
+  const params = toDiscoverSearchParams(media === "tv" ? sanitizeTvFilters(filters) : filters);
+  if (media === "tv") params.set("tipo", "series");
+  return params;
+}
+
+/** Séries não têm bilheteria: essa ordenação cai para "Mais populares". */
+export const TV_SORT_OPTIONS = DISCOVER_SORT_OPTIONS.filter(
+  ({ value }) => value !== "revenue.desc",
+);
+
+export function sanitizeTvFilters(filters: Partial<DiscoverFilters>): DiscoverFilters {
+  const sanitized = sanitizeDiscoverFilters(filters);
+  return sanitized.sort === "revenue.desc" ? { ...sanitized, sort: DEFAULT_SORT } : sanitized;
+}
+
+/**
+ * Parâmetros do endpoint `discover/tv`: os mesmos filtros de filmes, traduzidos para os
+ * campos de séries (data de estreia no lugar da data de lançamento).
+ */
+export function buildTvDiscoverParams(
+  filters: Partial<DiscoverFilters>,
+  page: unknown = 1,
+  { today = new Date() }: { today?: Date } = {},
+): DiscoverParams {
+  const { genre, sort, year, minRating } = sanitizeTvFilters(filters);
+  const params: DiscoverParams = {
+    include_adult: false,
+    sort_by: sort === "primary_release_date.desc" ? "first_air_date.desc" : sort,
+    page: normalizePage(page),
+  };
+
+  if (genre) params.with_genres = genre;
+  if (year) params.first_air_date_year = year;
+
+  if (minRating) {
+    params["vote_average.gte"] = minRating;
+    params["vote_count.gte"] = MIN_VOTES_FOR_RATING_FILTER;
+  }
+  if (sort === "vote_average.desc") params["vote_count.gte"] = MIN_VOTES_FOR_RATING_SORT;
+  if (sort === "primary_release_date.desc") params["first_air_date.lte"] = formatIsoDate(today);
+
+  return params;
+}

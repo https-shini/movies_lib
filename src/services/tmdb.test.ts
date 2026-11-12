@@ -2,14 +2,24 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { urlOf } from "../test/fetch";
 import {
   buildProxyUrl,
+  CLIENT_CACHE_TTL_MS,
   discoverMovies,
+  discoverTv,
   errorCodeFromResponse,
+  getCollection,
   getMovieDetails,
   getMovieGenres,
   getMovieList,
-  CLIENT_CACHE_TTL_MS,
+  getPersonDetails,
+  getPersonDetailsInEnglish,
+  getPopularPeople,
+  getPopularTv,
+  getTvDetails,
+  getTvGenres,
   PREFETCH,
   searchMovies,
+  searchPeople,
+  searchTv,
   TmdbError,
 } from "./tmdb";
 
@@ -108,8 +118,9 @@ describe("requisições ao TMDB", () => {
     expect(fetchMock).toHaveBeenCalledTimes(1);
     expect(url.pathname).toBe("/api/tmdb/movie/550");
     expect(url.searchParams.get("append_to_response")).toBe(
-      "credits,videos,recommendations,similar,watch/providers,release_dates",
+      "credits,videos,recommendations,similar,watch/providers,release_dates,images,external_ids",
     );
+    expect(url.searchParams.get("include_image_language")).toBe("pt,null,en");
     expect(url.searchParams.get("include_video_language")).toBe("pt,en,null");
     expect(url.searchParams.get("language")).toBe("pt-BR");
     expect(url.searchParams.has("region")).toBe(false);
@@ -287,5 +298,72 @@ describe("tratamento de erros", () => {
     expect(new TmdbError("rateLimited").message).toBe(
       "Muitas consultas em pouco tempo. Aguarde um instante e tente de novo.",
     );
+  });
+});
+
+describe("séries, pessoas e coleções", () => {
+  const page = { page: 1, results: [], total_pages: 0, total_results: 0 };
+
+  it("série completa numa única chamada, com os complementos de séries", async () => {
+    const fetchMock = mockFetch(
+      jsonResponse({ id: 1396, name: "Breaking Bad", poster_path: null }),
+    );
+    await getTvDetails(1396);
+
+    const url = requestedUrl(fetchMock);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(url.pathname).toBe("/api/tmdb/tv/1396");
+    expect(url.searchParams.get("append_to_response")).toBe(
+      "aggregate_credits,videos,recommendations,similar,watch/providers,content_ratings,images,external_ids",
+    );
+    expect(url.searchParams.get("language")).toBe("pt-BR");
+  });
+
+  it("pessoa com filmografia, fotos e perfis oficiais; biografia em inglês sem complementos", async () => {
+    const fetchMock = mockFetch(jsonResponse({ id: 287, name: "Brad Pitt", profile_path: null }));
+    await getPersonDetails(287);
+    const url = requestedUrl(fetchMock);
+    expect(url.pathname).toBe("/api/tmdb/person/287");
+    expect(url.searchParams.get("append_to_response")).toBe("combined_credits,images,external_ids");
+    expect(url.searchParams.get("language")).toBe("pt-BR");
+
+    const englishMock = mockFetch(jsonResponse({ id: 287, name: "Brad Pitt", profile_path: null }));
+    await getPersonDetailsInEnglish(287);
+    const english = requestedUrl(englishMock);
+    expect(english.searchParams.get("language")).toBe("en-US");
+    expect(english.searchParams.has("append_to_response")).toBe(false);
+  });
+
+  it("listas, gêneros, descoberta e coleção usam os endpoints permitidos pelo proxy", async () => {
+    const cases: [() => Promise<unknown>, string, unknown][] = [
+      [() => getPopularTv(), "/api/tmdb/tv/popular", page],
+      [() => getPopularPeople(2), "/api/tmdb/person/popular", page],
+      [() => getTvGenres(), "/api/tmdb/genre/tv/list", { genres: [] }],
+      [() => discoverTv({ genre: "18" }), "/api/tmdb/discover/tv", page],
+      [() => getCollection(2344), "/api/tmdb/collection/2344", { id: 2344, name: "x", parts: [] }],
+    ];
+
+    for (const [call, pathname, body] of cases) {
+      const fetchMock = mockFetch(jsonResponse(body));
+      await call();
+      expect(requestedUrl(fetchMock).pathname).toBe(pathname);
+    }
+  });
+
+  it("buscas de séries e pessoas codificam o termo e não consultam com termo vazio", async () => {
+    const fetchMock = mockFetch(jsonResponse(page));
+    await searchTv("Velozes & Furiosos");
+    expect(requestedUrl(fetchMock).pathname).toBe("/api/tmdb/search/tv");
+    expect(requestedUrl(fetchMock).searchParams.get("query")).toBe("Velozes & Furiosos");
+
+    const peopleMock = mockFetch(jsonResponse(page));
+    await searchPeople("  brad  ");
+    expect(requestedUrl(peopleMock).pathname).toBe("/api/tmdb/search/person");
+    expect(requestedUrl(peopleMock).searchParams.get("query")).toBe("brad");
+
+    const emptyMock = mockFetch(jsonResponse(page));
+    await expect(searchTv("   ")).resolves.toMatchObject({ results: [] });
+    await expect(searchPeople("")).resolves.toMatchObject({ results: [] });
+    expect(emptyMock).not.toHaveBeenCalled();
   });
 });

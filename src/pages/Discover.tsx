@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type ChangeEvent, type SyntheticEvent } from "react";
-import { useSearchParams } from "react-router";
+import { Link, useSearchParams } from "react-router";
 import { PiSlidersHorizontal, PiX } from "react-icons/pi";
 import { interpolate, locale, messages } from "../i18n";
 import {
@@ -9,7 +9,9 @@ import {
   MIN_VOTES_FOR_RATING_FILTER,
   MIN_YEAR,
   readDiscoverFilters,
-  toDiscoverSearchParams,
+  readDiscoverMedia,
+  toDiscoverUrlParams,
+  TV_SORT_OPTIONS,
   type DiscoverFilters,
   type DiscoverSort,
 } from "../lib/discover";
@@ -29,6 +31,7 @@ type AdvancedDraft = Pick<DiscoverFilters, "year" | "minRating">;
 
 interface AdvancedFiltersProps {
   initial: AdvancedDraft;
+  yearLabel: string;
   onApply: (draft: AdvancedDraft) => void;
 }
 
@@ -36,7 +39,7 @@ interface AdvancedFiltersProps {
  * Filtros digitáveis (ano e nota) com estado próprio: só são aplicados ao enviar,
  * evitando uma requisição a cada tecla.
  */
-const AdvancedFilters = ({ initial, onApply }: AdvancedFiltersProps) => {
+const AdvancedFilters = ({ initial, yearLabel, onApply }: AdvancedFiltersProps) => {
   const [draft, setDraft] = useState<AdvancedDraft>({
     year: initial.year,
     minRating: initial.minRating,
@@ -56,7 +59,7 @@ const AdvancedFilters = ({ initial, onApply }: AdvancedFiltersProps) => {
     <form id={FORM_ID} className="advanced-filters" onSubmit={handleSubmit}>
       <div className="field">
         <label className="field__label" htmlFor="discover-year">
-          {text.yearLabel}
+          {yearLabel}
         </label>
         <input
           id="discover-year"
@@ -111,10 +114,12 @@ const Discover = () => {
   const page = normalizePage(searchParams.get("page") ?? "1");
   const applied = readDiscoverFilters(searchParams);
   const { genre, sort, year, minRating } = applied;
+  const media = readDiscoverMedia(searchParams);
+  const isTv = media === "tv";
 
-  useDocumentTitle(text.title);
+  useDocumentTitle(isTv ? text.titleSeries : text.title);
 
-  const genresState = useGenres();
+  const genresState = useGenres(media);
   const genres = genresState.data ?? [];
   const genreListRef = useRef<HTMLUListElement>(null);
   const genresLoaded = genres.length > 0;
@@ -129,20 +134,20 @@ const Discover = () => {
   }, [genre, genresLoaded]);
 
   const { movies, totalPages, totalResults, isLoading, error, reload } = useMovies(
-    { kind: "discover", filters: { genre, sort, year, minRating } },
+    { kind: isTv ? "tvDiscover" : "discover", filters: { genre, sort, year, minRating } },
     { initialPage: page },
   );
 
   const applyFilters = (changes: Partial<DiscoverFilters>) => {
-    setSearchParams(toDiscoverSearchParams({ ...applied, ...changes }));
+    setSearchParams(toDiscoverUrlParams(media, { ...applied, ...changes }));
   };
 
   const clearAll = () => {
-    setSearchParams(new URLSearchParams());
+    setSearchParams(toDiscoverUrlParams(media, {}));
   };
 
   const changePage = (nextPage: number) => {
-    const nextParams = toDiscoverSearchParams(applied);
+    const nextParams = toDiscoverUrlParams(media, applied);
     if (nextPage > 1) nextParams.set("page", String(nextPage));
     setSearchParams(nextParams);
   };
@@ -172,14 +177,30 @@ const Discover = () => {
           <h1 className="page-head__title display">
             {genreName ? (
               <>
-                {text.headingGenre} <em>{genreName.toLowerCase()}</em>
+                {isTv ? text.headingSeriesGenre : text.headingGenre}{" "}
+                <em>{genreName.toLowerCase()}</em>
               </>
+            ) : isTv ? (
+              text.headingSeries
             ) : (
               text.heading
             )}
           </h1>
-          <p className="page-head__lede">{text.lede}</p>
+          <p className="page-head__lede">{isTv ? text.ledeSeries : text.lede}</p>
         </header>
+
+        <nav className="media-switch" aria-label={text.mediaLabel}>
+          <Link to="/discover" className="chip" aria-current={isTv ? undefined : "page"}>
+            {text.mediaMovies}
+          </Link>
+          <Link
+            to="/discover?tipo=series"
+            className="chip"
+            aria-current={isTv ? "page" : undefined}
+          >
+            {text.mediaSeries}
+          </Link>
+        </nav>
 
         <nav className="genre-bar" aria-label={text.genresLabel}>
           <ul ref={genreListRef} className="genre-bar__list" role="list">
@@ -239,7 +260,7 @@ const Discover = () => {
                 applyFilters({ sort: event.target.value as DiscoverSort });
               }}
             >
-              {DISCOVER_SORT_OPTIONS.map(({ value, label }) => (
+              {(isTv ? TV_SORT_OPTIONS : DISCOVER_SORT_OPTIONS).map(({ value, label }) => (
                 <option key={value} value={value}>
                   {label}
                 </option>
@@ -273,7 +294,9 @@ const Discover = () => {
               ? messages.common.searching
               : error
                 ? ""
-                : interpolate(text.count, { count: totalResults.toLocaleString(locale) })}
+                : interpolate(isTv ? text.countSeries : text.count, {
+                    count: totalResults.toLocaleString(locale),
+                  })}
           </p>
           {activeChips.length > 0 && (
             <ul className="discover-status__chips" role="list" aria-label={text.activeFiltersLabel}>
@@ -305,12 +328,12 @@ const Discover = () => {
         </div>
 
         <PosterGrid
-          label={text.resultsLabel}
+          label={isTv ? text.resultsLabelSeries : text.resultsLabel}
           movies={movies}
           isLoading={isLoading}
           error={error}
           onRetry={reload}
-          emptyTitle={text.emptyTitle}
+          emptyTitle={isTv ? text.emptyTitleSeries : text.emptyTitle}
           emptyMessage={text.emptyMessage}
           emptyAction={
             hasAnyFilter && (
@@ -353,6 +376,7 @@ const Discover = () => {
       >
         <AdvancedFilters
           initial={applied}
+          yearLabel={isTv ? text.yearLabelSeries : text.yearLabel}
           onApply={(draft) => {
             applyFilters(draft);
             setFiltersOpen(false);

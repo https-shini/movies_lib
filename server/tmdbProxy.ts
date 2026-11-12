@@ -19,7 +19,7 @@ interface ProxyRoute {
 export const CACHE_SECONDS = {
   reference: 24 * 60 * 60, // gêneros e configuração
   list: 60 * 60, // listas e descoberta
-  details: 6 * 60 * 60, // detalhes do filme e onde assistir
+  details: 6 * 60 * 60, // detalhes de filmes, séries, pessoas e coleções
   search: 10 * 60, // busca por texto
 } as const;
 
@@ -27,9 +27,14 @@ const ROUTES: readonly ProxyRoute[] = [
   { pattern: /^movie\/(popular|top_rated|now_playing)$/, maxAge: CACHE_SECONDS.list },
   { pattern: /^movie\/\d{1,10}$/, maxAge: CACHE_SECONDS.details },
   { pattern: /^movie\/\d{1,10}\/watch\/providers$/, maxAge: CACHE_SECONDS.details },
-  { pattern: /^search\/movie$/, maxAge: CACHE_SECONDS.search },
-  { pattern: /^discover\/movie$/, maxAge: CACHE_SECONDS.list },
-  { pattern: /^genre\/movie\/list$/, maxAge: CACHE_SECONDS.reference },
+  { pattern: /^tv\/popular$/, maxAge: CACHE_SECONDS.list },
+  { pattern: /^tv\/\d{1,10}$/, maxAge: CACHE_SECONDS.details },
+  { pattern: /^person\/popular$/, maxAge: CACHE_SECONDS.list },
+  { pattern: /^person\/\d{1,10}$/, maxAge: CACHE_SECONDS.details },
+  { pattern: /^collection\/\d{1,10}$/, maxAge: CACHE_SECONDS.details },
+  { pattern: /^search\/(movie|tv|person)$/, maxAge: CACHE_SECONDS.search },
+  { pattern: /^discover\/(movie|tv)$/, maxAge: CACHE_SECONDS.list },
+  { pattern: /^genre\/(movie|tv)\/list$/, maxAge: CACHE_SECONDS.reference },
 ];
 
 /** Parâmetros aceitos e repassados ao TMDB. Qualquer outro é descartado. */
@@ -43,10 +48,13 @@ const ALLOWED_PARAMS = new Set([
   "with_genres",
   "primary_release_year",
   "primary_release_date.lte",
+  "first_air_date_year",
+  "first_air_date.lte",
   "vote_average.gte",
   "vote_count.gte",
   "append_to_response",
   "include_video_language",
+  "include_image_language",
 ]);
 
 const ALLOWED_APPENDS = new Set([
@@ -56,6 +64,11 @@ const ALLOWED_APPENDS = new Set([
   "similar",
   "watch/providers",
   "release_dates",
+  "images",
+  "external_ids",
+  "aggregate_credits",
+  "content_ratings",
+  "combined_credits",
 ]);
 const MAX_PARAM_LENGTH = 200;
 

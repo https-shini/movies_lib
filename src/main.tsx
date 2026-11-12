@@ -15,7 +15,16 @@ import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
 import RouteError from "./pages/RouteError";
 import RouteFallback from "./pages/RouteFallback";
-import { prefetchDiscover, prefetchHome, prefetchMovie, prefetchSearch } from "./services/prefetch";
+import {
+  prefetchCollection,
+  prefetchDiscover,
+  prefetchHome,
+  prefetchMovie,
+  prefetchPeople,
+  prefetchPerson,
+  prefetchSearch,
+  prefetchTv,
+} from "./services/prefetch";
 
 /**
  * Início e 404 ficam no pacote principal; as demais páginas são carregadas sob demanda
@@ -45,6 +54,26 @@ const router = createBrowserRouter([
             path: "movie/:id",
             lazy: page(() => import("./pages/Movie")),
             loader: ({ params }) => prefetchMovie(params.id),
+          },
+          {
+            path: "serie/:id",
+            lazy: page(() => import("./pages/Tv")),
+            loader: ({ params }) => prefetchTv(params.id),
+          },
+          {
+            path: "pessoa/:id",
+            lazy: page(() => import("./pages/Person")),
+            loader: ({ params }) => prefetchPerson(params.id),
+          },
+          {
+            path: "pessoas",
+            lazy: page(() => import("./pages/People")),
+            loader: ({ request }) => prefetchPeople(request),
+          },
+          {
+            path: "colecao/:id",
+            lazy: page(() => import("./pages/Collection")),
+            loader: ({ params }) => prefetchCollection(params.id),
           },
           {
             path: "search",

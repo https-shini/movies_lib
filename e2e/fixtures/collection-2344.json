@@ -1,0 +1,36 @@
+{
+  "id": 2344,
+  "name": "Matrix: Coleção",
+  "overview": "A saga de Neo contra as máquinas, em ordem de lançamento.",
+  "poster_path": "/fixture-collection-poster.jpg",
+  "backdrop_path": "/fixture-collection-backdrop.jpg",
+  "parts": [
+    {
+      "id": 605,
+      "title": "Matrix Revolutions",
+      "poster_path": "/fixture-poster-605.jpg",
+      "release_date": "2003-11-05",
+      "vote_average": 6.7
+    },
+    {
+      "id": 603,
+      "title": "Matrix",
+      "original_title": "The Matrix",
+      "overview": "Um hacker descobre que a realidade em que vive é uma simulação controlada por máquinas.",
+      "poster_path": "/fixture-poster-603.jpg",
+      "backdrop_path": "/fixture-backdrop-603.jpg",
+      "release_date": "1999-03-31",
+      "vote_average": 8.2,
+      "vote_count": 26800,
+      "genre_ids": [28, 878],
+      "popularity": 192.5
+    },
+    {
+      "id": 604,
+      "title": "Matrix Reloaded",
+      "poster_path": "/fixture-poster-604.jpg",
+      "release_date": "2003-05-15",
+      "vote_average": 7.0
+    }
+  ]
+}

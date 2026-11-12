@@ -88,3 +88,11 @@ export function formatLanguage(code: string | null | undefined): string {
 export function textOr(value: string | null | undefined, fallback: string): string {
   return value?.trim() ? value : fallback;
 }
+
+/** Classificação indicativa: "Livre", "14 anos" ou "Não informada" (nunca a de outro país). */
+export function formatAgeRating(rating: string | null): string {
+  if (rating === null) return messages.movie.ageRatingMissing;
+  return rating === "L"
+    ? messages.movie.ageRatingFree
+    : interpolate(messages.movie.ageRatingYears, { age: rating });
+}

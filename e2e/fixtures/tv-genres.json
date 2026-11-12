@@ -1,0 +1,24 @@
+{
+  "genres": [
+    {
+      "id": 10759,
+      "name": "Ação e aventura"
+    },
+    {
+      "id": 16,
+      "name": "Animação"
+    },
+    {
+      "id": 80,
+      "name": "Crime"
+    },
+    {
+      "id": 18,
+      "name": "Drama"
+    },
+    {
+      "id": 10765,
+      "name": "Ficção científica e fantasia"
+    }
+  ]
+}

@@ -1,0 +1,252 @@
+{
+  "id": 1396,
+  "name": "Breaking Bad",
+  "original_name": "Breaking Bad",
+  "overview": "Um professor de química do ensino médio descobre que tem câncer e passa a produzir metanfetamina para garantir o futuro da família.",
+  "poster_path": "/fixture-tv-1396.jpg",
+  "backdrop_path": "/fixture-tv-backdrop-1396.jpg",
+  "first_air_date": "2008-01-20",
+  "vote_average": 8.9,
+  "vote_count": 12000,
+  "genre_ids": [18, 80],
+  "popularity": 300.0,
+  "tagline": "Mudar a equação.",
+  "number_of_seasons": 5,
+  "number_of_episodes": 62,
+  "status": "Ended",
+  "in_production": false,
+  "last_air_date": "2013-09-29",
+  "original_language": "en",
+  "homepage": "https://www.amc.com/shows/breaking-bad",
+  "genres": [
+    {
+      "id": 18,
+      "name": "Drama"
+    },
+    {
+      "id": 80,
+      "name": "Crime"
+    }
+  ],
+  "created_by": [
+    {
+      "id": 66633,
+      "name": "Vince Gilligan",
+      "profile_path": "/fixture-profile-66633.jpg"
+    }
+  ],
+  "networks": [
+    {
+      "id": 174,
+      "name": "AMC",
+      "logo_path": "/fixture-network.png",
+      "origin_country": "US"
+    }
+  ],
+  "seasons": [
+    {
+      "id": 3577,
+      "name": "Especiais",
+      "season_number": 0,
+      "episode_count": 9,
+      "air_date": "2009-02-17",
+      "poster_path": null,
+      "overview": ""
+    },
+    {
+      "id": 3572,
+      "name": "Temporada 1",
+      "season_number": 1,
+      "episode_count": 7,
+      "air_date": "2008-01-20",
+      "poster_path": "/fixture-season-1.jpg",
+      "overview": "Walter White recebe o diagnóstico e toma uma decisão radical."
+    },
+    {
+      "id": 3573,
+      "name": "Temporada 2",
+      "season_number": 2,
+      "episode_count": 13,
+      "air_date": "2009-03-08",
+      "poster_path": "/fixture-season-2.jpg",
+      "overview": ""
+    }
+  ],
+  "aggregate_credits": {
+    "cast": [
+      {
+        "id": 17419,
+        "name": "Bryan Cranston",
+        "profile_path": "/fixture-profile-17419.jpg",
+        "order": 0,
+        "total_episode_count": 62,
+        "roles": [
+          {
+            "credit_id": "r1",
+            "character": "Walter White",
+            "episode_count": 62
+          }
+        ]
+      },
+      {
+        "id": 84497,
+        "name": "Aaron Paul",
+        "profile_path": "/fixture-profile-84497.jpg",
+        "order": 1,
+        "total_episode_count": 62,
+        "roles": [
+          {
+            "credit_id": "r2",
+            "character": "Jesse Pinkman",
+            "episode_count": 62
+          }
+        ]
+      },
+      {
+        "id": 134531,
+        "name": "Anna Gunn",
+        "profile_path": null,
+        "order": 2,
+        "total_episode_count": 62,
+        "roles": [
+          {
+            "credit_id": "r3",
+            "character": "Skyler White",
+            "episode_count": 62
+          }
+        ]
+      }
+    ],
+    "crew": [
+      {
+        "id": 66633,
+        "name": "Vince Gilligan",
+        "profile_path": null,
+        "department": "Writing",
+        "total_episode_count": 62,
+        "jobs": [
+          {
+            "credit_id": "j1",
+            "job": "Writer",
+            "episode_count": 13
+          }
+        ]
+      }
+    ]
+  },
+  "videos": {
+    "results": [
+      {
+        "id": "fixture-tv-video-1",
+        "key": "fixtureTvTrailer",
+        "name": "Breaking Bad | Trailer",
+        "site": "YouTube",
+        "type": "Trailer",
+        "official": true,
+        "iso_639_1": "pt"
+      }
+    ]
+  },
+  "recommendations": {
+    "page": 1,
+    "results": [
+      {
+        "id": 1399,
+        "name": "Game of Thrones",
+        "original_name": "Game of Thrones",
+        "overview": "Sinopse de Game of Thrones.",
+        "poster_path": "/fixture-tv-1399.jpg",
+        "backdrop_path": "/fixture-tv-backdrop-1399.jpg",
+        "first_air_date": "2011-04-17",
+        "vote_average": 8.5,
+        "vote_count": 12000,
+        "genre_ids": [10765, 18],
+        "popularity": 300.0
+      },
+      {
+        "id": 66732,
+        "name": "Stranger Things",
+        "original_name": "Stranger Things",
+        "overview": "Sinopse de Stranger Things.",
+        "poster_path": "/fixture-tv-66732.jpg",
+        "backdrop_path": "/fixture-tv-backdrop-66732.jpg",
+        "first_air_date": "2016-07-15",
+        "vote_average": 8.6,
+        "vote_count": 12000,
+        "genre_ids": [18, 10765],
+        "popularity": 300.0
+      }
+    ],
+    "total_pages": 1,
+    "total_results": 2
+  },
+  "similar": {
+    "page": 1,
+    "results": [],
+    "total_pages": 1,
+    "total_results": 0
+  },
+  "watch/providers": {
+    "results": {
+      "BR": {
+        "link": "https://www.themoviedb.org/tv/1396/watch?locale=BR",
+        "flatrate": [
+          {
+            "provider_id": 8,
+            "provider_name": "Netflix",
+            "logo_path": "/fixture-logo-8.jpg",
+            "display_priority": 1
+          }
+        ]
+      }
+    }
+  },
+  "content_ratings": {
+    "results": [
+      {
+        "iso_3166_1": "US",
+        "rating": "TV-MA"
+      },
+      {
+        "iso_3166_1": "BR",
+        "rating": "16"
+      }
+    ]
+  },
+  "images": {
+    "backdrops": [
+      {
+        "file_path": "/fixture-tv-still-1.jpg",
+        "width": 1920,
+        "height": 1080,
+        "aspect_ratio": 1.778
+      },
+      {
+        "file_path": "/fixture-tv-still-2.jpg",
+        "width": 1920,
+        "height": 1080,
+        "aspect_ratio": 1.778
+      },
+      {
+        "file_path": "/fixture-tv-still-3.jpg",
+        "width": 1920,
+        "height": 1080,
+        "aspect_ratio": 1.778
+      }
+    ],
+    "posters": [
+      {
+        "file_path": "/fixture-tv-poster-alt.jpg",
+        "width": 1000,
+        "height": 1500,
+        "aspect_ratio": 0.667
+      }
+    ]
+  },
+  "external_ids": {
+    "imdb_id": "tt0903747",
+    "instagram_id": "breakingbad",
+    "twitter_id": "BreakingBad",
+    "facebook_id": "BreakingBad"
+  }
+}

@@ -7,6 +7,8 @@ import {
   PiHouseFill,
   PiMagnifyingGlass,
   PiMagnifyingGlassBold,
+  PiUsers,
+  PiUsersFill,
 } from "react-icons/pi";
 import { messages } from "../../i18n";
 import "./MobileTabBar.css";
@@ -27,6 +29,13 @@ const TABS: readonly Tab[] = [
     end: false,
     Icon: PiCompass,
     ActiveIcon: PiCompassFill,
+  },
+  {
+    to: "/pessoas",
+    label: messages.nav.people,
+    end: false,
+    Icon: PiUsers,
+    ActiveIcon: PiUsersFill,
   },
   {
     to: "/search",

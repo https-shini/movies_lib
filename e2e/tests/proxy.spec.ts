@@ -27,12 +27,12 @@ test.describe("Proxy do TMDB (local, sem chave)", () => {
   }
 
   const unknownEndpoints = [
-    "/api/tmdb/person/1",
+    "/api/tmdb/account/1",
     "/api/tmdb/configuration",
     "/api/tmdb/movie/550/images",
     "/api/tmdb/movie/abc",
-    "/api/tmdb/movie/550/..%2F..%2Fperson%2F1",
-    "/api/tmdb?path=person/1",
+    "/api/tmdb/movie/550/..%2F..%2Faccount%2F1",
+    "/api/tmdb?path=account/1",
   ];
   for (const path of unknownEndpoints) {
     test(`endpoint fora da lista recebe 404: ${path}`, async ({ request }) => {
@@ -67,7 +67,7 @@ test.describe("Proxy do TMDB (local, sem chave)", () => {
 
   test("o erro repetido continua sem cache", async ({ request }) => {
     for (let attempt = 0; attempt < 2; attempt += 1) {
-      const response = await request.get("/api/tmdb/person/1");
+      const response = await request.get("/api/tmdb/account/1");
       expect(response.headers()["cache-control"]).toBe("no-store");
       expect(response.headers()["cache-control"]).not.toContain("s-maxage");
     }

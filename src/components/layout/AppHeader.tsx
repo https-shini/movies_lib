@@ -10,6 +10,7 @@ const text = messages.nav;
 const NAV_ITEMS = [
   { to: "/", label: text.home, end: true },
   { to: "/discover", label: text.discover, end: false },
+  { to: "/pessoas", label: text.people, end: false },
 ] as const;
 
 const HeaderSearch = () => {

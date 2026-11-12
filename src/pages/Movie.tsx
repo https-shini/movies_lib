@@ -1,6 +1,5 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { Link, useParams } from "react-router";
-import type { IconType } from "react-icons";
 import {
   PiArrowDown,
   PiCalendarBlank,
@@ -11,112 +10,61 @@ import {
   PiPlayFill,
   PiShieldCheck,
   PiTranslate,
-  PiUser,
   PiWallet,
 } from "react-icons/pi";
-import { interpolate, messages } from "../i18n";
-import { backdropSrcSet, getBackdropUrl, getProfileUrl } from "../lib/images";
+import { messages } from "../i18n";
+import { pickGalleryImages } from "../lib/images";
+import { sectionCounter } from "../lib/sections";
 import {
+  DIRECTOR_JOBS,
   getBrazilianRating,
   getYouTubeTrailerKey,
+  groupCrew,
   MAX_CAST,
-  pickDirectors,
+  pickCrew,
+  pickGalleryVideos,
   pickRelatedMovies,
-  pickWriters,
+  WRITER_JOBS,
 } from "../lib/movie";
 import { useMovie } from "../hooks/useMovie";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
 import {
-  formatCompactNumber,
+  formatAgeRating,
   formatCurrency,
   formatLanguage,
-  formatRating,
   formatReleaseDate,
   formatRuntime,
   getReleaseYear,
   textOr,
 } from "../lib/format";
-import type { CastMember } from "../types/tmdb";
 import MovieRail from "../components/movie/MovieRail";
-import { Poster } from "../components/movie/PosterCard";
 import TrailerDialog from "../components/movie/TrailerDialog";
 import WatchProviders from "../components/movie/WatchProviders";
-import Rail, { RailControls } from "../components/ui/Rail";
+import PeopleRail from "../components/person/PeopleRail";
+import PersonLinks from "../components/person/PersonLinks";
+import CollectionBanner from "../components/title/CollectionBanner";
+import ExternalLinks from "../components/title/ExternalLinks";
+import FactGrid, { type Fact } from "../components/title/FactGrid";
+import FullCredits, { type CreditGroup } from "../components/title/FullCredits";
+import { departmentLabel } from "../lib/people";
+import ImageGallery from "../components/title/ImageGallery";
+import SectionNav from "../components/title/SectionNav";
+import TitleHero, { TitleHeroSkeleton } from "../components/title/TitleHero";
+import VideoGallery from "../components/title/VideoGallery";
 import SectionHeader from "../components/ui/SectionHeader";
 import StateMessage from "../components/ui/StateMessage";
 import NotFound from "./NotFound";
 import "./Movie.css";
 
 const text = messages.movie;
-
-const MovieSkeleton = () => (
-  <main className="movie" aria-busy="true" aria-label={text.loading}>
-    <section className="movie-hero">
-      <div className="movie-hero__backdrop skeleton" />
-      <div className="shell movie-hero__inner">
-        <div className="movie-hero__poster poster skeleton" />
-        <div className="movie-hero__info">
-          <span className="skeleton skeleton--text" style={{ width: "10rem" }} />
-          <span className="skeleton movie-hero__title-skeleton" />
-          <span className="skeleton skeleton--text" style={{ width: "14rem" }} />
-        </div>
-      </div>
-    </section>
-  </main>
-);
-
-const CastRail = ({ cast }: { cast: readonly CastMember[] }) => {
-  const railRef = useRef<HTMLUListElement>(null);
-  if (!cast.length) return null;
-
-  return (
-    <section className="section" aria-labelledby="cast-title">
-      <SectionHeader
-        id="cast-title"
-        index="02"
-        title={text.castTitle}
-        aside={<RailControls railRef={railRef} label={text.castTitle} />}
-      />
-      <Rail railRef={railRef} label={text.castTitle} className="rail--wide">
-        {cast.map((person) => {
-          const photo = getProfileUrl(person.profile_path);
-          return (
-            <li key={person.cast_id ?? person.credit_id} className="cast-card">
-              <div className="cast-card__photo">
-                {photo ? (
-                  <img src={photo} alt="" loading="lazy" decoding="async" />
-                ) : (
-                  <PiUser aria-hidden="true" />
-                )}
-              </div>
-              <p className="cast-card__name">{person.name}</p>
-              <p className="cast-card__role">{textOr(person.character, text.noCharacter)}</p>
-            </li>
-          );
-        })}
-      </Rail>
-    </section>
-  );
-};
-
-/** "Livre", "14 anos" ou "Não informada" (nunca a classificação de outro país). */
-function formatAgeRating(rating: string | null): string {
-  if (rating === null) return text.ageRatingMissing;
-  return rating === "L" ? text.ageRatingFree : interpolate(text.ageRatingYears, { age: rating });
-}
-
-interface Fact {
-  label: string;
-  value: string;
-  Icon: IconType;
-}
+const titleText = messages.title;
 
 const MovieDetails = ({ id }: { id: string }) => {
   const [trailerOpen, setTrailerOpen] = useState(false);
   const { data: movie, isLoading, error, reload } = useMovie(id);
   useDocumentTitle(textOr(movie?.title, isLoading ? text.loadingTitle : text.fallbackTitle));
 
-  if (isLoading) return <MovieSkeleton />;
+  if (isLoading) return <TitleHeroSkeleton label={text.loading} />;
 
   if (error || !movie) {
     return (
@@ -139,25 +87,23 @@ const MovieDetails = ({ id }: { id: string }) => {
   }
 
   const title = textOr(movie.title, messages.common.untitled);
-  const backdrop = getBackdropUrl(movie.backdrop_path);
   const trailerKey = getYouTubeTrailerKey(movie.videos?.results);
-  const cast = movie.credits?.cast.slice(0, MAX_CAST) ?? [];
+  const fullCast = movie.credits?.cast ?? [];
+  const cast = fullCast.slice(0, MAX_CAST);
   const related = pickRelatedMovies(movie);
-  const directors = pickDirectors(movie.credits);
-  const writers = pickWriters(movie.credits);
+  const directors = pickCrew(movie.credits, DIRECTOR_JOBS, 2);
+  const writers = pickCrew(movie.credits, WRITER_JOBS, 3);
   const year = getReleaseYear(movie.release_date);
   const runtime = movie.runtime ?? 0;
-  const rating = formatRating(movie.vote_average);
-  const voteCount = movie.vote_count ?? 0;
-  const hasRating = rating !== null && voteCount > 0;
-  const genres = movie.genres ?? [];
+  const videos = pickGalleryVideos(movie.videos?.results);
+  const images = pickGalleryImages(movie.images);
 
   const facts: Fact[] = [
     ...(directors.length
-      ? [{ label: text.directing, value: directors.join(", "), Icon: PiFilmSlate }]
+      ? [{ label: text.directing, value: <PersonLinks people={directors} />, Icon: PiFilmSlate }]
       : []),
     ...(writers.length
-      ? [{ label: text.writing, value: writers.join(", "), Icon: PiPencilSimpleLine }]
+      ? [{ label: text.writing, value: <PersonLinks people={writers} />, Icon: PiPencilSimpleLine }]
       : []),
     { label: text.release, value: formatReleaseDate(movie.release_date), Icon: PiCalendarBlank },
     { label: text.runtime, value: formatRuntime(movie.runtime), Icon: PiHourglassMedium },
@@ -171,142 +117,137 @@ const MovieDetails = ({ id }: { id: string }) => {
     { label: text.revenue, value: formatCurrency(movie.revenue), Icon: PiChartLineUp },
   ];
 
+  const creditGroups: CreditGroup[] = [
+    {
+      key: "cast",
+      label: titleText.fullCast,
+      people: fullCast.map((person) => ({
+        id: person.id,
+        name: person.name,
+        role: person.character ?? "",
+      })),
+    },
+    ...groupCrew(movie.credits?.crew).map((group) => ({
+      key: group.department,
+      label: departmentLabel(group.department),
+      people: group.members.map((member) => ({
+        id: member.id,
+        name: member.name,
+        role: member.jobs.join(", "),
+      })),
+    })),
+  ];
+
   const kicker =
     [year, runtime > 0 ? formatRuntime(runtime) : null].filter(Boolean).join(" · ") ||
     text.fallbackTitle;
 
+  const next = sectionCounter();
+  const sections = [
+    { id: "overview", label: titleText.overview },
+    { id: "where-to-watch", label: titleText.whereToWatch },
+    ...(cast.length ? [{ id: "cast", label: titleText.cast }] : []),
+    ...(videos.length ? [{ id: "videos", label: titleText.videos }] : []),
+    ...(images.length ? [{ id: "images", label: titleText.images }] : []),
+    ...(related.length ? [{ id: "related", label: titleText.related }] : []),
+  ];
+
   return (
     <main className="movie">
-      <section className="movie-hero" aria-labelledby="movie-title">
-        <div className="movie-hero__backdrop">
-          {backdrop && (
-            <img
-              src={backdrop}
-              srcSet={backdropSrcSet(movie.backdrop_path, ["w780", "w1280"])}
-              sizes="100vw"
-              alt=""
-              fetchPriority="high"
-            />
-          )}
-        </div>
-
-        <div className="shell movie-hero__inner reveal">
-          <Poster
-            path={movie.poster_path}
-            title={title}
-            className="movie-hero__poster"
-            variant="detail"
-            eager
-          />
-
-          <div className="movie-hero__info">
-            <p className="movie-hero__kicker mono">{kicker}</p>
-            <h1 id="movie-title" className="movie-hero__title display">
-              {title}
-            </h1>
-            {movie.original_title && movie.original_title !== title && (
-              <p className="movie-hero__original">
-                {interpolate(text.originalTitle, { title: movie.original_title })}
-              </p>
-            )}
-
-            {genres.length > 0 && (
-              <ul className="movie-hero__genres" role="list" aria-label={text.genresLabel}>
-                {genres.map((genre) => (
-                  <li key={genre.id}>
-                    <Link className="chip" to={`/discover?genre=${genre.id}`}>
-                      {genre.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            )}
-
-            <div className="movie-hero__score">
-              {hasRating ? (
-                <>
-                  <p
-                    className="movie-hero__rating"
-                    aria-label={interpolate(messages.common.ratingLabel, { rating })}
-                  >
-                    <span className="display">{rating}</span>
-                    <span className="mono" aria-hidden="true">
-                      /10
-                    </span>
-                  </p>
-                  <p className="movie-hero__votes mono">
-                    {interpolate(text.votes, { count: formatCompactNumber(voteCount) })}
-                  </p>
-                </>
-              ) : (
-                <p className="movie-hero__votes mono">{text.noVotes}</p>
-              )}
-            </div>
-
-            <div className="movie-hero__actions">
-              {trailerKey && (
-                <button
-                  type="button"
-                  className="btn btn--primary"
-                  onClick={() => {
-                    setTrailerOpen(true);
-                  }}
-                >
-                  <PiPlayFill aria-hidden="true" /> {text.watchTrailer}
-                </button>
-              )}
-              <a className="btn btn--ghost" href="#where-to-watch">
-                {text.whereToWatch} <PiArrowDown aria-hidden="true" />
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
+      <TitleHero
+        titleId="movie-title"
+        title={title}
+        kicker={kicker}
+        originalTitle={movie.original_title}
+        backdropPath={movie.backdrop_path}
+        posterPath={movie.poster_path}
+        genres={(movie.genres ?? []).map((genre) => ({
+          ...genre,
+          href: `/discover?genre=${String(genre.id)}`,
+        }))}
+        voteAverage={movie.vote_average}
+        voteCount={movie.vote_count}
+      >
+        {trailerKey && (
+          <button
+            type="button"
+            className="btn btn--primary"
+            onClick={() => {
+              setTrailerOpen(true);
+            }}
+          >
+            <PiPlayFill aria-hidden="true" /> {text.watchTrailer}
+          </button>
+        )}
+        <a className="btn btn--ghost" href="#where-to-watch">
+          {text.whereToWatch} <PiArrowDown aria-hidden="true" />
+        </a>
+      </TitleHero>
 
       <div className="shell">
-        <div className="movie-body">
+        <SectionNav items={sections} />
+
+        <div id="overview" className="movie-body section">
           <section className="movie-body__overview" aria-labelledby="overview-title">
             <h2 id="overview-title" className="sr-only">
               {text.overviewTitle}
             </h2>
             {movie.tagline && <p className="movie-tagline">{movie.tagline}</p>}
             <p className="movie-overview">{textOr(movie.overview, text.noOverview)}</p>
+            <ExternalLinks ids={movie.external_ids} homepage={movie.homepage} imdb="title" />
           </section>
 
-          <aside className="movie-body__facts" aria-labelledby="facts-title">
-            <h2 id="facts-title" className="facts__title mono">
-              {text.factsTitle}
-            </h2>
-            <dl className="facts">
-              {facts.map(({ label, value, Icon }) => (
-                <div key={label} className="facts__row">
-                  <dt>
-                    <Icon className="facts__icon" aria-hidden="true" />
-                    {label}
-                  </dt>
-                  <dd>{value}</dd>
-                </div>
-              ))}
-            </dl>
-          </aside>
+          <FactGrid titleId="facts-title" title={text.factsTitle} facts={facts} />
         </div>
+
+        {movie.belongs_to_collection && (
+          <CollectionBanner collection={movie.belongs_to_collection} />
+        )}
 
         <section id="where-to-watch" className="section" aria-labelledby="providers-title">
           <SectionHeader
             id="providers-title"
-            index="01"
+            index={next()}
             title={text.providersTitle}
             subtitle={text.providersSubtitle}
           />
           <WatchProviders providers={movie["watch/providers"]} />
         </section>
 
-        <CastRail cast={cast} />
+        <PeopleRail
+          id="cast"
+          index={cast.length ? next() : undefined}
+          title={text.castTitle}
+          subtitle={titleText.castSubtitle}
+          people={cast.map((person) => ({
+            id: person.id,
+            name: person.name,
+            role: textOr(person.character, text.noCharacter),
+            profilePath: person.profile_path,
+          }))}
+        >
+          <FullCredits groups={creditGroups} />
+        </PeopleRail>
+
+        <VideoGallery
+          id="videos"
+          index={videos.length ? next() : undefined}
+          title={title}
+          videos={videos}
+        />
+
+        <ImageGallery
+          id="images"
+          index={images.length ? next() : undefined}
+          title={title}
+          images={images}
+        />
 
         {related.length > 0 && (
           <MovieRail
             id="related-title"
-            index={cast.length ? "03" : "02"}
+            anchor="related"
+            index={next()}
             title={text.relatedTitle}
             movies={related}
             isLoading={false}

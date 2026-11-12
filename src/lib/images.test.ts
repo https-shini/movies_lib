@@ -2,9 +2,11 @@ import { describe, expect, it } from "vitest";
 import {
   backdropSrcSet,
   getBackdropUrl,
+  getGalleryUrl,
   getLogoUrl,
   getPosterUrl,
   getProfileUrl,
+  pickGalleryImages,
   POSTER_VARIANTS,
   posterSrcSet,
 } from "./images";
@@ -49,5 +51,32 @@ describe("variantes de pôster e srcset de backdrop", () => {
       "https://image.tmdb.org/t/p/w780/b.jpg 780w, https://image.tmdb.org/t/p/w1280/b.jpg 1280w",
     );
     expect(backdropSrcSet(null, ["w780"])).toBeUndefined();
+  });
+});
+
+describe("galeria", () => {
+  it("monta as URLs da miniatura e da imagem ampliada por formato", () => {
+    expect(getGalleryUrl("/a.jpg", "backdrop", "thumb")).toBe(
+      "https://image.tmdb.org/t/p/w300/a.jpg",
+    );
+    expect(getGalleryUrl("/a.jpg", "poster", "full")).toBe("https://image.tmdb.org/t/p/w780/a.jpg");
+    expect(getGalleryUrl(null, "profile", "full")).toBeNull();
+  });
+
+  it("junta fundos, pôsteres e retratos respeitando os limites e sem repetir", () => {
+    const images = pickGalleryImages(
+      {
+        backdrops: [{ file_path: "/b1.jpg" }, { file_path: "/b2.jpg" }, { file_path: "/b3.jpg" }],
+        posters: [{ file_path: "/p1.jpg" }, { file_path: "/b1.jpg" }, { file_path: "" }],
+      },
+      { backdrops: 2, posters: 3 },
+    );
+
+    expect(images).toEqual([
+      { path: "/b1.jpg", kind: "backdrop" },
+      { path: "/b2.jpg", kind: "backdrop" },
+      { path: "/p1.jpg", kind: "poster" },
+    ]);
+    expect(pickGalleryImages(undefined)).toEqual([]);
   });
 });

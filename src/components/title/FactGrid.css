@@ -1,0 +1,42 @@
+.facts__title {
+  margin-bottom: var(--space-3);
+  color: var(--color-text-tertiary);
+}
+
+/* Ficha técnica em cards com ícone dourado, como na identidade original. */
+.facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 160px), 1fr));
+  gap: var(--space-3);
+}
+
+.facts__row {
+  position: relative;
+  display: grid;
+  align-content: center;
+  gap: var(--space-1);
+  padding: var(--space-4) var(--space-4) var(--space-4) calc(var(--space-4) * 2 + var(--icon-md));
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-base);
+}
+
+.facts__icon {
+  position: absolute;
+  top: 50%;
+  left: var(--space-4);
+  color: var(--color-accent-default);
+  font-size: var(--icon-md);
+  transform: translateY(-50%);
+}
+
+.facts__row dt {
+  color: var(--color-text-tertiary);
+  font-size: var(--text-xs);
+}
+
+.facts__row dd {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  overflow-wrap: anywhere;
+}

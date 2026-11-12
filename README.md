@@ -8,10 +8,13 @@ O projeto nasceu como MoviesLib e está sendo refeito como Cinelux em fases e bl
 
 ## Funcionalidades
 
-- **Início:** destaque do filme mais popular, faixa "Em alta", ranking dos 10 mais bem avaliados, "Nos cinemas" e índice de gêneros.
-- **Descobrir (`/discover`):** gêneros e ordenação com um toque, ano e nota mínima num painel de filtros, filtros ativos como chips removíveis, tudo registrado na URL, com paginação.
-- **Buscar (`/search?q=`):** busca por título em português, com paginação e sugestões quando não há termo.
-- **Filme (`/movie/:id`):** sinopse, nota, gêneros clicáveis, ficha técnica com a classificação indicativa do Brasil, trailer na própria página (YouTube em modo de privacidade aprimorada), elenco, recomendações e onde assistir no Brasil (dados do JustWatch).
+- **Início:** destaque do filme mais popular, faixas "Em alta", "Séries em alta" e "Nos cinemas", ranking dos 10 mais bem avaliados, pessoas em destaque e índice de gêneros.
+- **Descobrir (`/discover`):** filmes ou séries (`?tipo=series`), gêneros e ordenação com um toque, ano e nota mínima num painel de filtros, filtros ativos como chips removíveis, tudo registrado na URL, com paginação.
+- **Buscar (`/search?q=`):** resultados por categoria (filmes, séries e pessoas), com a contagem de cada uma, paginação e sugestões quando não há termo.
+- **Filme (`/movie/:id`):** sinopse, nota, gêneros clicáveis, ficha técnica com a classificação indicativa do Brasil, trailer na própria página (YouTube em modo de privacidade aprimorada), onde assistir no Brasil (dados do JustWatch), elenco com link para cada perfil, elenco e equipe completos, galeria de vídeos e de imagens, links oficiais, coleção e recomendações, com atalhos para cada seção.
+- **Série (`/serie/:id`):** a mesma estrutura do filme, com criação, emissora, situação, temporadas e elenco de todas as temporadas.
+- **Pessoa (`/pessoa/:id`) e Pessoas (`/pessoas`):** biografia (em inglês, com aviso, quando falta a tradução), principais trabalhos, filmografia completa por área de atuação com filtro de filmes e séries, fotos e perfis oficiais; e a lista das pessoas mais procuradas.
+- **Coleção (`/colecao/:id`):** os filmes de uma franquia em ordem de lançamento.
 - **Sobre (`/sobre`) e Privacidade (`/privacidade`):** créditos exigidos pelo TMDB e pelo JustWatch e o que o site coleta.
 - **Estados:** esqueletos de carregamento, estados vazios, erros em português com "Tentar novamente", página 404 e tela de erro de rota.
 - **Acessibilidade e responsividade:** link para pular ao conteúdo, foco visível, `prefers-reduced-motion`, barra inferior no celular e ausência de rolagem horizontal de 320 a 1440 px.

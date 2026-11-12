@@ -16,6 +16,8 @@ interface MovieRailProps {
   error?: string | undefined;
   onRetry?: (() => void) | undefined;
   link?: ReactNode | undefined;
+  /** Âncora da seção para os atalhos da página (ex.: "related"). */
+  anchor?: string | undefined;
 }
 
 /** Seção com cabeçalho numerado e faixa horizontal de pôsteres. */
@@ -29,12 +31,13 @@ const MovieRail = ({
   error = "",
   onRetry,
   link,
+  anchor,
 }: MovieRailProps) => {
   const railRef = useRef<HTMLUListElement>(null);
   const hasMovies = !isLoading && !error && movies.length > 0;
 
   return (
-    <section className="section" aria-labelledby={id}>
+    <section id={anchor} className="section" aria-labelledby={id}>
       <SectionHeader
         id={id}
         index={index}

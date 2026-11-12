@@ -105,10 +105,15 @@ button:disabled {
  */
 .chip::before,
 .search-box__clear::before,
-.app-header__link::before {
+.app-header__link::before,
+.hit-area::before {
   position: absolute;
   inset: min(0px, calc((100% - var(--tap-target)) / 2));
   content: "";
+}
+
+.hit-area {
+  position: relative;
 }
 
 /*
@@ -124,7 +129,7 @@ button:disabled {
     border: var(--border-width) solid ButtonText;
   }
 
-  :root :is(.chip[aria-pressed="true"], .chip--active, .count-badge),
+  :root :is(.chip[aria-pressed="true"], .chip[aria-current="page"], .chip--active, .count-badge),
   :root .app-header__link.active::after {
     forced-color-adjust: none;
     border-color: Highlight;

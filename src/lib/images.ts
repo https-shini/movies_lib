@@ -7,7 +7,7 @@ const IMAGE_BASE_URL = "https://image.tmdb.org/t/p";
 
 export type PosterSize = "w92" | "w185" | "w342" | "w500" | "w780" | "original";
 export type BackdropSize = "w300" | "w780" | "w1280" | "original";
-export type ProfileSize = "w185" | "original";
+export type ProfileSize = "w185" | "h632" | "original";
 export type LogoSize = "w92" | "w185" | "original";
 
 type ImageSize = PosterSize | BackdropSize | ProfileSize | LogoSize;
@@ -95,3 +95,57 @@ export const POSTER_VARIANTS = {
 >;
 
 export type PosterVariant = keyof typeof POSTER_VARIANTS;
+
+/** Tamanhos da galeria: miniatura e imagem ampliada, por formato. */
+export const GALLERY_SIZES = {
+  backdrop: { thumb: "w300", full: "w1280" },
+  poster: { thumb: "w185", full: "w780" },
+  profile: { thumb: "w185", full: "original" },
+} as const;
+
+export type GalleryKind = keyof typeof GALLERY_SIZES;
+
+/** URL de uma imagem da galeria (pôster, fundo ou foto) no tamanho pedido. */
+export function getGalleryUrl(
+  path: string | null | undefined,
+  kind: GalleryKind,
+  size: "thumb" | "full",
+): string | null {
+  return buildImageUrl(path, GALLERY_SIZES[kind][size]);
+}
+
+export interface GalleryImage {
+  path: string;
+  kind: GalleryKind;
+}
+
+interface ImageLists {
+  backdrops?: readonly { file_path: string }[] | undefined;
+  posters?: readonly { file_path: string }[] | undefined;
+  profiles?: readonly { file_path: string }[] | undefined;
+}
+
+/** Imagens da galeria: fotos de cena primeiro, depois pôsteres e retratos, sem repetir. */
+export function pickGalleryImages(
+  images: ImageLists | null | undefined,
+  limits: { backdrops?: number; posters?: number; profiles?: number } = {},
+): GalleryImage[] {
+  const { backdrops = 12, posters = 8, profiles = 16 } = limits;
+  const take = (
+    items: readonly { file_path: string }[] | undefined,
+    kind: GalleryKind,
+    limit: number,
+  ): GalleryImage[] =>
+    (items ?? [])
+      .filter((item) => item.file_path)
+      .slice(0, limit)
+      .map((item) => ({ path: item.file_path, kind }));
+
+  const all = [
+    ...take(images?.backdrops, "backdrop", backdrops),
+    ...take(images?.posters, "poster", posters),
+    ...take(images?.profiles, "profile", profiles),
+  ];
+  const seen = new Set<string>();
+  return all.filter((image) => !seen.has(image.path) && seen.add(image.path));
+}

@@ -1,11 +1,15 @@
 import { describe, expect, it } from "vitest";
 import {
   buildDiscoverParams,
+  buildTvDiscoverParams,
   MIN_VOTES_FOR_RATING_FILTER,
   MIN_VOTES_FOR_RATING_SORT,
   readDiscoverFilters,
+  readDiscoverMedia,
   sanitizeDiscoverFilters,
   toDiscoverSearchParams,
+  toDiscoverUrlParams,
+  TV_SORT_OPTIONS,
 } from "./discover";
 
 const today = new Date(2026, 10, 7, 12);
@@ -111,5 +115,40 @@ describe("filtros na URL", () => {
         minRating: "",
       }).toString(),
     ).toBe("genre=35&sort=revenue.desc&year=2020");
+  });
+});
+
+describe("descoberta de séries", () => {
+  it("lê o tipo de obra da URL", () => {
+    expect(readDiscoverMedia(new URLSearchParams("tipo=series"))).toBe("tv");
+    expect(readDiscoverMedia(new URLSearchParams("tipo=outro"))).toBe("movie");
+    expect(readDiscoverMedia(new URLSearchParams())).toBe("movie");
+  });
+
+  it("monta a URL com o tipo e sem a ordenação por bilheteria", () => {
+    expect(toDiscoverUrlParams("tv", { genre: "18", sort: "revenue.desc" }).toString()).toBe(
+      "genre=18&tipo=series",
+    );
+    expect(toDiscoverUrlParams("movie", { genre: "18" }).toString()).toBe("genre=18");
+    expect(TV_SORT_OPTIONS.map((option) => option.value)).not.toContain("revenue.desc");
+  });
+
+  it("traduz os filtros para os campos de séries", () => {
+    const params = buildTvDiscoverParams(
+      { genre: "18", sort: "primary_release_date.desc", year: "2011", minRating: "8" },
+      2,
+      { today: new Date(2026, 10, 12) },
+    );
+
+    expect(params).toEqual({
+      include_adult: false,
+      sort_by: "first_air_date.desc",
+      page: 2,
+      with_genres: "18",
+      first_air_date_year: "2011",
+      "vote_average.gte": "8",
+      "vote_count.gte": 50,
+      "first_air_date.lte": "2026-11-12",
+    });
   });
 });
