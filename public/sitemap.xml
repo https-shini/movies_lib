@@ -8,6 +8,12 @@
     <loc>https://movies-lib-vite.vercel.app/discover</loc>
   </url>
   <url>
+    <loc>https://movies-lib-vite.vercel.app/discover?tipo=series</loc>
+  </url>
+  <url>
+    <loc>https://movies-lib-vite.vercel.app/pessoas</loc>
+  </url>
+  <url>
     <loc>https://movies-lib-vite.vercel.app/search</loc>
   </url>
   <url>

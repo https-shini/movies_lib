@@ -352,19 +352,19 @@ Escalas usadas:
 | I-08 | Cache no navegador | 1 | Médio/alto | M | P1 | Concluído (D-41) |
 | I-09 | Proxy resistente | 1 | Alto (escala) | M | P1 | Concluído: cache na borda (D-19) e limite no firewall em modo Log (D-31, D-47) |
 | I-10 | Sinopse de reserva | 1 | Médio | P | P2 | Pendente |
-| I-12 | Páginas de pessoas | 2 | Muito alto | G | P1 | Pendente |
-| I-13 | Busca de filmes e pessoas | 2 | Alto | M | P1 | Pendente |
+| I-12 | Páginas de pessoas | 2 | Muito alto | G | P1 | Concluído (D-55) |
+| I-13 | Busca de filmes e pessoas | 2 | Alto | M | P1 | Concluído (D-55) |
 | I-14 | Filtro por streaming | 2 | Muito alto | M | P1 | Pendente |
 | I-15 | Mais filtros em Descobrir | 2 | Médio | M | P2 | Pendente |
-| I-16 | Coleções e sagas | 2 | Médio | M | P2 | Pendente |
+| I-16 | Coleções e sagas | 2 | Médio | M | P2 | Concluído (D-55) |
 | I-17 | Palavras-chave | 2 | Baixo | P/M | P3 | Pendente |
-| I-18 | Galeria de imagens | 2 | Baixo | M | P3 | Pendente |
+| I-18 | Galeria de imagens | 2 | Baixo | M | P3 | Concluído (D-55) |
 | I-19 | Autenticação, banco e API própria | 3 | Essencial ao SaaS | GG | P1 | Pendente |
 | I-20 | Diário, notas, lista de interesse e listas | 3 | Essencial ao SaaS | G | P1 | Pendente |
 | I-23 | Prévia ao compartilhar | 3 | Alto | G | P1 | Pendente |
 | I-21 | Recomendações por regras | 3 | Alto | M | P2 | Pendente |
 | I-22 | Importação do IMDb | 3 | Médio | M | P2 | Pendente |
-| I-24 | Séries de TV | 4 | Baixo agora | GG | P3 | Pendente |
+| I-24 | Séries de TV | 4 | Baixo agora | GG | P3 | Concluído (D-55) |
 | I-25 | Escolha de região | 4 | Baixo | P | P3 | Pendente |
 
 ---
