@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 import type { MovieSummary, ReleaseDatesResponse, Video } from "../types/tmdb";
 import {
   getBrazilianRating,
+  groupCrew,
+  pickGalleryVideos,
   getYouTubeEmbedUrl,
   getYouTubeTrailerKey,
   getYouTubeWatchUrl,
@@ -140,5 +142,64 @@ describe("getBrazilianRating", () => {
   it("devolve null sem dados", () => {
     expect(getBrazilianRating(undefined)).toBeNull();
     expect(getBrazilianRating({ results: [] })).toBeNull();
+  });
+});
+
+describe("pickGalleryVideos", () => {
+  const video = (overrides: Partial<Video>): Video => ({
+    id: "v",
+    key: "k",
+    site: "YouTube",
+    type: "Trailer",
+    ...overrides,
+  });
+
+  it("ordena por tipo e, dentro do tipo, oficiais e em português primeiro", () => {
+    const picked = pickGalleryVideos([
+      video({ id: "bastidores", type: "Behind the Scenes" }),
+      video({ id: "teaser", type: "Teaser" }),
+      video({ id: "trailer-en", type: "Trailer", official: true, iso_639_1: "en" }),
+      video({ id: "trailer-pt", type: "Trailer", official: true, iso_639_1: "pt" }),
+    ]);
+
+    expect(picked.map((item) => item.id)).toEqual([
+      "trailer-pt",
+      "trailer-en",
+      "teaser",
+      "bastidores",
+    ]);
+  });
+
+  it("ignora vídeos de outros sites, sem chave ou de tipo desconhecido", () => {
+    const picked = pickGalleryVideos([
+      video({ id: "vimeo", site: "Vimeo" }),
+      video({ id: "sem-chave", key: "" }),
+      video({ id: "abertura", type: "Opening Credits" }),
+    ]);
+    expect(picked).toEqual([]);
+    expect(pickGalleryVideos(undefined)).toEqual([]);
+  });
+});
+
+describe("groupCrew", () => {
+  it("agrupa por departamento na ordem editorial e junta as funções de cada pessoa", () => {
+    const groups = groupCrew([
+      { id: 3, name: "Som", job: "Sound Designer", department: "Sound", credit_id: "a" },
+      { id: 1, name: "David Fincher", job: "Director", department: "Directing", credit_id: "b" },
+      { id: 2, name: "Art Linson", job: "Producer", department: "Production", credit_id: "c" },
+      {
+        id: 2,
+        name: "Art Linson",
+        job: "Executive Producer",
+        department: "Production",
+        credit_id: "d",
+      },
+    ]);
+
+    expect(groups.map((group) => group.department)).toEqual(["Directing", "Production", "Sound"]);
+    expect(groups[1]?.members).toEqual([
+      { id: 2, name: "Art Linson", jobs: ["Producer", "Executive Producer"] },
+    ]);
+    expect(groupCrew(undefined)).toEqual([]);
   });
 });

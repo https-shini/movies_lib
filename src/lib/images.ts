@@ -95,3 +95,21 @@ export const POSTER_VARIANTS = {
 >;
 
 export type PosterVariant = keyof typeof POSTER_VARIANTS;
+
+/** Tamanhos da galeria: miniatura e imagem ampliada, por formato. */
+export const GALLERY_SIZES = {
+  backdrop: { thumb: "w300", full: "w1280" },
+  poster: { thumb: "w185", full: "w780" },
+  profile: { thumb: "w185", full: "original" },
+} as const;
+
+export type GalleryKind = keyof typeof GALLERY_SIZES;
+
+/** URL de uma imagem da galeria (pôster, fundo ou foto) no tamanho pedido. */
+export function getGalleryUrl(
+  path: string | null | undefined,
+  kind: GalleryKind,
+  size: "thumb" | "full",
+): string | null {
+  return buildImageUrl(path, GALLERY_SIZES[kind][size]);
+}

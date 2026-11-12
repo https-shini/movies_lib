@@ -111,3 +111,91 @@ export function getBrazilianRating(
 
   return candidates[0]?.rating ?? null;
 }
+
+/** Tipos de vídeo do TMDB, na ordem em que aparecem na galeria. */
+export const VIDEO_TYPES = [
+  "Trailer",
+  "Teaser",
+  "Clip",
+  "Featurette",
+  "Behind the Scenes",
+  "Bloopers",
+] as const;
+export type VideoType = (typeof VIDEO_TYPES)[number];
+
+const isVideoType = (value: string): value is VideoType =>
+  (VIDEO_TYPES as readonly string[]).includes(value);
+
+export interface GalleryVideo {
+  id: string;
+  key: string;
+  name: string;
+  type: VideoType;
+}
+
+/**
+ * Vídeos do YouTube para a galeria: trailers primeiro, depois teasers, cenas e bastidores.
+ * Dentro de cada tipo, os oficiais e os em português vêm antes.
+ */
+export function pickGalleryVideos(
+  videos: readonly Video[] | null | undefined,
+  limit = 12,
+): GalleryVideo[] {
+  const score = (video: Video) => (video.official ? 2 : 0) + (video.iso_639_1 === "pt" ? 1 : 0);
+
+  return (videos ?? [])
+    .filter((video) => video.site === "YouTube" && video.key && isVideoType(video.type))
+    .sort((a, b) => {
+      const byType =
+        VIDEO_TYPES.indexOf(a.type as VideoType) - VIDEO_TYPES.indexOf(b.type as VideoType);
+      return byType !== 0 ? byType : score(b) - score(a);
+    })
+    .slice(0, limit)
+    .map((video) => ({
+      id: video.id,
+      key: video.key,
+      name: video.name?.trim() ?? "",
+      type: video.type as VideoType,
+    }));
+}
+
+export interface CrewGroup {
+  department: string;
+  members: { id: number; name: string; jobs: string[] }[];
+}
+
+/** Ordem dos departamentos na equipe completa; os não listados vêm depois. */
+const DEPARTMENT_ORDER = [
+  "Directing",
+  "Writing",
+  "Production",
+  "Camera",
+  "Editing",
+  "Sound",
+  "Art",
+  "Costume & Make-Up",
+  "Visual Effects",
+];
+
+/** Equipe técnica agrupada por departamento, uma linha por pessoa com todas as funções. */
+export function groupCrew(crew: Credits["crew"] | null | undefined): CrewGroup[] {
+  const groups = new Map<string, Map<number, { id: number; name: string; jobs: string[] }>>();
+
+  for (const member of crew ?? []) {
+    const department = member.department ?? "Crew";
+    const people = groups.get(department) ?? new Map<number, CrewGroup["members"][number]>();
+    const person = people.get(member.id) ?? { id: member.id, name: member.name, jobs: [] };
+    if (member.job && !person.jobs.includes(member.job)) person.jobs.push(member.job);
+    people.set(member.id, person);
+    groups.set(department, people);
+  }
+
+  const rank = (department: string) => {
+    const index = DEPARTMENT_ORDER.indexOf(department);
+    return index === -1 ? DEPARTMENT_ORDER.length : index;
+  };
+
+  return [...groups.entries()]
+    .sort(([a], [b]) => rank(a) - rank(b) || a.localeCompare(b))
+    .map(([department, people]) => ({ department, members: [...people.values()] }));
+}

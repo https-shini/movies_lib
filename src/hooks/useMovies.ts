@@ -1,22 +1,37 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { DiscoverFilters } from "../lib/discover";
 import { getTotalPages } from "../lib/pagination";
+import { fromTv } from "../lib/media";
 import {
   discoverMovies,
+  discoverTv,
   getMovieList,
+  getPopularTv,
   isAbortError,
   searchMovies,
+  searchTv,
   type MovieListKind,
   type TmdbErrorCode,
 } from "../services/tmdb";
-import type { MovieSummary, Paginated } from "../types/tmdb";
+import type { MovieSummary, Paginated, TvSummary } from "../types/tmdb";
 import { toAsyncError, type AsyncError } from "./useAsync";
 
-/** De onde vêm os filmes da lista. `null` significa "nada a carregar" (ex.: busca vazia). */
+/**
+ * De onde vêm os itens da lista: filmes ou séries (convertidas para o formato dos cards).
+ * `null` significa "nada a carregar" (ex.: busca vazia).
+ */
 export type MovieSource =
   | { kind: "list"; list: MovieListKind }
   | { kind: "search"; query: string }
-  | { kind: "discover"; filters: Partial<DiscoverFilters> };
+  | { kind: "discover"; filters: Partial<DiscoverFilters> }
+  | { kind: "tvPopular" }
+  | { kind: "tvSearch"; query: string }
+  | { kind: "tvDiscover"; filters: Partial<DiscoverFilters> };
+
+const asCards = (data: Paginated<TvSummary>): Paginated<MovieSummary> => ({
+  ...data,
+  results: data.results.map(fromTv),
+});
 
 export function fetchMoviePage(
   source: MovieSource,
@@ -30,6 +45,12 @@ export function fetchMoviePage(
       return searchMovies(source.query, page, { signal });
     case "discover":
       return discoverMovies(source.filters, page, { signal });
+    case "tvPopular":
+      return getPopularTv(page, { signal }).then(asCards);
+    case "tvSearch":
+      return searchTv(source.query, page, { signal }).then(asCards);
+    case "tvDiscover":
+      return discoverTv(source.filters, page, { signal }).then(asCards);
   }
 }
 

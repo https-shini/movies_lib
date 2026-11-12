@@ -3,9 +3,20 @@
  * Chama apenas o proxy interno /api/tmdb/...: a URL real e a chave existem só no servidor.
  */
 import { messages } from "../i18n";
-import { buildDiscoverParams, type DiscoverFilters } from "../lib/discover";
+import { buildDiscoverParams, buildTvDiscoverParams, type DiscoverFilters } from "../lib/discover";
 import { normalizePage } from "../lib/pagination";
-import type { Genre, GenreList, MovieDetails, MovieSummary, Paginated } from "../types/tmdb";
+import type {
+  CollectionDetails,
+  Genre,
+  GenreList,
+  MovieDetails,
+  MovieSummary,
+  Paginated,
+  PersonDetails,
+  PersonSummary,
+  TvDetails,
+  TvSummary,
+} from "../types/tmdb";
 
 export const TMDB_PROXY_BASE = "/api/tmdb";
 const LANGUAGE = "pt-BR";
@@ -302,7 +313,11 @@ export async function getMovieGenres(options?: RequestOptions): Promise<Genre[]>
 }
 
 /** Complementos pedidos junto com os detalhes do filme. */
-export const MOVIE_APPENDS = "credits,videos,recommendations,similar,watch/providers,release_dates";
+export const MOVIE_APPENDS =
+  "credits,videos,recommendations,similar,watch/providers,release_dates,images,external_ids";
+
+/** Imagens em português, sem texto (a maioria dos fundos) e em inglês. */
+const IMAGE_LANGUAGES = "pt,null,en";
 
 /**
  * Detalhes, elenco, vídeos, recomendações, onde assistir e datas de lançamento por país
@@ -318,8 +333,124 @@ export function getMovieDetails(
     `movie/${String(id)}`,
     withLocale({
       include_video_language: "pt,en,null",
+      include_image_language: IMAGE_LANGUAGES,
       append_to_response: MOVIE_APPENDS,
     }),
     options,
   );
+}
+
+/** Séries populares no TMDB. */
+export function getPopularTv(page = 1, options?: RequestOptions): Promise<Paginated<TvSummary>> {
+  return request("tv/popular", withLocale({ page: normalizePage(page) }), options);
+}
+
+/** Pessoas populares no TMDB. */
+export function getPopularPeople(
+  page = 1,
+  options?: RequestOptions,
+): Promise<Paginated<PersonSummary>> {
+  return request("person/popular", withLocale({ page: normalizePage(page) }), options);
+}
+
+const emptyResults = <T>(): Paginated<T> => ({
+  page: 1,
+  results: [],
+  total_pages: 0,
+  total_results: 0,
+});
+
+/** Busca de séries pelo nome. Termo vazio não gera requisição. */
+export async function searchTv(
+  query: string,
+  page = 1,
+  options?: RequestOptions,
+): Promise<Paginated<TvSummary>> {
+  const term = query.trim();
+  if (!term) return emptyResults<TvSummary>();
+  return request(
+    "search/tv",
+    withLocale({ query: term, include_adult: false, page: normalizePage(page) }),
+    options,
+  );
+}
+
+/** Busca de pessoas (elenco e equipe) pelo nome. Termo vazio não gera requisição. */
+export async function searchPeople(
+  query: string,
+  page = 1,
+  options?: RequestOptions,
+): Promise<Paginated<PersonSummary>> {
+  const term = query.trim();
+  if (!term) return emptyResults<PersonSummary>();
+  return request(
+    "search/person",
+    withLocale({ query: term, include_adult: false, page: normalizePage(page) }),
+    options,
+  );
+}
+
+/** Descoberta de séries com os mesmos filtros de filmes. */
+export function discoverTv(
+  filters: Partial<DiscoverFilters>,
+  page = 1,
+  options?: RequestOptions,
+): Promise<Paginated<TvSummary>> {
+  return request("discover/tv", withLocale(buildTvDiscoverParams(filters, page)), options);
+}
+
+export async function getTvGenres(options?: RequestOptions): Promise<Genre[]> {
+  const data = await request<GenreList>("genre/tv/list", withLocale(), options);
+  return data.genres;
+}
+
+/** Complementos pedidos junto com os detalhes da série. */
+export const TV_APPENDS =
+  "aggregate_credits,videos,recommendations,similar,watch/providers,content_ratings,images,external_ids";
+
+/** Série completa numa única chamada: elenco de todas as temporadas, vídeos e imagens. */
+export function getTvDetails(id: number | string, options?: RequestOptions): Promise<TvDetails> {
+  return request(
+    `tv/${String(id)}`,
+    withLocale({
+      include_video_language: "pt,en,null",
+      include_image_language: IMAGE_LANGUAGES,
+      append_to_response: TV_APPENDS,
+    }),
+    options,
+  );
+}
+
+/** Complementos pedidos junto com os dados da pessoa. */
+export const PERSON_APPENDS = "combined_credits,images,external_ids";
+
+/** Perfil, filmografia completa (filmes e séries), fotos e perfis oficiais. */
+export function getPersonDetails(
+  id: number | string,
+  options?: RequestOptions,
+): Promise<PersonDetails> {
+  return request(
+    `person/${String(id)}`,
+    withLocale({ append_to_response: PERSON_APPENDS }),
+    options,
+  );
+}
+
+/**
+ * Biografia em inglês, pedida só quando o TMDB não tem a versão em português.
+ * Sem complementos: a resposta é pequena.
+ */
+export function getPersonDetailsInEnglish(
+  id: number | string,
+  options?: RequestOptions,
+): Promise<PersonDetails> {
+  return request(`person/${String(id)}`, withLocale({ language: "en-US" }), options);
+}
+
+/** Coleção ou franquia, com todos os filmes. */
+export function getCollection(
+  id: number | string,
+  options?: RequestOptions,
+): Promise<CollectionDetails> {
+  return request(`collection/${String(id)}`, withLocale(), options);
 }
