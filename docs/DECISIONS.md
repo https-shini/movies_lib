@@ -480,3 +480,12 @@ Cada decisão tem: contexto, decisão e consequência. As decisões D-01 a D-11 
   - **Miniaturas do YouTube** nos cards de vídeo: exigiriam liberar `i.ytimg.com` na CSP; não compensam abrir uma nova origem.
   - **Contas, listas sincronizadas e avaliações próprias:** dependem de autenticação e banco de dados (I-19 do roadmap), com custo e obrigações de LGPD; fora deste escopo.
 - **Testes:** 223 unitários e 777 E2E nos sete tamanhos.
+
+## D-57. Desempenho do Início: seções sob demanda e uma folha de estilo
+
+- **Problema:** com as faixas de séries e de pessoas (D-55), o Início caiu de 91 para 82 no Lighthouse de celular: de 50 para 83 requisições e tempo de bloqueio de 136 para 324 ms.
+- **Diagnóstico (relatórios do Lighthouse):** duas consultas a mais ao proxy na abertura e 26 imagens a mais, todas de seções abaixo da dobra; o `loading="lazy"` não segura imagens de faixas horizontais próximas da tela. Além disso, o build passou a entregar três folhas de estilo e três arquivos pequenos de script antes da primeira pintura, onde antes havia uma folha.
+- **Seções sob demanda:** `OnDemand` e `useNearViewport` (IntersectionObserver, margem de 200 px) montam Séries em alta, Os 10 mais bem avaliados, Nos cinemas e Pessoas em destaque só quando chegam perto da tela. Até lá, a seção mostra o mesmo esqueleto, com as mesmas dimensões, então o layout não salta. O pré-carregamento da rota ficou só com o destaque, "Em alta" e os gêneros. Cache, erro com "Tentar novamente" e cancelamento não mudaram; sem IntersectionObserver, o conteúdo carrega direto.
+- **Build:** `cssCodeSplit: false` (uma folha de cerca de 10 KB com gzip) e as bibliotecas num único pacote, com as estatísticas da Vercel fora dele (D-41).
+- **Descartado:** um grupo de pacote para o código compartilhado da aplicação. Ele mudava a ordem das regras no CSS único, e o ícone de busca do cabeçalho reaparecia no desktop; os testes E2E acusaram. A ordem atual ainda depende da ordem de importação dos módulos: se um dia isso incomodar, a saída robusta são camadas de cascata (`@layer`).
+- **Testes:** os testes genéricos (nome acessível, alvos de toque, rolagem horizontal) percorrem a página inteira antes de verificar (`loadWholePage`). Novos: nenhuma consulta das seções adiadas na primeira tela, uma única consulta de cada ao percorrer a página, nenhuma repetição ao voltar, e erro com nova tentativa numa seção adiada.

@@ -1,5 +1,5 @@
 import type { Locator, Page } from "@playwright/test";
-import { expect, isDesktopLayout, test } from "../helpers/test.ts";
+import { expect, isDesktopLayout, loadWholePage, test } from "../helpers/test.ts";
 
 /** Pressiona Tab até o elemento receber o foco (falha se não chegar em `max` passos). */
 async function tabTo(page: Page, target: Locator, max = 60): Promise<void> {
@@ -175,7 +175,7 @@ test.describe("Acessibilidade e teclado", () => {
       await page.goto(path);
       await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
       // Espera os dados simulados aparecerem antes de inspecionar.
-      await expect(page.locator('[aria-busy="true"]')).toHaveCount(0);
+      await loadWholePage(page);
 
       expect(await findUnnamedControls(page)).toEqual([]);
     });
@@ -197,7 +197,7 @@ test.describe("Acessibilidade e teclado", () => {
     test(`alvos de toque com pelo menos 44 × 44 px em ${path}`, async ({ page }) => {
       await page.goto(path);
       await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-      await expect(page.locator('[aria-busy="true"]')).toHaveCount(0);
+      await loadWholePage(page);
 
       expect(await findSmallTargets(page)).toEqual([]);
     });
