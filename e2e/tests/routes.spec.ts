@@ -19,6 +19,7 @@ test.describe("Rotas", () => {
       heading: "Séries de drama",
       title: "Descobrir séries · Cinelux",
     },
+    { path: "/minha-lista", heading: "Minha lista", title: "Minha lista · Cinelux" },
     { path: "/sobre", heading: "Sobre o Cinelux", title: "Sobre · Cinelux" },
     { path: "/privacidade", heading: "Privacidade", title: "Privacidade · Cinelux" },
   ];
@@ -80,6 +81,7 @@ test.describe("Rodapé e créditos", () => {
       ["Início", "/"],
       ["Descobrir", "/discover"],
       ["Pessoas", "/pessoas"],
+      ["Minha lista", "/minha-lista"],
       ["Buscar", "/search"],
       ["Sobre", "/sobre"],
       ["Privacidade", "/privacidade"],

@@ -15,6 +15,7 @@ test.describe("Responsividade", () => {
     "/pessoa/287",
     "/pessoas",
     "/colecao/2344",
+    "/minha-lista",
     "/search?q=duna&tipo=series",
     "/discover?tipo=series",
     "/sobre",
