@@ -16,7 +16,12 @@ const OnDemand = ({ fallback, children }: OnDemandProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const near = useNearViewport(ref);
 
-  return <div ref={ref}>{near ? children : fallback}</div>;
+  // Em espera, os esqueletos ficam parados: animar fora da tela só gasta processamento.
+  return (
+    <div ref={ref} className={near ? undefined : "on-demand--idle"}>
+      {near ? children : fallback}
+    </div>
+  );
 };
 
 export default OnDemand;

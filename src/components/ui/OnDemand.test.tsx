@@ -41,6 +41,8 @@ describe("OnDemand", () => {
 
     expect(screen.getByText("carregando")).toBeInTheDocument();
     expect(screen.queryByText("conteúdo")).not.toBeInTheDocument();
+    // Em espera, o contêiner é marcado para os esqueletos não animarem fora da tela.
+    expect(screen.getByText("carregando").parentElement).toHaveClass("on-demand--idle");
     expect(observer.options).toEqual({ rootMargin: "200px 0px" });
 
     act(() => {
@@ -53,6 +55,7 @@ describe("OnDemand", () => {
     });
     expect(screen.getByText("conteúdo")).toBeInTheDocument();
     expect(screen.queryByText("carregando")).not.toBeInTheDocument();
+    expect(screen.getByText("conteúdo").parentElement).not.toHaveClass("on-demand--idle");
     // Depois de montado, deixa de observar: o conteúdo não volta ao espaço reservado.
     expect(observer.disconnected).toBeGreaterThan(0);
   });
