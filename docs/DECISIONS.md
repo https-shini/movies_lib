@@ -466,3 +466,17 @@ Cada decisão tem: contexto, decisão e consequência. As decisões D-01 a D-11 
 - **Fora do alcance da fonte de dados:** premiações, críticas profissionais e notícias não existem no TMDB; não foram simuladas. Ficam como possibilidade com outra fonte (ver D-56).
 - **CSP inalterada:** nenhuma origem nova. Por isso a galeria de vídeos não usa miniaturas do YouTube (viriam de `i.ytimg.com`).
 - **Testes:** 217 unitários e 714 E2E nos sete tamanhos. As páginas novas entraram nas verificações de nome acessível, alvos de toque de 44 px, rolagem horizontal e abertura direta pela URL.
+
+## D-56. Camada de vidro, Minha lista, compartilhar e integrações avaliadas
+
+- **Pedido do proprietário:** elevar o produto com visual inspirado em Liquid Glass, recursos adicionais de valor real e integrações externas quando trouxerem benefício.
+- **Vidro sobre a paleta atual:** tokens `--glass-*` (tinta translúcida, brilho de borda, reflexo, sombra e luz ambiente). O desfoque do fundo fica só nas camadas flutuantes (cabeçalho, atalhos de seção, diálogos e barra inferior, que virou uma cápsula flutuante); cards e painéis ganham tinta, brilho e um reflexo ao passar o cursor, sem desfoque, porque dezenas de `backdrop-filter` na mesma tela pesam em celulares. Quem pede menos transparência no sistema (`prefers-reduced-transparency`) recebe superfícies opacas.
+- **Defeito encontrado e corrigido:** com `backdrop-filter` e `-webkit-backdrop-filter` escritos juntos usando uma variável, o minificador manteve só a versão com prefixo, que o Chromium não aplica: o vidro saía sem desfoque. O CSS passou a declarar só `backdrop-filter`, e o build acrescenta o prefixo. Um teste E2E confere o desfoque calculado e o fundo translúcido nas camadas flutuantes, e a versão opaca com transparência reduzida.
+- **Minha lista:** salvar filmes e séries sem cadastro, em `localStorage`. Sem conta, banco de dados ou custo; o conteúdo guardado é validado a cada leitura, tem limite de 500 itens e nunca sai do navegador. A página de privacidade descreve o armazenamento.
+- **Compartilhar:** folha de compartilhamento do sistema (`navigator.share`) quando existe; nos demais casos, copia o link e avisa.
+- **Integrações avaliadas e não adotadas agora:**
+  - **OMDb** (premiações, nota do IMDb e do Rotten Tomatoes): exige chave e, acima de 1.000 consultas por dia, plano pago. Cobriria a lacuna de premiações e críticas (D-55), mas depende de o proprietário criar a conta e aceitar os termos.
+  - **Wikipédia e Wikidata** (biografia em português quando o TMDB só tem em inglês): gratuitas e sem chave, com crédito obrigatório (CC BY-SA). Viável pelo servidor, sem mudar a CSP; fica como próximo passo recomendado, porque pede uma segunda função de proxy com sua própria lista de permissões e testes.
+  - **Miniaturas do YouTube** nos cards de vídeo: exigiriam liberar `i.ytimg.com` na CSP; não compensam abrir uma nova origem.
+  - **Contas, listas sincronizadas e avaliações próprias:** dependem de autenticação e banco de dados (I-19 do roadmap), com custo e obrigações de LGPD; fora deste escopo.
+- **Testes:** 223 unitários e 777 E2E nos sete tamanhos.

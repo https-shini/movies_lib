@@ -31,3 +31,9 @@ ajustado no mesmo commit).
   Depois de ativar, a contagem aparece no painel em alguns minutos.
 - **Firewall:** a regra "Rate Limit API" está em modo Log (D-47). Só mudar para Block depois de
   observar os eventos da regra no painel (Firewall) e confirmar que não há falsos positivos.
+
+## Integrações que dependem de conta ou decisão
+
+- **OMDb (premiações e notas do IMDb e do Rotten Tomatoes):** criar a conta em omdbapi.com, escolher o plano (gratuito até 1.000 consultas por dia) e guardar a chave como variável de ambiente do servidor na Vercel, nunca no código. Com a chave configurada, a integração pode ser feita pelo proxy, como a do TMDB (D-56).
+- **Biografias da Wikipédia em português:** não exige conta; é uma decisão de produto, porque obriga a exibir o crédito e a licença CC BY-SA nas páginas de pessoa (D-56).
+

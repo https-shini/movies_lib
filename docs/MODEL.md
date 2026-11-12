@@ -67,6 +67,7 @@ Todo o código (dados, componentes, páginas, proxy e testes) está em TypeScrip
 | `/pessoa/:id`   | Person     | Perfil, principais trabalhos, filmografia por área e fotos               |
 | `/pessoas`      | People     | Pessoas populares, com `page` na URL                                     |
 | `/colecao/:id`  | Collection | Filmes da franquia em ordem de lançamento                                |
+| `/minha-lista`  | Watchlist  | Títulos salvos no navegador (`localStorage`), sem consulta à API         |
 | `/sobre`        | About      | Logo e aviso do TMDB, créditos do JustWatch e do YouTube                 |
 | `/privacidade`  | Privacy    | O que é coletado e quais serviços externos recebem o IP                  |
 | `*`             | NotFound   | 404 dentro do layout                                                     |
@@ -130,6 +131,10 @@ Requisições canceladas (`AbortError`) são repassadas sem conversão.
 - **Pôsteres:** `srcset` e `sizes` medidos nos cinco tamanhos de tela (`POSTER_VARIANTS` em `lib/images.ts`): cards com `w185`/`w342`, ranking com `w92`/`w185` e pôster do filme com `w185` a `w500`. Os backdrops usam `w780`/`w1280`.
 - **Fontes:** DM Sans e Space Grotesk (identidade original, D-54) servidas pelo próprio site (`src/assets/fonts`, `src/styles/fonts.css`), nos subconjuntos latin e latin-ext, com `font-display: swap`. Não há requisições ao Google.
 
+### Minha lista
+
+`useWatchlist` guarda os títulos salvos em `localStorage` (`cinelux:minha-lista:v1`), no formato validado por `lib/watchlist.ts`: só id, tipo, título, caminho do pôster, data, nota e o momento em que foi salvo. Nada vai para o servidor. As abas abertas se atualizam pelo evento `storage`; sem armazenamento disponível, a lista vale só para a aba. O conteúdo lido é sempre validado, porque pode ter sido alterado fora do site.
+
 ### Regras de descoberta
 
 Os valores da URL são validados em `lib/discover.ts` e `lib/pagination.ts`: ordenações permitidas, ano entre 1900 e 2100, nota entre 0 e 10 e página entre 1 e 500 (limite do TMDB). A ordenação por nota exige 200 votos e o filtro de nota mínima, 50. O formulário de filtros mantém um rascunho e só altera a URL ao ser enviado.
@@ -137,6 +142,10 @@ Os valores da URL são validados em `lib/discover.ts` e `lib/pagination.ts`: ord
 ### Onde assistir
 
 `lib/watchProviders.ts` separa a resposta do Brasil em assinatura, gratuito, com anúncios, aluguel e compra, na ordem de prioridade do TMDB. Sem dados para a região, a interface diz que o TMDB não lista opções, sem afirmar que o filme está indisponível. Os dados são do JustWatch, com crédito na seção e no rodapé.
+
+### Camada de vidro
+
+Os tokens `--glass-*` e `--surface-*` de `tokens.css` definem as superfícies translúcidas. O desfoque do fundo (`backdrop-filter`) fica só no cabeçalho, nos atalhos de seção, nos diálogos e na barra inferior; cards e painéis usam tinta e brilho, sem desfoque, para não custar desempenho. Com `prefers-reduced-transparency: reduce`, os mesmos tokens viram superfícies opacas. O CSS declara só `backdrop-filter`, sem prefixo: o build acrescenta `-webkit-` (D-56).
 
 ## 6. Proxy do TMDB
 
@@ -167,12 +176,12 @@ Todas as respostas recebem `X-Content-Type-Options`, `Referrer-Policy`, `X-Frame
 
 ### Testes unitários (Vitest)
 
-217 testes em 22 arquivos, ao lado do código, cobrem:
+223 testes em 23 arquivos, ao lado do código, cobrem:
 
 - proxy: lista de permissões, chave, token v4, tempo limite, cache por tipo e erros sem cache;
 - serviço: montagem de URLs, códigos de erro e cancelamento;
 - hooks `useMovies` e `useMovie`, e o carregamento do perfil com a biografia em inglês de reserva;
-- regras de `lib/`: formatação, imagens e galeria, descoberta de filmes e séries, paginação, trailer e vídeos, equipe por departamento, filmografia e idade (`person.ts`), elenco e classificação de séries (`tv.ts`), onde assistir e analytics;
+- regras de `lib/`: formatação, imagens e galeria, descoberta de filmes e séries, paginação, trailer e vídeos, equipe por departamento, filmografia e idade (`person.ts`), elenco e classificação de séries (`tv.ts`), onde assistir, Minha lista (validação do conteúdo guardado) e analytics;
 - i18n: interpolação de valores e nome da marca sem tradução;
 - componentes (Testing Library): estados de erro e vazio, grade de pôsteres (carregamento, erro, vazio, pôster e título ausentes) e paginação.
 
@@ -187,7 +196,7 @@ e2e/
 ├── helpers/
 │   ├── tmdb.ts        page.route em /api/tmdb/**: fixture por endpoint, trocas por teste, registro das chamadas
 │   └── test.ts        test estendido: mock automático, rede externa isolada, falha em erro de console
-└── tests/             home, search, movie, discover, encyclopedia, states, routes, a11y, responsive e proxy
+└── tests/             home, search, movie, discover, encyclopedia, watchlist, states, routes, a11y, responsive e proxy
 ```
 
 - **Fluxo:** o navegador carrega o app real; as chamadas a `/api/tmdb/<endpoint>` são interceptadas antes de chegar ao servidor e respondidas com fixtures. Os testes também conferem os parâmetros enviados (idioma, região, filtros, página e complementos dos detalhes).

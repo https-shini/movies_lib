@@ -15,6 +15,8 @@ O projeto nasceu como MoviesLib e está sendo refeito como Cinelux em fases e bl
 - **Série (`/serie/:id`):** a mesma estrutura do filme, com criação, emissora, situação, temporadas e elenco de todas as temporadas.
 - **Pessoa (`/pessoa/:id`) e Pessoas (`/pessoas`):** biografia (em inglês, com aviso, quando falta a tradução), principais trabalhos, filmografia completa por área de atuação com filtro de filmes e séries, fotos e perfis oficiais; e a lista das pessoas mais procuradas.
 - **Coleção (`/colecao/:id`):** os filmes de uma franquia em ordem de lançamento.
+- **Minha lista (`/minha-lista`):** filmes e séries salvos para ver depois, guardados só no navegador, sem cadastro. Cada página de filme, série e pessoa tem um botão de compartilhar.
+- **Visual:** superfícies de vidro (transparência, desfoque e brilho de borda) sobre a paleta grafite e dourado, com versão opaca para quem reduz a transparência no sistema.
 - **Sobre (`/sobre`) e Privacidade (`/privacidade`):** créditos exigidos pelo TMDB e pelo JustWatch e o que o site coleta.
 - **Estados:** esqueletos de carregamento, estados vazios, erros em português com "Tentar novamente", página 404 e tela de erro de rota.
 - **Acessibilidade e responsividade:** link para pular ao conteúdo, foco visível, `prefers-reduced-motion`, barra inferior no celular e ausência de rolagem horizontal de 320 a 1440 px.
