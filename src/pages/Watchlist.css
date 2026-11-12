@@ -1,13 +1,15 @@
-.watchlist__toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-4);
-  margin-bottom: var(--space-5);
-  padding-bottom: var(--space-3);
-  border-bottom: var(--border-width) solid var(--color-border);
-}
+@layer pages {
+  .watchlist__toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-bottom: var(--space-5);
+    padding-bottom: var(--space-3);
+    border-bottom: var(--border-width) solid var(--color-border);
+  }
 
-.watchlist__count {
-  color: var(--color-text-tertiary);
+  .watchlist__count {
+    color: var(--color-text-tertiary);
+  }
 }

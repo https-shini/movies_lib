@@ -1,4 +1,5 @@
-/*
+@layer tokens {
+  /*
  * Cinelux · tokens do sistema visual (D-50, D-54).
  *
  * Identidade original do projeto, recuperada do histórico do Git (src/index.css e CSS das
@@ -16,198 +17,198 @@
  * `--weight-*`, `--duration-*`...). Os componentes usam só os tokens semânticos; os
  * primitivos (`--ink-*`, `--paper-*`, `--vermilion-*`) ficam restritos a este arquivo.
  */
-:root {
-  color-scheme: dark;
+  :root {
+    color-scheme: dark;
 
-  /* 1. Cores e superfícies -------------------------------------------------- */
+    /* 1. Cores e superfícies -------------------------------------------------- */
 
-  /* Primitivos [original] */
-  --ink-0: #080a0f;
-  --ink-1: #11151e;
-  --ink-2: #171d28;
-  --ink-3: #1f2633; /* [reconstruído] um degrau acima de --ink-2 */
-  --ink-black: #000;
-  --line-500: #252d3a;
-  --line-400: #343c49;
-  --paper-100: #f4f5f7;
-  --paper-300: #b3bdcc;
-  --paper-500: #9ba5b5;
-  --gold-500: #f4c95d;
-  --gold-400: #f7d77f; /* [reconstruído] hover */
-  --gold-950: #111;
-  --coral-300: #ff8585;
-  --mint-300: #9fd8a8; /* [atual] */
+    /* Primitivos [original] */
+    --ink-0: #080a0f;
+    --ink-1: #11151e;
+    --ink-2: #171d28;
+    --ink-3: #1f2633; /* [reconstruído] um degrau acima de --ink-2 */
+    --ink-black: #000;
+    --line-500: #252d3a;
+    --line-400: #343c49;
+    --paper-100: #f4f5f7;
+    --paper-300: #b3bdcc;
+    --paper-500: #9ba5b5;
+    --gold-500: #f4c95d;
+    --gold-400: #f7d77f; /* [reconstruído] hover */
+    --gold-950: #111;
+    --coral-300: #ff8585;
+    --mint-300: #9fd8a8; /* [atual] */
 
-  /* Canais RGB para variações com transparência */
-  --rgb-ink: 8 10 15;
-  --rgb-ink-deep: 4 5 8;
-  --rgb-paper: 244 245 247;
-  --rgb-gold: 244 201 93;
+    /* Canais RGB para variações com transparência */
+    --rgb-ink: 8 10 15;
+    --rgb-ink-deep: 4 5 8;
+    --rgb-paper: 244 245 247;
+    --rgb-gold: 244 201 93;
 
-  /* Superfícies */
-  --color-bg: var(--ink-0);
-  --color-surface-base: var(--ink-1);
-  --color-surface-elevated: var(--ink-2);
-  --color-surface-raised: var(--ink-3);
-  --color-video-bg: var(--ink-black);
+    /* Superfícies */
+    --color-bg: var(--ink-0);
+    --color-surface-base: var(--ink-1);
+    --color-surface-elevated: var(--ink-2);
+    --color-surface-raised: var(--ink-3);
+    --color-video-bg: var(--ink-black);
 
-  /* Texto */
-  --color-text-heading: var(--paper-100);
-  --color-text-primary: var(--paper-100);
-  --color-text-secondary: var(--paper-300);
-  --color-text-tertiary: var(--paper-500);
+    /* Texto */
+    --color-text-heading: var(--paper-100);
+    --color-text-primary: var(--paper-100);
+    --color-text-secondary: var(--paper-300);
+    --color-text-tertiary: var(--paper-500);
 
-  /* Acento */
-  --color-accent-default: var(--gold-500);
-  --color-accent-hover: var(--gold-400);
-  --color-accent-on: var(--gold-950);
-  --color-accent-subtle: rgb(var(--rgb-gold) / 14%);
+    /* Acento */
+    --color-accent-default: var(--gold-500);
+    --color-accent-hover: var(--gold-400);
+    --color-accent-on: var(--gold-950);
+    --color-accent-subtle: rgb(var(--rgb-gold) / 14%);
 
-  /* Estados */
-  --color-danger: var(--coral-300);
-  --color-success: var(--mint-300);
-  --color-hover-tint: rgb(var(--rgb-paper) / 5%);
+    /* Estados */
+    --color-danger: var(--coral-300);
+    --color-success: var(--mint-300);
+    --color-hover-tint: rgb(var(--rgb-paper) / 5%);
 
-  /* Linhas */
-  --color-border: var(--line-500); /* [original] bordas sólidas de cards e campos */
-  --color-border-strong: var(--line-400);
+    /* Linhas */
+    --color-border: var(--line-500); /* [original] bordas sólidas de cards e campos */
+    --color-border-strong: var(--line-400);
 
-  /* Véus sobre conteúdo [atual] */
-  --color-nav-bg: rgb(var(--rgb-ink) / 88%);
-  --color-tabbar-bg: rgb(var(--rgb-ink) / 94%);
-  --color-badge-bg: rgb(var(--rgb-ink) / 86%);
-  --color-backdrop: rgb(var(--rgb-ink-deep) / 72%);
-  --color-shimmer: rgb(var(--rgb-paper) / 5%);
+    /* Véus sobre conteúdo [atual] */
+    --color-nav-bg: rgb(var(--rgb-ink) / 88%);
+    --color-tabbar-bg: rgb(var(--rgb-ink) / 94%);
+    --color-badge-bg: rgb(var(--rgb-ink) / 86%);
+    --color-backdrop: rgb(var(--rgb-ink-deep) / 72%);
+    --color-shimmer: rgb(var(--rgb-paper) / 5%);
 
-  /* Gradientes dos destaques [atual] */
-  --gradient-hero-scrim: linear-gradient(
-    180deg,
-    rgb(var(--rgb-ink) / 15%) 0%,
-    rgb(var(--rgb-ink) / 35%) 40%,
-    rgb(var(--rgb-ink) / 96%) 82%,
-    var(--color-bg) 100%
-  );
-  --gradient-hero-side: linear-gradient(
-    90deg,
-    rgb(var(--rgb-ink) / 92%) 0%,
-    rgb(var(--rgb-ink) / 55%) 45%,
-    rgb(var(--rgb-ink) / 0%) 75%
-  );
-  --gradient-backdrop-scrim: linear-gradient(
-    180deg,
-    rgb(var(--rgb-ink) / 10%) 0%,
-    rgb(var(--rgb-ink) / 45%) 55%,
-    var(--color-bg) 100%
-  );
-  --gradient-backdrop-side: linear-gradient(
-    90deg,
-    rgb(var(--rgb-ink) / 94%) 0%,
-    rgb(var(--rgb-ink) / 70%) 38%,
-    rgb(var(--rgb-ink) / 15%) 75%
-  );
+    /* Gradientes dos destaques [atual] */
+    --gradient-hero-scrim: linear-gradient(
+      180deg,
+      rgb(var(--rgb-ink) / 15%) 0%,
+      rgb(var(--rgb-ink) / 35%) 40%,
+      rgb(var(--rgb-ink) / 96%) 82%,
+      var(--color-bg) 100%
+    );
+    --gradient-hero-side: linear-gradient(
+      90deg,
+      rgb(var(--rgb-ink) / 92%) 0%,
+      rgb(var(--rgb-ink) / 55%) 45%,
+      rgb(var(--rgb-ink) / 0%) 75%
+    );
+    --gradient-backdrop-scrim: linear-gradient(
+      180deg,
+      rgb(var(--rgb-ink) / 10%) 0%,
+      rgb(var(--rgb-ink) / 45%) 55%,
+      var(--color-bg) 100%
+    );
+    --gradient-backdrop-side: linear-gradient(
+      90deg,
+      rgb(var(--rgb-ink) / 94%) 0%,
+      rgb(var(--rgb-ink) / 70%) 38%,
+      rgb(var(--rgb-ink) / 15%) 75%
+    );
 
-  /* Fundo dos painéis de destaque [original]: brilho dourado sutil sobre grafite. */
-  --gradient-panel:
-    radial-gradient(ellipse at 80% 15%, rgb(var(--rgb-gold) / 18%), transparent 42%),
-    linear-gradient(125deg, var(--ink-2), #0c111a 72%);
+    /* Fundo dos painéis de destaque [original]: brilho dourado sutil sobre grafite. */
+    --gradient-panel:
+      radial-gradient(ellipse at 80% 15%, rgb(var(--rgb-gold) / 18%), transparent 42%),
+      linear-gradient(125deg, var(--ink-2), #0c111a 72%);
 
-  /* 2. Tipografia e pesos ----------------------------------------------------- */
+    /* 2. Tipografia e pesos ----------------------------------------------------- */
 
-  /* Famílias [original]: Space Grotesk nos títulos, DM Sans no restante. Os rótulos e
+    /* Famílias [original]: Space Grotesk nos títulos, DM Sans no restante. Os rótulos e
      dados (--font-mono) também usam DM Sans, com algarismos tabulares (typography.css). */
-  --font-display: "Space Grotesk", "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-sans: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-mono: var(--font-sans);
+    --font-display: "Space Grotesk", "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-sans: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-mono: var(--font-sans);
 
-  /* Pesos [especificação, 4.3] */
-  --weight-regular: 400;
-  --weight-medium: 500;
-  --weight-semibold: 600;
-  --weight-bold: 700;
-  --weight-extrabold: 800; /* [original] botões e rótulos de destaque */
+    /* Pesos [especificação, 4.3] */
+    --weight-regular: 400;
+    --weight-medium: 500;
+    --weight-semibold: 600;
+    --weight-bold: 700;
+    --weight-extrabold: 800; /* [original] botões e rótulos de destaque */
 
-  /* Escala [atual] */
-  --text-2xs: 0.6875rem;
-  --text-xs: 0.75rem;
-  --text-sm: 0.875rem;
-  --text-md: 1rem;
-  --text-lg: 1.125rem;
-  --text-xl: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
-  --text-2xl: clamp(1.6rem, 1.3rem + 1.4vw, 2.25rem);
-  --text-3xl: clamp(2.1rem, 1.5rem + 3vw, 3.75rem);
-  --text-4xl: clamp(2.6rem, 1.6rem + 5vw, 5.5rem);
-  --text-brand: 1.4rem;
-  --text-numeral: 2.1rem;
-  --text-numeral-lg: 2.8rem;
+    /* Escala [atual] */
+    --text-2xs: 0.6875rem;
+    --text-xs: 0.75rem;
+    --text-sm: 0.875rem;
+    --text-md: 1rem;
+    --text-lg: 1.125rem;
+    --text-xl: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+    --text-2xl: clamp(1.6rem, 1.3rem + 1.4vw, 2.25rem);
+    --text-3xl: clamp(2.1rem, 1.5rem + 3vw, 3.75rem);
+    --text-4xl: clamp(2.6rem, 1.6rem + 5vw, 5.5rem);
+    --text-brand: 1.4rem;
+    --text-numeral: 2.1rem;
+    --text-numeral-lg: 2.8rem;
 
-  /* Entrelinha [atual] */
-  --leading-numeral: 0.85;
-  --leading-none: 1;
-  --leading-display: 1.02;
-  --leading-tight: 1.15;
-  --leading-snug: 1.25;
-  --leading-title: 1.3;
-  --leading-body: 1.55;
-  --leading-relaxed: 1.7;
-  --leading-loose: 1.75;
+    /* Entrelinha [atual] */
+    --leading-numeral: 0.85;
+    --leading-none: 1;
+    --leading-display: 1.02;
+    --leading-tight: 1.15;
+    --leading-snug: 1.25;
+    --leading-title: 1.3;
+    --leading-body: 1.55;
+    --leading-relaxed: 1.7;
+    --leading-loose: 1.75;
 
-  /* Espaçamento entre letras [atual] */
-  --tracking-display: -0.045em; /* [original] títulos em Space Grotesk */
-  --tracking-tightest: -0.03em;
-  --tracking-tighter: -0.02em;
-  --tracking-tight: -0.015em;
-  --tracking-snug: -0.01em;
-  --tracking-normal: 0;
-  --tracking-slight: 0.01em;
-  --tracking-wide: 0.02em;
-  --tracking-wider: 0.06em;
-  --tracking-eyebrow: 0.14em; /* [original] rótulos em caixa alta */
+    /* Espaçamento entre letras [atual] */
+    --tracking-display: -0.045em; /* [original] títulos em Space Grotesk */
+    --tracking-tightest: -0.03em;
+    --tracking-tighter: -0.02em;
+    --tracking-tight: -0.015em;
+    --tracking-snug: -0.01em;
+    --tracking-normal: 0;
+    --tracking-slight: 0.01em;
+    --tracking-wide: 0.02em;
+    --tracking-wider: 0.06em;
+    --tracking-eyebrow: 0.14em; /* [original] rótulos em caixa alta */
 
-  /* Medida de leitura [especificação, 4.6] */
-  --measure-prose: 65ch;
+    /* Medida de leitura [especificação, 4.6] */
+    --measure-prose: 65ch;
 
-  /* Ícones [especificação, seção 6: 16, 20 e 24 px; 32 px nos estados] */
-  --icon-sm: 1rem;
-  --icon-md: 1.25rem;
-  --icon-lg: 1.5rem;
-  --icon-xl: 2rem;
+    /* Ícones [especificação, seção 6: 16, 20 e 24 px; 32 px nos estados] */
+    --icon-sm: 1rem;
+    --icon-md: 1.25rem;
+    --icon-lg: 1.5rem;
+    --icon-xl: 2rem;
 
-  /* 3. Espaçamentos (base 4 px) [atual; a especificação usa 4rem em --space-8] */
-  --space-1: 0.25rem;
-  --space-2: 0.5rem;
-  --space-3: 0.75rem;
-  --space-4: 1rem;
-  --space-5: 1.5rem;
-  --space-6: 2rem;
-  --space-7: 3rem;
-  --space-8: 4.5rem;
+    /* 3. Espaçamentos (base 4 px) [atual; a especificação usa 4rem em --space-8] */
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-5: 1.5rem;
+    --space-6: 2rem;
+    --space-7: 3rem;
+    --space-8: 4.5rem;
 
-  /* Layout [atual] */
-  --gutter: clamp(1rem, 0.6rem + 2vw, 2.5rem);
-  --container-max: 1320px;
-  --header-h: 64px;
-  --tabbar-h: 64px;
-  --tap-target: 44px; /* alvo mínimo de toque [especificação, 11] */
+    /* Layout [atual] */
+    --gutter: clamp(1rem, 0.6rem + 2vw, 2.5rem);
+    --container-max: 1320px;
+    --header-h: 64px;
+    --tabbar-h: 64px;
+    --tap-target: 44px; /* alvo mínimo de toque [especificação, 11] */
 
-  /* 4. Raios e bordas [original] ---------------------------------------------- */
-  --radius-hairline: 2px;
-  --radius-xs: 6px;
-  --radius-sm: 9px; /* botões e campos */
-  --radius-md: 14px; /* cards e pôsteres */
-  --radius-lg: 20px; /* destaques e painéis */
-  --radius-full: 999px;
-  --radius-round: 50%;
-  --border-width: 1px;
-  --border-width-strong: 2px;
+    /* 4. Raios e bordas [original] ---------------------------------------------- */
+    --radius-hairline: 2px;
+    --radius-xs: 6px;
+    --radius-sm: 9px; /* botões e campos */
+    --radius-md: 14px; /* cards e pôsteres */
+    --radius-lg: 20px; /* destaques e painéis */
+    --radius-full: 999px;
+    --radius-round: 50%;
+    --border-width: 1px;
+    --border-width-strong: 2px;
 
-  /* 5. Sombras e elevação ------------------------------------------------------ */
-  --elevation-overlay: 0 20px 55px rgb(0 0 0 / 35%); /* [original] pôster e diálogos */
-  --ring-hairline: inset 0 0 0 var(--border-width) var(--color-border); /* [reconstruído] */
-  --ring-selected: inset 0 0 0 var(--border-width-strong) var(--color-accent-default);
-  --focus-halo: 0 0 0 4px var(--color-accent-subtle); /* [reconstruído] campos em foco */
-  --focus-halo-sm: 0 0 0 3px var(--color-accent-subtle);
+    /* 5. Sombras e elevação ------------------------------------------------------ */
+    --elevation-overlay: 0 20px 55px rgb(0 0 0 / 35%); /* [original] pôster e diálogos */
+    --ring-hairline: inset 0 0 0 var(--border-width) var(--color-border); /* [reconstruído] */
+    --ring-selected: inset 0 0 0 var(--border-width-strong) var(--color-accent-default);
+    --focus-halo: 0 0 0 4px var(--color-accent-subtle); /* [reconstruído] campos em foco */
+    --focus-halo-sm: 0 0 0 3px var(--color-accent-subtle);
 
-  /* 6. Breakpoints [reconstruído] ---------------------------------------------
+    /* 6. Breakpoints [reconstruído] ---------------------------------------------
    * Variáveis CSS não funcionam dentro de @media; os valores abaixo são a referência
    * para todo `@media` do projeto (src/styles/breakpoints.ts tem os mesmos números).
    *   2xs  380px  grade de pôsteres em 2 colunas fixas (até)
@@ -220,68 +221,69 @@
    *   3xl 1200px  trilhos com 7 itens e índice de gêneros em 4 colunas
    */
 
-  /* 7. Transições e animações [atual; a especificação sugere 120, 200 e 360 ms] */
-  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
-  --ease-standard: ease;
-  --duration-fast: 140ms;
-  --duration-base: 240ms;
-  --duration-shimmer: 1.4s;
+    /* 7. Transições e animações [atual; a especificação sugere 120, 200 e 360 ms] */
+    --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+    --ease-standard: ease;
+    --duration-fast: 140ms;
+    --duration-base: 240ms;
+    --duration-shimmer: 1.4s;
 
-  /* 8. Camadas e estados [reconstruído] -------------------------------------- */
-  --layer-behind: -1;
-  --layer-sticky: 20; /* atalhos de seção presos abaixo do cabeçalho */
-  --layer-bars: 30; /* cabeçalho e barra inferior */
-  --layer-skip-link: 50;
-  --opacity-disabled: 0.4;
-  --opacity-backdrop: 0.45; /* imagem de fundo atrás de texto */
+    /* 8. Camadas e estados [reconstruído] -------------------------------------- */
+    --layer-behind: -1;
+    --layer-sticky: 20; /* atalhos de seção presos abaixo do cabeçalho */
+    --layer-bars: 30; /* cabeçalho e barra inferior */
+    --layer-skip-link: 50;
+    --opacity-disabled: 0.4;
+    --opacity-backdrop: 0.45; /* imagem de fundo atrás de texto */
 
-  /* 9. Vidro (Liquid Glass) [reconstruído sobre a paleta original, D-56] ----------
+    /* 9. Vidro (Liquid Glass) [reconstruído sobre a paleta original, D-56] ----------
    * Superfícies translúcidas com brilho de borda e profundidade. O desfoque do fundo
    * (--glass-filter) fica só nas camadas flutuantes: cabeçalho, barra inferior, atalhos
    * de seção e diálogos. Cards usam a tinta e o brilho, sem desfoque, para não pesar.
    */
-  --rgb-surface: 17 21 30; /* --ink-1 */
-  --rgb-line: 52 60 73; /* --line-400 */
-  --glass-tint: rgb(var(--rgb-surface) / 62%);
-  --glass-tint-strong: rgb(var(--rgb-surface) / 72%);
-  --glass-tint-subtle: rgb(var(--rgb-paper) / 4%);
-  --glass-border: rgb(var(--rgb-paper) / 12%);
-  --glass-border-strong: rgb(var(--rgb-paper) / 22%);
-  --glass-filter: saturate(170%) blur(20px);
-  --glass-sheen: linear-gradient(
-    140deg,
-    rgb(var(--rgb-paper) / 8%) 0%,
-    rgb(var(--rgb-paper) / 2%) 36%,
-    rgb(var(--rgb-paper) / 0%) 62%
-  );
-  --glass-sweep: linear-gradient(
-    110deg,
-    transparent 30%,
-    rgb(var(--rgb-paper) / 9%) 50%,
-    transparent 70%
-  );
-  --glass-highlight: inset 0 1px 0 rgb(var(--rgb-paper) / 12%);
-  --glass-highlight-strong: inset 0 1px 0 rgb(255 255 255 / 38%);
-  --glass-shadow: 0 16px 40px -18px rgb(0 0 0 / 65%);
-  --glow-accent: 0 10px 28px -12px rgb(var(--rgb-gold) / 60%);
-  --surface-card: var(--glass-sheen), var(--glass-tint);
-  --surface-floating: var(--glass-sheen), var(--glass-tint-strong);
-  --gradient-ambient:
-    radial-gradient(58rem 38rem at 88% -8%, rgb(var(--rgb-gold) / 9%), transparent 62%),
-    radial-gradient(52rem 40rem at -12% 28%, rgb(var(--rgb-line) / 42%), transparent 62%),
-    radial-gradient(46rem 34rem at 62% 112%, rgb(var(--rgb-line) / 30%), transparent 60%);
-  --duration-sweep: 700ms;
-  --tabbar-inset: var(--space-2); /* distância da barra flutuante até a borda da tela */
-}
+    --rgb-surface: 17 21 30; /* --ink-1 */
+    --rgb-line: 52 60 73; /* --line-400 */
+    --glass-tint: rgb(var(--rgb-surface) / 62%);
+    --glass-tint-strong: rgb(var(--rgb-surface) / 72%);
+    --glass-tint-subtle: rgb(var(--rgb-paper) / 4%);
+    --glass-border: rgb(var(--rgb-paper) / 12%);
+    --glass-border-strong: rgb(var(--rgb-paper) / 22%);
+    --glass-filter: saturate(170%) blur(20px);
+    --glass-sheen: linear-gradient(
+      140deg,
+      rgb(var(--rgb-paper) / 8%) 0%,
+      rgb(var(--rgb-paper) / 2%) 36%,
+      rgb(var(--rgb-paper) / 0%) 62%
+    );
+    --glass-sweep: linear-gradient(
+      110deg,
+      transparent 30%,
+      rgb(var(--rgb-paper) / 9%) 50%,
+      transparent 70%
+    );
+    --glass-highlight: inset 0 1px 0 rgb(var(--rgb-paper) / 12%);
+    --glass-highlight-strong: inset 0 1px 0 rgb(255 255 255 / 38%);
+    --glass-shadow: 0 16px 40px -18px rgb(0 0 0 / 65%);
+    --glow-accent: 0 10px 28px -12px rgb(var(--rgb-gold) / 60%);
+    --surface-card: var(--glass-sheen), var(--glass-tint);
+    --surface-floating: var(--glass-sheen), var(--glass-tint-strong);
+    --gradient-ambient:
+      radial-gradient(58rem 38rem at 88% -8%, rgb(var(--rgb-gold) / 9%), transparent 62%),
+      radial-gradient(52rem 40rem at -12% 28%, rgb(var(--rgb-line) / 42%), transparent 62%),
+      radial-gradient(46rem 34rem at 62% 112%, rgb(var(--rgb-line) / 30%), transparent 60%);
+    --duration-sweep: 700ms;
+    --tabbar-inset: var(--space-2); /* distância da barra flutuante até a borda da tela */
+  }
 
-/* Quem pede menos transparência no sistema recebe superfícies opacas, sem desfoque. */
-@media (prefers-reduced-transparency: reduce) {
-  :root {
-    --glass-tint: var(--color-surface-base);
-    --glass-tint-strong: var(--color-surface-base);
-    --glass-filter: none;
-    --glass-sheen: none;
-    --glass-sweep: none;
-    --gradient-ambient: none;
+  /* Quem pede menos transparência no sistema recebe superfícies opacas, sem desfoque. */
+  @media (prefers-reduced-transparency: reduce) {
+    :root {
+      --glass-tint: var(--color-surface-base);
+      --glass-tint-strong: var(--color-surface-base);
+      --glass-filter: none;
+      --glass-sheen: none;
+      --glass-sweep: none;
+      --gradient-ambient: none;
+    }
   }
 }

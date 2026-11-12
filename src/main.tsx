@@ -1,4 +1,7 @@
-// Estilos globais primeiro, para que os estilos dos componentes tenham precedência.
+// A ordem da cascata é definida por camadas em layers.css (D-58), não pela ordem dos imports.
+// layers.css vem primeiro para que a declaração das camadas preceda qualquer regra.
+import "./styles/layers.css";
+import "./styles/tokens.css";
 import "./styles/fonts.css";
 import "./styles/base.css";
 import "./styles/typography.css";

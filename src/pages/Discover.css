@@ -1,121 +1,123 @@
-/* Alternância entre filmes e séries. */
-.media-switch {
-  display: flex;
-  gap: var(--space-2);
-  margin-bottom: var(--space-4);
-}
+@layer pages {
+  /* Alternância entre filmes e séries. */
+  .media-switch {
+    display: flex;
+    gap: var(--space-2);
+    margin-bottom: var(--space-4);
+  }
 
-/* Barra de gêneros: rolagem horizontal no celular, quebra em linhas no desktop */
-.genre-bar {
-  margin: 0 calc(var(--gutter) * -1) var(--space-5);
-}
-
-.genre-bar__list {
-  position: relative;
-  display: flex;
-  gap: var(--space-2);
-  padding: var(--space-1) var(--gutter);
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-
-.genre-bar__list::-webkit-scrollbar {
-  display: none;
-}
-
-.genre-bar__list .chip {
-  min-height: 40px;
-}
-
-.genre-bar__skeleton {
-  width: 92px;
-  border-color: transparent;
-}
-
-.genre-bar .btn--quiet {
-  margin-left: var(--gutter);
-}
-
-@media (min-width: 900px) {
+  /* Barra de gêneros: rolagem horizontal no celular, quebra em linhas no desktop */
   .genre-bar {
-    margin-inline: 0;
+    margin: 0 calc(var(--gutter) * -1) var(--space-5);
   }
 
   .genre-bar__list {
-    flex-wrap: wrap;
-    padding-inline: 0;
-    overflow: visible;
+    position: relative;
+    display: flex;
+    gap: var(--space-2);
+    padding: var(--space-1) var(--gutter);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .genre-bar__list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .genre-bar__list .chip {
+    min-height: 40px;
+  }
+
+  .genre-bar__skeleton {
+    width: 92px;
+    border-color: transparent;
   }
 
   .genre-bar .btn--quiet {
-    margin-left: 0;
+    margin-left: var(--gutter);
   }
-}
 
-/* Ordenação e filtros -------------------------------------------------- */
-.discover-toolbar {
-  display: flex;
-  align-items: flex-end;
-  gap: var(--space-3);
-  padding-bottom: var(--space-4);
-  border-bottom: 1px solid var(--color-border);
-}
+  @media (min-width: 900px) {
+    .genre-bar {
+      margin-inline: 0;
+    }
 
-.discover-toolbar__sort {
-  display: grid;
-  flex: 1;
-  gap: var(--space-2);
-  max-width: 320px;
-}
+    .genre-bar__list {
+      flex-wrap: wrap;
+      padding-inline: 0;
+      overflow: visible;
+    }
 
-.discover-toolbar__filters {
-  min-height: 48px;
-}
+    .genre-bar .btn--quiet {
+      margin-left: 0;
+    }
+  }
 
-.count-badge {
-  display: inline-grid;
-  min-width: 20px;
-  height: 20px;
-  place-items: center;
-  padding: 0 6px;
-  border-radius: var(--radius-full);
-  color: var(--color-accent-on);
-  background: var(--color-accent-default);
-  font-family: var(--font-mono);
-  font-size: var(--text-2xs);
-}
+  /* Ordenação e filtros -------------------------------------------------- */
+  .discover-toolbar {
+    display: flex;
+    align-items: flex-end;
+    gap: var(--space-3);
+    padding-bottom: var(--space-4);
+    border-bottom: 1px solid var(--color-border);
+  }
 
-.discover-status {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-3);
-  min-height: 60px;
-  margin-bottom: var(--space-5);
-  padding-block: var(--space-3);
-}
+  .discover-toolbar__sort {
+    display: grid;
+    flex: 1;
+    gap: var(--space-2);
+    max-width: 320px;
+  }
 
-.discover-status__count {
-  color: var(--color-text-tertiary);
-}
-
-.discover-status__chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-}
-
-.discover-status__clear {
-  margin-left: auto;
-}
-
-.advanced-filters {
-  display: grid;
-  gap: var(--space-5);
-}
-
-@media (max-width: 420px) {
   .discover-toolbar__filters {
-    padding-inline: var(--space-4);
+    min-height: 48px;
+  }
+
+  .count-badge {
+    display: inline-grid;
+    min-width: 20px;
+    height: 20px;
+    place-items: center;
+    padding: 0 6px;
+    border-radius: var(--radius-full);
+    color: var(--color-accent-on);
+    background: var(--color-accent-default);
+    font-family: var(--font-mono);
+    font-size: var(--text-2xs);
+  }
+
+  .discover-status {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+    min-height: 60px;
+    margin-bottom: var(--space-5);
+    padding-block: var(--space-3);
+  }
+
+  .discover-status__count {
+    color: var(--color-text-tertiary);
+  }
+
+  .discover-status__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .discover-status__clear {
+    margin-left: auto;
+  }
+
+  .advanced-filters {
+    display: grid;
+    gap: var(--space-5);
+  }
+
+  @media (max-width: 420px) {
+    .discover-toolbar__filters {
+      padding-inline: var(--space-4);
+    }
   }
 }

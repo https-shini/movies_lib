@@ -1,21 +1,23 @@
-/* Corpo das páginas de filme e de série. */
-.movie-body {
-  display: grid;
-  gap: var(--space-7);
-  margin-top: var(--space-7);
-}
+@layer pages {
+  /* Corpo das páginas de filme e de série. */
+  .movie-body {
+    display: grid;
+    gap: var(--space-7);
+    margin-top: var(--space-7);
+  }
 
-.movie-tagline {
-  margin-bottom: var(--space-4);
-  color: var(--color-text-primary);
-  font-size: var(--text-xl);
-  font-weight: var(--weight-medium);
-  line-height: var(--leading-title);
-}
+  .movie-tagline {
+    margin-bottom: var(--space-4);
+    color: var(--color-text-primary);
+    font-size: var(--text-xl);
+    font-weight: var(--weight-medium);
+    line-height: var(--leading-title);
+  }
 
-.movie-overview {
-  max-width: 66ch;
-  color: var(--color-text-secondary);
-  font-size: var(--text-lg);
-  line-height: var(--leading-loose);
+  .movie-overview {
+    max-width: 66ch;
+    color: var(--color-text-secondary);
+    font-size: var(--text-lg);
+    line-height: var(--leading-loose);
+  }
 }

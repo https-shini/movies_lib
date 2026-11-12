@@ -19,5 +19,5 @@
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true
   },
-  "include": ["vite.config.ts", "playwright.config.ts", "api", "server", "e2e"]
+  "include": ["vite.config.ts", "playwright.config.ts", "api", "server", "e2e", "build"]
 }
