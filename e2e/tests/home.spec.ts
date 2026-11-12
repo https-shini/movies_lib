@@ -83,6 +83,12 @@ test.describe("Início", () => {
     for (const path of deferred) expect(tmdb.callsTo(path), path).toHaveLength(0);
     const people = page.getByRole("heading", { level: 2, name: "Pessoas em destaque" });
     await expect(people).toBeAttached();
+    // Em espera, o esqueleto não anima (não gasta processamento fora da tela).
+    const idleShimmer = await page
+      .locator(".on-demand--idle .skeleton")
+      .last()
+      .evaluate((element) => getComputedStyle(element, "::after").animationName);
+    expect(idleShimmer).toBe("none");
     await expect(page.getByRole("list", { name: "Pessoas em destaque", exact: true })).toHaveCount(
       0,
     );

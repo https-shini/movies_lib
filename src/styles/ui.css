@@ -285,6 +285,11 @@
   content: "";
 }
 
+/* Seção sob demanda ainda fora da tela (OnDemand): esqueleto sem animação. */
+.on-demand--idle .skeleton::after {
+  animation: none;
+}
+
 .skeleton--text {
   height: 0.85em;
   border-radius: var(--radius-hairline);
