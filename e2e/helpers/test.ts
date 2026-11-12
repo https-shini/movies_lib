@@ -139,3 +139,23 @@ export function deferred(): { promise: Promise<void>; resolve: () => void } {
   });
   return { promise, resolve };
 }
+
+/**
+ * Percorre a página de cima a baixo para carregar as seções sob demanda (as que só buscam
+ * dados ao chegar perto da tela), espera o fim dos carregamentos e volta ao topo.
+ */
+export async function loadWholePage(page: Page): Promise<void> {
+  for (let step = 0; step < 60; step += 1) {
+    const atBottom = await page.evaluate(() => {
+      window.scrollBy(0, Math.round(window.innerHeight * 0.8));
+      const { scrollHeight } = document.documentElement;
+      return window.scrollY + window.innerHeight >= scrollHeight - 2;
+    });
+    if (atBottom) break;
+    await page.waitForTimeout(50);
+  }
+  await expect(page.locator('[aria-busy="true"]')).toHaveCount(0);
+  await page.evaluate(() => {
+    window.scrollTo(0, 0);
+  });
+}

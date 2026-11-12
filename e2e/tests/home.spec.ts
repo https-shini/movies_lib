@@ -1,5 +1,5 @@
 import { FEATURED_MOVIE, genres, movies, people, tvShows } from "../fixtures/index.ts";
-import { expect, test } from "../helpers/test.ts";
+import { expect, loadWholePage, test } from "../helpers/test.ts";
 
 test.describe("Início", () => {
   test("mostra o destaque e as seções com os dados do TMDB", async ({ page, tmdb }) => {
@@ -20,6 +20,9 @@ test.describe("Início", () => {
         page.getByRole("heading", { level: 2, name: section, exact: true }),
       ).toBeVisible();
     }
+
+    // As seções abaixo da dobra carregam quando chegam perto da tela: percorre a página.
+    await loadWholePage(page);
 
     // Séries e pessoas populares, cada uma com sua faixa e uma consulta em português.
     const series = page.getByRole("list", { name: "Séries em alta" });
@@ -66,8 +69,59 @@ test.describe("Início", () => {
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Filmes de ficção científica");
   });
 
+  test("as seções abaixo da dobra só consultam o proxy ao se aproximar da tela", async ({
+    page,
+    tmdb,
+  }) => {
+    const deferred = ["tv/popular", "movie/top_rated", "movie/now_playing", "person/popular"];
+    await page.goto("/");
+    await expect(page.getByRole("list", { name: "Em alta", exact: true })).toBeVisible();
+
+    // Primeira tela: só o destaque, a faixa "Em alta" e os gêneros. Os títulos das demais
+    // seções já existem, com o espaço reservado, mas sem dados.
+    expect(tmdb.callsTo("movie/popular").length).toBeGreaterThan(0);
+    for (const path of deferred) expect(tmdb.callsTo(path), path).toHaveLength(0);
+    const people = page.getByRole("heading", { level: 2, name: "Pessoas em destaque" });
+    await expect(people).toBeAttached();
+    await expect(page.getByRole("list", { name: "Pessoas em destaque", exact: true })).toHaveCount(
+      0,
+    );
+
+    // Ao percorrer a página, cada seção consulta uma única vez.
+    await loadWholePage(page);
+    await expect(
+      page.getByRole("list", { name: "Pessoas em destaque", exact: true }).getByRole("listitem"),
+    ).toHaveCount(6);
+    for (const path of deferred) expect(tmdb.callsTo(path), path).toHaveLength(1);
+
+    // Voltar ao topo e descer de novo não repete consultas.
+    await loadWholePage(page);
+    for (const path of deferred) expect(tmdb.callsTo(path), path).toHaveLength(1);
+  });
+
+  test("a seção sob demanda mostra o erro com nova tentativa", async ({
+    page,
+    tmdb,
+    consoleErrors,
+  }) => {
+    consoleErrors.allow(/503/);
+    tmdb.on("tv/popular", { status: 503, body: { code: "unavailable" } }, { times: 1 });
+    await page.goto("/");
+
+    await page.getByRole("heading", { level: 2, name: "Séries em alta" }).scrollIntoViewIfNeeded();
+    const section = page.locator("section", {
+      has: page.getByRole("heading", { name: "Séries em alta" }),
+    });
+    await expect(section.getByRole("alert")).toContainText("Não foi possível carregar esta seção");
+    await section.getByRole("button", { name: "Tentar novamente" }).click();
+    await expect(
+      page.getByRole("list", { name: "Séries em alta" }).getByRole("listitem"),
+    ).toHaveCount(6);
+  });
+
   test("leva à série e ao perfil pelas faixas de séries e de pessoas", async ({ page }) => {
     await page.goto("/");
+    await loadWholePage(page);
 
     await page
       .getByRole("list", { name: "Séries em alta" })
@@ -77,6 +131,7 @@ test.describe("Início", () => {
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Breaking Bad");
 
     await page.goto("/");
+    await loadWholePage(page);
     await page
       .getByRole("list", { name: "Pessoas em destaque" })
       .getByRole("link", { name: /Brad Pitt/ })

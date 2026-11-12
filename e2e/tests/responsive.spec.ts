@@ -1,4 +1,10 @@
-import { expect, expectNoHorizontalScroll, isDesktopLayout, test } from "../helpers/test.ts";
+import {
+  expect,
+  expectNoHorizontalScroll,
+  isDesktopLayout,
+  loadWholePage,
+  test,
+} from "../helpers/test.ts";
 
 /**
  * Roda em cada projeto de tamanho de tela (320, 375, 768, 1024 e 1440 px).
@@ -27,7 +33,7 @@ test.describe("Responsividade", () => {
     test(`sem rolagem horizontal em ${path}`, async ({ page }) => {
       await page.goto(path);
       await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-      await expect(page.locator('[aria-busy="true"]')).toHaveCount(0);
+      await loadWholePage(page);
 
       await expectNoHorizontalScroll(page);
     });
