@@ -11,6 +11,12 @@ test.describe("Responsividade", () => {
     "/search",
     "/search?q=duna",
     "/movie/550",
+    "/serie/1396",
+    "/pessoa/287",
+    "/pessoas",
+    "/colecao/2344",
+    "/search?q=duna&tipo=series",
+    "/discover?tipo=series",
     "/sobre",
     "/privacidade",
     "/rota-que-nao-existe",
@@ -51,7 +57,7 @@ test.describe("Responsividade", () => {
       await expect(searchIcon).toBeVisible();
 
       const tabs = tabBar.getByRole("link");
-      await expect(tabs).toHaveText(["Início", "Descobrir", "Buscar"]);
+      await expect(tabs).toHaveText(["Início", "Descobrir", "Pessoas", "Buscar"]);
       await expect(tabBar.getByRole("link", { name: "Descobrir" })).toHaveAttribute(
         "aria-current",
         "page",

@@ -45,7 +45,7 @@ test.describe("Filme", () => {
     const detailCalls = tmdb.callsTo("movie/550");
     expect(detailCalls).toHaveLength(1);
     expect(detailCalls[0]?.searchParams.get("append_to_response")).toBe(
-      "credits,videos,recommendations,similar,watch/providers,release_dates",
+      "credits,videos,recommendations,similar,watch/providers,release_dates,images,external_ids",
     );
     expect(detailCalls[0]?.searchParams.get("include_video_language")).toBe("pt,en,null");
     expect(tmdb.callsTo("movie/550/watch/providers")).toHaveLength(0);

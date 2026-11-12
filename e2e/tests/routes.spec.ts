@@ -10,6 +10,15 @@ test.describe("Rotas", () => {
     { path: "/discover?genre=18", heading: "Filmes de drama", title: "Descobrir filmes · Cinelux" },
     { path: "/search?q=duna", heading: "Resultados para “duna”", title: "Busca: duna · Cinelux" },
     { path: "/movie/550", heading: "Clube da Luta", title: "Clube da Luta · Cinelux" },
+    { path: "/serie/1396", heading: "Breaking Bad", title: "Breaking Bad · Cinelux" },
+    { path: "/pessoa/287", heading: "Brad Pitt", title: "Brad Pitt · Cinelux" },
+    { path: "/pessoas", heading: "Pessoas", title: "Pessoas · Cinelux" },
+    { path: "/colecao/2344", heading: "Matrix: Coleção", title: "Matrix: Coleção · Cinelux" },
+    {
+      path: "/discover?tipo=series&genre=18",
+      heading: "Séries de drama",
+      title: "Descobrir séries · Cinelux",
+    },
     { path: "/sobre", heading: "Sobre o Cinelux", title: "Sobre · Cinelux" },
     { path: "/privacidade", heading: "Privacidade", title: "Privacidade · Cinelux" },
   ];
@@ -70,6 +79,7 @@ test.describe("Rodapé e créditos", () => {
     for (const [name, href] of [
       ["Início", "/"],
       ["Descobrir", "/discover"],
+      ["Pessoas", "/pessoas"],
       ["Buscar", "/search"],
       ["Sobre", "/sobre"],
       ["Privacidade", "/privacidade"],

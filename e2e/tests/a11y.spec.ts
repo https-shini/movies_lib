@@ -101,7 +101,8 @@ test.describe("Acessibilidade e teclado", () => {
           .getByRole("navigation", { name: "Navegação principal" })
           .getByRole("link", { name: "Descobrir" });
 
-    await tabTo(page, discoverLink);
+    // No celular a barra de navegação vem depois de todo o conteúdo do Início.
+    await tabTo(page, discoverLink, 150);
     await page.keyboard.press("Enter");
 
     await expect(page).toHaveURL("/discover");
@@ -156,7 +157,18 @@ test.describe("Acessibilidade e teclado", () => {
     await expect(filters).toBeFocused();
   });
 
-  const pages = ["/", "/discover", "/search?q=duna", "/movie/550", "/sobre", "/privacidade"];
+  const pages = [
+    "/",
+    "/discover",
+    "/search?q=duna",
+    "/movie/550",
+    "/serie/1396",
+    "/pessoa/287",
+    "/pessoas",
+    "/colecao/2344",
+    "/sobre",
+    "/privacidade",
+  ];
   for (const path of pages) {
     test(`todo controle interativo tem nome acessível em ${path}`, async ({ page }) => {
       await page.goto(path);
@@ -172,6 +184,10 @@ test.describe("Acessibilidade e teclado", () => {
     "/discover?genre=18",
     "/search?q=duna",
     "/movie/550",
+    "/serie/1396",
+    "/pessoa/287",
+    "/pessoas",
+    "/colecao/2344",
     "/sobre",
     "/privacidade",
   ];
