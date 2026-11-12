@@ -4,9 +4,10 @@
   grid-template-columns: minmax(0, 1fr);
   gap: var(--space-5);
   padding: var(--space-5);
-  border: var(--border-width) solid var(--color-border);
+  border: var(--border-width) solid var(--glass-border-strong);
   border-radius: var(--radius-lg);
   background: var(--gradient-panel);
+  box-shadow: var(--glass-highlight), var(--glass-shadow);
 }
 
 .person-head__photo {
@@ -136,7 +137,7 @@
 }
 
 .filmography__row:hover {
-  background: var(--color-surface-base);
+  background: var(--color-hover-tint);
 }
 
 .filmography__row:hover .filmography__title {

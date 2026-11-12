@@ -12,7 +12,8 @@
   padding: var(--space-3);
   border: var(--border-width) solid var(--color-border);
   border-radius: var(--radius-md);
-  background: var(--color-surface-base);
+  background: var(--surface-card);
+  box-shadow: var(--glass-highlight);
 }
 
 .season__body {

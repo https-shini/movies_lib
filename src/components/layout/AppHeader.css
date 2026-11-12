@@ -2,10 +2,10 @@
   position: sticky;
   top: 0;
   z-index: var(--layer-bars);
-  border-bottom: 1px solid var(--color-border);
-  background: var(--color-nav-bg);
-  backdrop-filter: saturate(140%) blur(14px);
-  -webkit-backdrop-filter: saturate(140%) blur(14px);
+  border-bottom: 1px solid var(--glass-border);
+  background: var(--surface-floating);
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: var(--glass-filter);
 }
 
 .app-header__inner {
@@ -105,7 +105,8 @@
   padding: 0 var(--space-4) 0 42px;
   border: 1px solid var(--color-border-strong);
   border-radius: var(--radius-sm);
-  background: var(--color-surface-base);
+  background: var(--glass-tint-subtle);
+  box-shadow: var(--glass-highlight);
   font-size: var(--text-sm);
   transition:
     border-color var(--duration-fast) ease,
@@ -128,6 +129,7 @@
 
 /* Botão dourado ao lado do campo, como na identidade original. */
 .header-search__submit {
+  box-shadow: var(--glass-highlight-strong);
   display: grid;
   width: var(--tap-target);
   height: var(--tap-target);

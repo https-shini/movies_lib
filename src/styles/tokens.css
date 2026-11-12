@@ -234,4 +234,54 @@
   --layer-skip-link: 50;
   --opacity-disabled: 0.4;
   --opacity-backdrop: 0.45; /* imagem de fundo atrás de texto */
+
+  /* 9. Vidro (Liquid Glass) [reconstruído sobre a paleta original, D-56] ----------
+   * Superfícies translúcidas com brilho de borda e profundidade. O desfoque do fundo
+   * (--glass-filter) fica só nas camadas flutuantes: cabeçalho, barra inferior, atalhos
+   * de seção e diálogos. Cards usam a tinta e o brilho, sem desfoque, para não pesar.
+   */
+  --rgb-surface: 17 21 30; /* --ink-1 */
+  --rgb-line: 52 60 73; /* --line-400 */
+  --glass-tint: rgb(var(--rgb-surface) / 62%);
+  --glass-tint-strong: rgb(var(--rgb-surface) / 72%);
+  --glass-tint-subtle: rgb(var(--rgb-paper) / 4%);
+  --glass-border: rgb(var(--rgb-paper) / 12%);
+  --glass-border-strong: rgb(var(--rgb-paper) / 22%);
+  --glass-filter: saturate(170%) blur(20px);
+  --glass-sheen: linear-gradient(
+    140deg,
+    rgb(var(--rgb-paper) / 8%) 0%,
+    rgb(var(--rgb-paper) / 2%) 36%,
+    rgb(var(--rgb-paper) / 0%) 62%
+  );
+  --glass-sweep: linear-gradient(
+    110deg,
+    transparent 30%,
+    rgb(var(--rgb-paper) / 9%) 50%,
+    transparent 70%
+  );
+  --glass-highlight: inset 0 1px 0 rgb(var(--rgb-paper) / 12%);
+  --glass-highlight-strong: inset 0 1px 0 rgb(255 255 255 / 38%);
+  --glass-shadow: 0 16px 40px -18px rgb(0 0 0 / 65%);
+  --glow-accent: 0 10px 28px -12px rgb(var(--rgb-gold) / 60%);
+  --surface-card: var(--glass-sheen), var(--glass-tint);
+  --surface-floating: var(--glass-sheen), var(--glass-tint-strong);
+  --gradient-ambient:
+    radial-gradient(58rem 38rem at 88% -8%, rgb(var(--rgb-gold) / 9%), transparent 62%),
+    radial-gradient(52rem 40rem at -12% 28%, rgb(var(--rgb-line) / 42%), transparent 62%),
+    radial-gradient(46rem 34rem at 62% 112%, rgb(var(--rgb-line) / 30%), transparent 60%);
+  --duration-sweep: 700ms;
+  --tabbar-inset: var(--space-2); /* distância da barra flutuante até a borda da tela */
+}
+
+/* Quem pede menos transparência no sistema recebe superfícies opacas, sem desfoque. */
+@media (prefers-reduced-transparency: reduce) {
+  :root {
+    --glass-tint: var(--color-surface-base);
+    --glass-tint-strong: var(--color-surface-base);
+    --glass-filter: none;
+    --glass-sheen: none;
+    --glass-sweep: none;
+    --gradient-ambient: none;
+  }
 }

@@ -6,9 +6,10 @@
   margin: var(--space-5) auto 0;
   overflow: hidden;
   isolation: isolate;
-  border: var(--border-width) solid var(--color-border);
+  border: var(--border-width) solid var(--glass-border-strong);
   border-radius: var(--radius-lg);
   background: var(--gradient-panel);
+  box-shadow: var(--glass-highlight), var(--glass-shadow);
 }
 
 .movie-hero__backdrop {

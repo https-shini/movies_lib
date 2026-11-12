@@ -3,11 +3,12 @@
   max-width: none;
   max-height: min(100dvh - 2rem, 760px);
   padding: 0;
-  border: 1px solid var(--color-border-strong);
-  border-radius: var(--radius-md);
+  border: 1px solid var(--glass-border-strong);
+  border-radius: var(--radius-lg);
   color: var(--color-text-primary);
-  background: var(--color-surface-base);
-  box-shadow: var(--elevation-overlay);
+  background: var(--surface-floating);
+  box-shadow: var(--glass-highlight), var(--elevation-overlay);
+  backdrop-filter: var(--glass-filter);
 }
 
 .dialog::backdrop {

@@ -4,10 +4,9 @@
   top: var(--header-h);
   z-index: var(--layer-sticky);
   margin: var(--space-6) calc(var(--gutter) * -1) 0;
-  border-bottom: var(--border-width) solid var(--color-border);
-  background: var(--color-nav-bg);
-  backdrop-filter: saturate(140%) blur(14px);
-  -webkit-backdrop-filter: saturate(140%) blur(14px);
+  border-bottom: var(--border-width) solid var(--glass-border);
+  background: var(--surface-floating);
+  backdrop-filter: var(--glass-filter);
 }
 
 .section-nav__list {

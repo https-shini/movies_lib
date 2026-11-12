@@ -6,10 +6,11 @@
   margin-block: var(--space-7);
   overflow: hidden;
   isolation: isolate;
-  border: var(--border-width) solid var(--color-border);
+  border: var(--border-width) solid var(--glass-border-strong);
   border-radius: var(--radius-lg);
   background: var(--gradient-panel);
   transition: border-color var(--duration-fast) ease;
+  box-shadow: var(--glass-highlight), var(--glass-shadow);
 }
 
 .collection-banner:hover {

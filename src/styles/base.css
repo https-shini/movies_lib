@@ -13,6 +13,16 @@ html {
   scroll-padding-top: calc(var(--header-h) + var(--space-4));
 }
 
+/* Luz ambiente fixa: dá ao vidro algo para refratar, sem competir com o conteúdo. */
+body::before {
+  position: fixed;
+  inset: 0;
+  z-index: var(--layer-behind);
+  background: var(--gradient-ambient);
+  content: "";
+  pointer-events: none;
+}
+
 html:has(dialog[open]) {
   overflow: hidden;
 }
