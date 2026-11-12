@@ -1,0 +1,47 @@
+{
+  "id": 7467,
+  "name": "David Fincher",
+  "biography": "",
+  "birthday": "1962-08-28",
+  "deathday": null,
+  "place_of_birth": "Denver, Colorado, EUA",
+  "profile_path": "/fixture-profile-7467.jpg",
+  "known_for_department": "Directing",
+  "homepage": null,
+  "imdb_id": "nm0000399",
+  "combined_credits": {
+    "cast": [],
+    "crew": [
+      {
+        "id": 550,
+        "credit_id": "credit-movie-550-Director",
+        "media_type": "movie",
+        "poster_path": "/fixture-poster-550.jpg",
+        "vote_average": 8.4,
+        "vote_count": 30000,
+        "title": "Clube da Luta",
+        "release_date": "1999-10-15",
+        "job": "Director",
+        "department": "Directing"
+      },
+      {
+        "id": 807,
+        "credit_id": "credit-movie-807-Director",
+        "media_type": "movie",
+        "poster_path": "/fixture-poster-807.jpg",
+        "vote_average": 8.4,
+        "vote_count": 21000,
+        "title": "Seven: Os Sete Crimes Capitais",
+        "release_date": "1995-09-22",
+        "job": "Director",
+        "department": "Directing"
+      }
+    ]
+  },
+  "images": {
+    "profiles": []
+  },
+  "external_ids": {
+    "imdb_id": "nm0000399"
+  }
+}

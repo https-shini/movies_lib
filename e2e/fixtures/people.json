@@ -1,0 +1,96 @@
+{
+  "page": 1,
+  "results": [
+    {
+      "id": 287,
+      "name": "Brad Pitt",
+      "profile_path": "/fixture-profile-287.jpg",
+      "known_for_department": "Acting",
+      "popularity": 90.1,
+      "known_for": [
+        {
+          "media_type": "movie",
+          "id": 550,
+          "title": "Clube da Luta",
+          "poster_path": "/fixture-poster-550.jpg"
+        },
+        {
+          "media_type": "movie",
+          "id": 807,
+          "title": "Seven: Os Sete Crimes Capitais",
+          "poster_path": "/fixture-poster-807.jpg"
+        }
+      ]
+    },
+    {
+      "id": 819,
+      "name": "Edward Norton",
+      "profile_path": "/fixture-profile-819.jpg",
+      "known_for_department": "Acting",
+      "popularity": 40.2,
+      "known_for": [
+        {
+          "media_type": "movie",
+          "id": 550,
+          "title": "Clube da Luta",
+          "poster_path": "/fixture-poster-550.jpg"
+        }
+      ]
+    },
+    {
+      "id": 7467,
+      "name": "David Fincher",
+      "profile_path": "/fixture-profile-7467.jpg",
+      "known_for_department": "Directing",
+      "popularity": 35.0,
+      "known_for": [
+        {
+          "media_type": "movie",
+          "id": 550,
+          "title": "Clube da Luta",
+          "poster_path": "/fixture-poster-550.jpg"
+        }
+      ]
+    },
+    {
+      "id": 17419,
+      "name": "Bryan Cranston",
+      "profile_path": "/fixture-profile-17419.jpg",
+      "known_for_department": "Acting",
+      "popularity": 33.0,
+      "known_for": [
+        {
+          "media_type": "tv",
+          "id": 1396,
+          "name": "Breaking Bad",
+          "poster_path": "/fixture-tv-1396.jpg"
+        }
+      ]
+    },
+    {
+      "id": 1283,
+      "name": "Helena Bonham Carter",
+      "profile_path": null,
+      "known_for_department": "Acting",
+      "popularity": 30.0,
+      "known_for": []
+    },
+    {
+      "id": 6193,
+      "name": "Leonardo DiCaprio",
+      "profile_path": "/fixture-profile-6193.jpg",
+      "known_for_department": "Acting",
+      "popularity": 70.0,
+      "known_for": [
+        {
+          "media_type": "movie",
+          "id": 27205,
+          "title": "A Origem",
+          "poster_path": "/fixture-poster-27205.jpg"
+        }
+      ]
+    }
+  ],
+  "total_pages": 2,
+  "total_results": 10
+}

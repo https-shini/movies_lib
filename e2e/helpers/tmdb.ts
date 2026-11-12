@@ -70,6 +70,28 @@ function defaultResponse(path: string, url: URL): MockResponse | null {
     return summary ? json(fixtures.detailsFrom(summary)) : json(fixtures.tmdbNotFound, 404);
   }
 
+  // Séries, pessoas e coleções ------------------------------------------------
+  if (path === "tv/popular" || path === "discover/tv") return json(fixtures.tvShows);
+  if (path === "genre/tv/list") return json(fixtures.tvGenres);
+  if (path === "person/popular") return json({ ...fixtures.people, page });
+
+  const query = (url.searchParams.get("query") ?? "").toLowerCase();
+  if (path === "search/tv") {
+    return json(query === "duna" ? fixtures.searchTvDuna : fixtures.emptyPage);
+  }
+  if (path === "search/person") {
+    return json(query === "brad" ? fixtures.searchPersonBrad : fixtures.emptyPage);
+  }
+
+  if (path === "tv/1396") return json(fixtures.tv1396);
+  if (path === "person/287") return json(fixtures.person287);
+  if (path === "person/7467") {
+    const english = url.searchParams.get("language") === "en-US";
+    return json(english ? fixtures.person7467English : fixtures.person7467);
+  }
+  if (path === "collection/2344") return json(fixtures.collection2344);
+  if (/^(tv|person|collection)\/\d+$/.test(path)) return json(fixtures.tmdbNotFound, 404);
+
   return null;
 }
 
