@@ -62,6 +62,19 @@ test.describe("Responsividade", () => {
         "aria-current",
         "page",
       );
+      // Todos os itens na mesma linha e dentro da tela (a barra não quebra em duas linhas).
+      const boxes = await tabs.evaluateAll((links) =>
+        links.map((link) => {
+          const { top, right, bottom } = link.getBoundingClientRect();
+          return { top: Math.round(top), right, bottom };
+        }),
+      );
+      const screen = page.viewportSize() ?? { width: 0, height: 0 };
+      expect(new Set(boxes.map((box) => box.top)).size).toBe(1);
+      for (const box of boxes) {
+        expect(box.right).toBeLessThanOrEqual(screen.width);
+        expect(box.bottom).toBeLessThanOrEqual(screen.height);
+      }
       // Alvos de toque de pelo menos 44 px de altura.
       for (const box of await tabs.evaluateAll((links) =>
         links.map((link) => link.getBoundingClientRect().height),
