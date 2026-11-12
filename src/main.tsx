@@ -75,6 +75,7 @@ const router = createBrowserRouter([
             lazy: page(() => import("./pages/Collection")),
             loader: ({ params }) => prefetchCollection(params.id),
           },
+          { path: "minha-lista", lazy: page(() => import("./pages/Watchlist")) },
           {
             path: "search",
             lazy: page(() => import("./pages/Search")),

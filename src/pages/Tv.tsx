@@ -39,10 +39,12 @@ import FullCredits, { type CreditGroup } from "../components/title/FullCredits";
 import { departmentLabel } from "../lib/people";
 import ImageGallery from "../components/title/ImageGallery";
 import SeasonList from "../components/title/SeasonList";
+import SaveButton from "../components/title/SaveButton";
 import SectionNav from "../components/title/SectionNav";
 import TitleHero, { TitleHeroSkeleton } from "../components/title/TitleHero";
 import VideoGallery from "../components/title/VideoGallery";
 import SectionHeader from "../components/ui/SectionHeader";
+import ShareButton from "../components/ui/ShareButton";
 import StateMessage from "../components/ui/StateMessage";
 import NotFound from "./NotFound";
 import "./Movie.css";
@@ -215,6 +217,17 @@ const TvDetailsPage = ({ id }: { id: string }) => {
         <a className="btn btn--ghost" href="#where-to-watch">
           {movieText.whereToWatch} <PiArrowDown aria-hidden="true" />
         </a>
+        <SaveButton
+          item={{
+            id: show.id,
+            mediaType: "tv",
+            title,
+            posterPath: show.poster_path,
+            date: show.first_air_date ?? "",
+            voteAverage: show.vote_average ?? null,
+          }}
+        />
+        <ShareButton title={title} />
       </TitleHero>
 
       <div className="shell">

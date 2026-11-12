@@ -125,7 +125,7 @@ export const ptBR = {
     },
     storageTitle: "Cookies e armazenamento no navegador",
     storageText:
-      "O Cinelux não grava cookies. Buscas e filtros ficam apenas no endereço da página, para que você possa compartilhá-los. As respostas do catálogo ficam só na memória da aba aberta, por até 5 minutos, e somem ao fechá-la.",
+      "O Cinelux não grava cookies. Buscas e filtros ficam apenas no endereço da página, para que você possa compartilhá-los. As respostas do catálogo ficam só na memória da aba aberta, por até 5 minutos, e somem ao fechá-la. A Minha lista é guardada no armazenamento local do seu navegador: não é enviada a nenhum servidor e pode ser apagada na própria página ou limpando os dados do site.",
     hostingTitle: "Onde os dados são tratados",
     hostingText:
       "O site e o servidor que consulta o TMDB são hospedados pela Vercel Inc., nos Estados Unidos, que também processa as estatísticas de visitas e de desempenho. As consultas de filmes, inclusive o termo de busca, são enviadas ao TMDB pelo nosso servidor, sem o seu endereço IP. Como esses serviços ficam fora do Brasil, os dados técnicos descritos nesta página são tratados no exterior.",
@@ -135,6 +135,7 @@ export const ptBR = {
     retentionTitle: "Por quanto tempo guardamos",
     retention: [
       "Respostas do catálogo na memória da aba: até 5 minutos.",
+      "Minha lista: fica no seu navegador até você removê-la.",
       "Código que representa o visitante nas estatísticas: descartado em até 24 horas.",
       "Registros técnicos da hospedagem: até 1 hora.",
       "Estatísticas agregadas de visitas e de desempenho, que não identificam ninguém: ficam no painel da hospedagem pelo período que o plano oferece.",
@@ -147,7 +148,7 @@ export const ptBR = {
     contactEmail: "Pedidos sobre dados pessoais: {email}",
     contactProcedure:
       "Para exercer qualquer direito, envie um e-mail dizendo qual pedido quer fazer. A LGPD prevê que a declaração completa seja entregue em até 15 dias (art. 19, II).",
-    updated: "Atualizado em 11 de novembro de 2026.",
+    updated: "Atualizado em 12 de novembro de 2026.",
   },
 
   common: {
@@ -501,6 +502,32 @@ export const ptBR = {
     error: "Não foi possível carregar as pessoas",
     empty: "Nenhuma pessoa por aqui.",
     knownFor: "Conhecido(a) por {titles}",
+  },
+
+  watchlist: {
+    title: "Minha lista",
+    kicker: "Guardados neste navegador",
+    heading: "Minha lista",
+    lede: "Filmes e séries que você salvou para ver depois. A lista fica só neste navegador, sem cadastro.",
+    save: "Salvar na lista",
+    saved: "Na sua lista",
+    navLabel: "Minha lista",
+    count: { one: "{count} título", other: "{count} títulos" },
+    listLabel: "Títulos salvos",
+    emptyTitle: "Sua lista está vazia",
+    emptyMessage: 'Abra um filme ou uma série e toque em "Salvar na lista".',
+    emptyAction: "Descobrir filmes",
+    clear: "Limpar lista",
+    clearTitle: "Limpar a lista?",
+    clearDescription: "Os títulos salvos neste navegador serão removidos. Não é possível desfazer.",
+    clearConfirm: "Limpar tudo",
+    clearCancel: "Cancelar",
+  },
+
+  share: {
+    share: "Compartilhar",
+    copied: "Link copiado",
+    failed: "Não foi possível copiar",
   },
 
   providers: {

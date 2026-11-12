@@ -31,20 +31,33 @@
 .btn--primary {
   color: var(--color-accent-on);
   background: var(--color-accent-default);
+  box-shadow: var(--glass-highlight-strong);
 }
 
 .btn--primary:hover {
   background: var(--color-accent-hover);
+  box-shadow: var(--glass-highlight-strong), var(--glow-accent);
+}
+
+.btn:active:not(:disabled) {
+  transform: scale(0.98);
 }
 
 .btn--ghost {
-  border-color: var(--color-border-strong);
-  background: transparent;
+  border-color: var(--glass-border-strong);
+  background: var(--glass-tint-subtle);
+  box-shadow: var(--glass-highlight);
 }
 
 .btn--ghost:hover {
   border-color: var(--color-text-secondary);
   background: var(--color-hover-tint);
+}
+
+/* Item já salvo na Minha lista. */
+.btn--saved {
+  border-color: var(--color-accent-default);
+  color: var(--color-accent-default);
 }
 
 .btn--quiet {
@@ -68,9 +81,10 @@
   flex: none;
   place-items: center;
   padding: 0;
-  border: 1px solid var(--color-border-strong);
+  border: 1px solid var(--glass-border-strong);
   border-radius: var(--radius-round);
-  background: transparent;
+  background: var(--glass-tint-subtle);
+  box-shadow: var(--glass-highlight);
   font-size: var(--icon-md);
   transition:
     background-color var(--duration-fast) ease,
@@ -95,10 +109,11 @@
   gap: var(--space-2);
   min-height: 36px;
   padding: 0 var(--space-4);
-  border: 1px solid var(--color-border-strong);
+  border: 1px solid var(--glass-border-strong);
   border-radius: var(--radius-full);
   color: var(--color-text-secondary);
-  background: transparent;
+  background: var(--glass-tint-subtle);
+  box-shadow: var(--glass-highlight);
   font-size: var(--text-sm);
   font-weight: var(--weight-medium);
   white-space: nowrap;
@@ -149,7 +164,8 @@
   padding: 0 var(--space-4);
   border: 1px solid var(--color-border-strong);
   border-radius: var(--radius-sm);
-  background: var(--color-surface-base);
+  background: var(--glass-tint);
+  box-shadow: var(--glass-highlight);
   font-size: var(--text-md);
   transition: border-color var(--duration-fast) ease;
 }

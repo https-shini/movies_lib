@@ -27,7 +27,8 @@
   border: var(--border-width) solid var(--color-border);
   border-radius: var(--radius-md);
   color: var(--color-text-primary);
-  background: var(--color-surface-base);
+  background: var(--surface-card);
+  box-shadow: var(--glass-highlight);
   text-align: left;
   transition:
     border-color var(--duration-fast) ease,

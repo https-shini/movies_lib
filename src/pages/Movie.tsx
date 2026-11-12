@@ -48,10 +48,12 @@ import FactGrid, { type Fact } from "../components/title/FactGrid";
 import FullCredits, { type CreditGroup } from "../components/title/FullCredits";
 import { departmentLabel } from "../lib/people";
 import ImageGallery from "../components/title/ImageGallery";
+import SaveButton from "../components/title/SaveButton";
 import SectionNav from "../components/title/SectionNav";
 import TitleHero, { TitleHeroSkeleton } from "../components/title/TitleHero";
 import VideoGallery from "../components/title/VideoGallery";
 import SectionHeader from "../components/ui/SectionHeader";
+import ShareButton from "../components/ui/ShareButton";
 import StateMessage from "../components/ui/StateMessage";
 import NotFound from "./NotFound";
 import "./Movie.css";
@@ -182,6 +184,17 @@ const MovieDetails = ({ id }: { id: string }) => {
         <a className="btn btn--ghost" href="#where-to-watch">
           {text.whereToWatch} <PiArrowDown aria-hidden="true" />
         </a>
+        <SaveButton
+          item={{
+            id: movie.id,
+            mediaType: "movie",
+            title,
+            posterPath: movie.poster_path,
+            date: movie.release_date ?? "",
+            voteAverage: movie.vote_average ?? null,
+          }}
+        />
+        <ShareButton title={title} />
       </TitleHero>
 
       <div className="shell">

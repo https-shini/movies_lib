@@ -39,7 +39,7 @@
   margin: var(--space-2) 0;
   padding: var(--space-4);
   border-left: 2px solid var(--color-accent-default);
-  background: var(--color-surface-base);
+  background: var(--surface-card);
 }
 
 .legal__notice figcaption {

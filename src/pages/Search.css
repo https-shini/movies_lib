@@ -6,7 +6,8 @@
   padding: var(--space-2);
   border: 1px solid var(--color-border-strong);
   border-radius: var(--radius-sm);
-  background: var(--color-surface-base);
+  background: var(--glass-tint);
+  box-shadow: var(--glass-highlight);
   transition:
     border-color var(--duration-fast) ease,
     box-shadow var(--duration-fast) ease;

@@ -166,6 +166,7 @@ test.describe("Acessibilidade e teclado", () => {
     "/pessoa/287",
     "/pessoas",
     "/colecao/2344",
+    "/minha-lista",
     "/sobre",
     "/privacidade",
   ];
@@ -188,6 +189,7 @@ test.describe("Acessibilidade e teclado", () => {
     "/pessoa/287",
     "/pessoas",
     "/colecao/2344",
+    "/minha-lista",
     "/sobre",
     "/privacidade",
   ];
