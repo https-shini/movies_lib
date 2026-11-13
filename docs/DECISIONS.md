@@ -534,3 +534,12 @@ Cada decisão tem: contexto, decisão e consequência. As decisões D-01 a D-11 
 - **Resultado no build:** CSS global de 11,5 KB e JS de entrada de 10,4 KB (gzip). Ficam no global os tokens, o selo e a trilha de navegação, que a segunda parte do redesign usa em todas as páginas.
 - **Testes:** o Início não baixa o CSS da temporada; a temporada abre já com a grade aplicada; o carregador não duplica folhas e não trava a página quando uma falha.
 - **Segunda medição (após o PR #25):** o Início seguia abaixo da base (85 contra 89). As requisições a mais eram o pacote dos avisos, carregado entre 0,7 e 0,9 s, junto com a imagem do destaque, e somando de 50 a 70 ms de script na abertura. Os avisos passaram a carregar só depois do evento `load`, com o navegador ocioso (`lib/idle.ts`), ou no primeiro aviso, o que vier antes.
+
+## D-64. Redesign, parte 2: ritmo, ranking, gêneros e ações do título
+
+- **Ritmo entre seções:** `.section` usa `--section-gap` (48 px no celular, 72 px no desktop) em vez da margem fixa de 72 px, que deixava cerca de 150 px vazios entre seções no celular. O cabeçalho de seção troca a linha sólida por um filete que esmaece, e o número ganha um traço com o gradiente da marca.
+- **Ranking do Início:** algarismos com o gradiente da marca (`background-clip: text`, com cor sólida onde não há suporte); do 4º ao 10º, mais discretos, acendendo ao passar o cursor. No alto contraste do sistema, voltam à cor do texto.
+- **Gêneros:** cartões de vidro em vez de lista de texto.
+- **Ações do título no celular:** a principal (trailer) ocupa a linha inteira e as secundárias ficam em duas colunas; uma que sobra sozinha ocupa a linha. Abaixo de 360 px, uma coluna. Medido de 360 a 420 px: nenhum rótulo cortado. O conteúdo da página sobe cerca de 60 px.
+- **Frase de efeito:** citação editorial em Space Grotesk, com filete dourado.
+- **Peso:** só CSS; o arquivo global cresce cerca de 0,3 KB (gzip).

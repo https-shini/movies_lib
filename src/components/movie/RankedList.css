@@ -21,16 +21,30 @@
     background: linear-gradient(90deg, var(--color-accent-subtle), transparent 70%);
   }
 
-  a.ranked__item:hover .ranked__number {
-    color: var(--color-accent-default);
+  /* Fora do pódio, os algarismos ficam mais discretos e acendem ao passar o cursor. */
+  .ranked > li:nth-child(n + 4) .ranked__number {
+    opacity: 0.55;
   }
 
+  a.ranked__item:hover .ranked__number {
+    opacity: 1;
+  }
+
+  /* Algarismos com o gradiente da marca: o ranking é o momento de destaque do Início (D-64). */
   .ranked__number {
-    color: var(--color-text-tertiary);
+    color: var(--color-accent-default);
     font-size: var(--text-numeral);
     font-variant-numeric: lining-nums tabular-nums;
     text-align: right;
-    transition: color var(--duration-fast) ease;
+    transition: opacity var(--duration-fast) ease;
+  }
+
+  @supports (background-clip: text) {
+    .ranked__number {
+      background: var(--gradient-accent-text);
+      background-clip: text;
+      color: transparent;
+    }
   }
 
   .ranked__poster {

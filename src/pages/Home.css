@@ -8,10 +8,11 @@
   }
 
   /* Índice de gêneros: lista tipográfica, como um sumário */
+  /* Gêneros como cartões de vidro: convidam a explorar sem disputar com os pôsteres (D-64). */
   .genre-index {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    column-gap: var(--space-5);
+    gap: var(--space-2);
   }
 
   .genre-index__link {
@@ -20,7 +21,11 @@
     align-items: center;
     justify-content: space-between;
     gap: var(--space-2);
-    border-bottom: 1px solid var(--color-border);
+    padding-inline: var(--space-4);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: var(--surface-card);
+    box-shadow: var(--glass-highlight);
     font-family: var(--font-display);
     font-size: var(--text-lg);
     font-weight: var(--weight-medium);
@@ -40,7 +45,10 @@
   }
 
   a.genre-index__link:hover {
+    border-color: rgb(var(--rgb-gold) / 45%);
     color: var(--color-accent-default);
+    background:
+      linear-gradient(120deg, var(--color-accent-subtle), transparent 70%), var(--surface-card);
   }
 
   a.genre-index__link:hover svg {
@@ -50,15 +58,14 @@
 
   .genre-index__link.skeleton {
     height: 52px;
-    border-radius: 0;
-    background: transparent;
+    background: var(--surface-card);
   }
 
   .genre-index__link.skeleton::before {
     position: absolute;
     top: 18px;
-    left: 0;
-    width: 60%;
+    left: var(--space-4);
+    width: 55%;
     height: 16px;
     border-radius: var(--radius-hairline);
     background: var(--color-surface-elevated);
