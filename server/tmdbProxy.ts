@@ -29,6 +29,8 @@ const ROUTES: readonly ProxyRoute[] = [
   { pattern: /^movie\/\d{1,10}\/watch\/providers$/, maxAge: CACHE_SECONDS.details },
   { pattern: /^tv\/popular$/, maxAge: CACHE_SECONDS.list },
   { pattern: /^tv\/\d{1,10}$/, maxAge: CACHE_SECONDS.details },
+  // Temporada com a lista de episódios (D-61). Até 3 dígitos: nenhuma série passa disso.
+  { pattern: /^tv\/\d{1,10}\/season\/\d{1,3}$/, maxAge: CACHE_SECONDS.details },
   { pattern: /^person\/popular$/, maxAge: CACHE_SECONDS.list },
   { pattern: /^person\/\d{1,10}$/, maxAge: CACHE_SECONDS.details },
   { pattern: /^collection\/\d{1,10}$/, maxAge: CACHE_SECONDS.details },

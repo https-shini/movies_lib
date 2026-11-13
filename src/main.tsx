@@ -26,6 +26,7 @@ import {
   prefetchPeople,
   prefetchPerson,
   prefetchSearch,
+  prefetchSeason,
   prefetchTv,
 } from "./services/prefetch";
 
@@ -62,6 +63,11 @@ const router = createBrowserRouter([
             path: "serie/:id",
             lazy: page(() => import("./pages/Tv")),
             loader: ({ params }) => prefetchTv(params.id),
+          },
+          {
+            path: "serie/:id/temporada/:season",
+            lazy: page(() => import("./pages/Season")),
+            loader: ({ params }) => prefetchSeason(params.id, params.season),
           },
           {
             path: "pessoa/:id",

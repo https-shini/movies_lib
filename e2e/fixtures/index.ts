@@ -15,6 +15,7 @@ import type {
   Paginated,
   PersonDetails,
   PersonSummary,
+  SeasonDetails,
   TvDetails,
   TvSummary,
 } from "../../src/types/tmdb.ts";
@@ -35,6 +36,7 @@ import searchDunaPage1Json from "./search-duna-page-1.json" with { type: "json" 
 import searchDunaPage2Json from "./search-duna-page-2.json" with { type: "json" };
 import tmdb404Json from "./tmdb-404.json" with { type: "json" };
 import tv1396Json from "./tv-1396.json" with { type: "json" };
+import tv1396Season1Json from "./tv-1396-season-1.json" with { type: "json" };
 import tvGenresJson from "./tv-genres.json" with { type: "json" };
 import tvJson from "./tv.json" with { type: "json" };
 
@@ -66,6 +68,11 @@ export const tvGenres: GenreList = tvGenresJson;
 export const searchTvDuna: Paginated<TvSummary> = searchTvDunaJson;
 /** Breaking Bad (1396) com temporadas, elenco de todas as temporadas, vídeos e imagens. */
 export const tv1396: TvDetails = tv1396Json;
+/**
+ * Breaking Bad, temporada 1: 7 episódios; o 3 sem imagem, o 5 sem sinopse e o 7 marcado
+ * como final da temporada.
+ */
+export const tv1396Season1: SeasonDetails = tv1396Season1Json;
 /** Pessoas populares: 6 na página 1, de 2 páginas. */
 export const people = peopleJson as Paginated<PersonSummary>;
 /** Busca de pessoas por "brad": 1 resultado. */

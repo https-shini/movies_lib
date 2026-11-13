@@ -1,0 +1,102 @@
+{
+  "id": 3572,
+  "name": "Temporada 1",
+  "overview": "Walter White descobre um câncer e entra no mundo do tráfico.",
+  "season_number": 1,
+  "air_date": "2008-01-20",
+  "poster_path": "/fixture-season-1396-1.jpg",
+  "vote_average": 8.2,
+  "episodes": [
+    {
+      "id": 62086,
+      "name": "Piloto",
+      "overview": "Walter White, professor de química, recebe um diagnóstico de câncer e decide produzir metanfetamina.",
+      "episode_number": 1,
+      "season_number": 1,
+      "air_date": "2008-01-20",
+      "runtime": 58,
+      "still_path": "/fixture-still-1396-1-1.jpg",
+      "vote_average": 8.3,
+      "vote_count": 100,
+      "episode_type": "standard"
+    },
+    {
+      "id": 62087,
+      "name": "O Gato Está no Saco...",
+      "overview": "Walt e Jesse precisam se livrar de dois corpos.",
+      "episode_number": 2,
+      "season_number": 1,
+      "air_date": "2008-01-27",
+      "runtime": 48,
+      "still_path": "/fixture-still-1396-1-2.jpg",
+      "vote_average": 8.0,
+      "vote_count": 100,
+      "episode_type": "standard"
+    },
+    {
+      "id": 62088,
+      "name": "...E o Saco Está no Rio",
+      "overview": "Walt enfrenta um dilema sobre o prisioneiro no porão.",
+      "episode_number": 3,
+      "season_number": 1,
+      "air_date": "2008-02-10",
+      "runtime": 48,
+      "still_path": null,
+      "vote_average": 7.9,
+      "vote_count": 100,
+      "episode_type": "standard"
+    },
+    {
+      "id": 62089,
+      "name": "O Homem do Câncer",
+      "overview": "Walt conta à família sobre o diagnóstico.",
+      "episode_number": 4,
+      "season_number": 1,
+      "air_date": "2008-02-17",
+      "runtime": 48,
+      "still_path": "/fixture-still-1396-1-4.jpg",
+      "vote_average": 7.7,
+      "vote_count": 100,
+      "episode_type": "standard"
+    },
+    {
+      "id": 62090,
+      "name": "Matéria Cinzenta",
+      "overview": "",
+      "episode_number": 5,
+      "season_number": 1,
+      "air_date": "2008-02-24",
+      "runtime": 48,
+      "still_path": "/fixture-still-1396-1-5.jpg",
+      "vote_average": 7.6,
+      "vote_count": 100,
+      "episode_type": "standard"
+    },
+    {
+      "id": 62091,
+      "name": "Um Punhado de Nada",
+      "overview": "Walt assume uma nova identidade para cobrar uma dívida.",
+      "episode_number": 6,
+      "season_number": 1,
+      "air_date": "2008-03-02",
+      "runtime": 48,
+      "still_path": "/fixture-still-1396-1-6.jpg",
+      "vote_average": 8.6,
+      "vote_count": 100,
+      "episode_type": "standard"
+    },
+    {
+      "id": 62092,
+      "name": "Um Acordo sem Rodeios",
+      "overview": "Walt e Jesse tentam fechar um acordo com Tuco.",
+      "episode_number": 7,
+      "season_number": 1,
+      "air_date": "2008-03-09",
+      "runtime": 48,
+      "still_path": "/fixture-still-1396-1-7.jpg",
+      "vote_average": 8.1,
+      "vote_count": 100,
+      "episode_type": "finale"
+    }
+  ]
+}

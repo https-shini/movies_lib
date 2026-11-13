@@ -14,6 +14,7 @@ import type {
   Paginated,
   PersonDetails,
   PersonSummary,
+  SeasonDetails,
   TvDetails,
   TvSummary,
 } from "../types/tmdb";
@@ -419,6 +420,15 @@ export function getTvDetails(id: number | string, options?: RequestOptions): Pro
     }),
     options,
   );
+}
+
+/** Temporada com todos os episódios: título, sinopse, imagem, data e duração (D-61). */
+export function getTvSeason(
+  id: number | string,
+  season: number | string,
+  options?: RequestOptions,
+): Promise<SeasonDetails> {
+  return request(`tv/${String(id)}/season/${String(season)}`, withLocale(), options);
 }
 
 /** Complementos pedidos junto com os dados da pessoa. */

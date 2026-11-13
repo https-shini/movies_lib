@@ -84,6 +84,8 @@ function defaultResponse(path: string, url: URL): MockResponse | null {
   }
 
   if (path === "tv/1396") return json(fixtures.tv1396);
+  if (path === "tv/1396/season/1") return json(fixtures.tv1396Season1);
+  if (/^tv\/\d+\/season\/\d+$/.test(path)) return json(fixtures.tmdbNotFound, 404);
   if (path === "person/287") return json(fixtures.person287);
   if (path === "person/7467") {
     const english = url.searchParams.get("language") === "en-US";

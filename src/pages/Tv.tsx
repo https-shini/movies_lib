@@ -246,7 +246,12 @@ const TvDetailsPage = ({ id }: { id: string }) => {
           <FactGrid titleId="facts-title" title={movieText.factsTitle} facts={facts} />
         </div>
 
-        <SeasonList id="seasons" index={seasons.length ? next() : undefined} seasons={seasons} />
+        <SeasonList
+          id="seasons"
+          showId={show.id}
+          index={seasons.length ? next() : undefined}
+          seasons={seasons}
+        />
 
         <section id="where-to-watch" className="section" aria-labelledby="providers-title">
           <SectionHeader

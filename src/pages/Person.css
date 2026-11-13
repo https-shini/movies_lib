@@ -173,7 +173,6 @@
     gap: var(--space-3);
   }
 
-
   @media (max-width: 420px) {
     .filmography__row {
       grid-template-columns: 2.75rem minmax(0, 1fr);

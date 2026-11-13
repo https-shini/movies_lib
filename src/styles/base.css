@@ -115,6 +115,7 @@
   .chip::before,
   .search-box__clear::before,
   .app-header__link::before,
+  .breadcrumbs__link::before,
   .hit-area::before {
     position: absolute;
     inset: min(0px, calc((100% - var(--tap-target)) / 2));

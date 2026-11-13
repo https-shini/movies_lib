@@ -17,6 +17,7 @@ import {
   getPopularPeople,
   getTvDetails,
   getTvGenres,
+  getTvSeason,
   prefetch,
   PREFETCH,
   searchMovies,
@@ -37,9 +38,21 @@ export function prefetchHome(): null {
 }
 
 const isId = (id: string | undefined): id is string => Boolean(id && /^\d+$/.test(id));
+/** Número de temporada válido (0 = especiais), com o mesmo limite do proxy. */
+export const isSeasonNumber = (value: string | undefined): value is string =>
+  Boolean(value && /^\d{1,3}$/.test(value));
 
 export function prefetchTv(id: string | undefined): null {
   if (isId(id)) prefetch(getTvDetails(id, PREFETCH));
+  return null;
+}
+
+/** Temporada e a série dona dela (nome, fundo e lista de temporadas para navegar). */
+export function prefetchSeason(id: string | undefined, season: string | undefined): null {
+  if (isId(id) && isSeasonNumber(season)) {
+    prefetch(getTvDetails(id, PREFETCH));
+    prefetch(getTvSeason(id, season, PREFETCH));
+  }
   return null;
 }
 

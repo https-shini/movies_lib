@@ -128,6 +128,8 @@ describe("handleTmdbProxy", () => {
     ["/api/tmdb/movie/550/watch/providers", 21600],
     ["/api/tmdb/search/movie?query=duna", 600],
     ["/api/tmdb/tv/1399", 21600],
+    ["/api/tmdb/tv/1399/season/1", 21600],
+    ["/api/tmdb/tv/1399/season/0", 21600],
     ["/api/tmdb/tv/popular", 3600],
     ["/api/tmdb/person/287", 21600],
     ["/api/tmdb/person/popular", 3600],
@@ -177,6 +179,19 @@ describe("handleTmdbProxy", () => {
     expect(
       (await handleTmdbProxy(request("/api/tmdb/movie/550/../../account/1"), options)).status,
     ).toBe(404);
+  });
+
+  it.each([
+    "/api/tmdb/tv/1399/season/1234",
+    "/api/tmdb/tv/1399/season/1/episode/1",
+    "/api/tmdb/tv/1399/season/1/account_states",
+    "/api/tmdb/tv/1399/season/-1",
+    "/api/tmdb/tv/abc/season/1",
+  ])("permite só a temporada inteira, sem subcaminhos: %s", async (path) => {
+    const fetchImpl = fetchStub();
+    const response = await handleTmdbProxy(request(path), { apiKey: "key", fetchImpl });
+    expect(response.status).toBe(404);
+    expect(fetchImpl).not.toHaveBeenCalled();
   });
 
   it("aceita apenas GET", async () => {

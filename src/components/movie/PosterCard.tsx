@@ -75,7 +75,9 @@ const PosterCard = ({ movie, eager = false, priority = false }: PosterCardProps)
       <div className="poster-card__media">
         <Poster path={movie.poster_path} title={title} eager={eager} priority={priority} />
         {movie.media_type === "tv" && (
-          <span className="poster-card__badge badge badge--accent">{messages.title.seriesBadge}</span>
+          <span className="poster-card__badge badge badge--accent">
+            {messages.title.seriesBadge}
+          </span>
         )}
         <Rating value={movie.vote_average} className="poster-card__rating" />
       </div>

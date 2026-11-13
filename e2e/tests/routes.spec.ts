@@ -11,6 +11,11 @@ test.describe("Rotas", () => {
     { path: "/search?q=duna", heading: "Resultados para “duna”", title: "Busca: duna · Cinelux" },
     { path: "/movie/550", heading: "Clube da Luta", title: "Clube da Luta · Cinelux" },
     { path: "/serie/1396", heading: "Breaking Bad", title: "Breaking Bad · Cinelux" },
+    {
+      path: "/serie/1396/temporada/1",
+      heading: "Temporada 1",
+      title: "Temporada 1 · Breaking Bad · Cinelux",
+    },
     { path: "/pessoa/287", heading: "Brad Pitt", title: "Brad Pitt · Cinelux" },
     { path: "/pessoas", heading: "Pessoas", title: "Pessoas · Cinelux" },
     { path: "/colecao/2344", heading: "Matrix: Coleção", title: "Matrix: Coleção · Cinelux" },

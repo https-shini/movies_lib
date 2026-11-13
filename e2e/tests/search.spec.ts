@@ -100,7 +100,9 @@ test.describe("Busca", () => {
   test("mostra o estado vazio quando nada é encontrado", async ({ page }) => {
     await page.goto("/search?q=filme%20que%20n%C3%A3o%20existe");
 
-    await expect(page.getByRole("status")).toContainText("Nenhum filme encontrado");
+    await expect(page.getByRole("main").getByRole("status")).toContainText(
+      "Nenhum filme encontrado",
+    );
     await expect(
       page.getByText("Confira a grafia ou tente o título original do filme."),
     ).toBeVisible();

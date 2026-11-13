@@ -15,6 +15,40 @@
     border-radius: var(--radius-md);
     background: var(--surface-card);
     box-shadow: var(--glass-highlight);
+    color: inherit;
+    text-decoration: none;
+    transition:
+      border-color var(--duration-fast) var(--ease-standard),
+      transform var(--duration-base) var(--ease-out),
+      box-shadow var(--duration-base) var(--ease-out);
+  }
+
+  .season:hover {
+    border-color: var(--glass-border-strong);
+    box-shadow: var(--glass-highlight), var(--elevation-2);
+    transform: translateY(-2px);
+  }
+
+  .season:focus-visible {
+    outline-offset: 3px;
+  }
+
+  .season__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    margin-top: var(--space-1);
+    color: var(--color-accent-default);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-semibold);
+  }
+
+  .season:hover .season__cta svg {
+    transform: translateX(2px);
+  }
+
+  .season__cta svg {
+    transition: transform var(--duration-fast) var(--ease-out);
   }
 
   .season__body {
