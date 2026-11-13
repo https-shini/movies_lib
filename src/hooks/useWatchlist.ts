@@ -2,6 +2,8 @@ import { useCallback, useSyncExternalStore } from "react";
 import {
   isInWatchlist,
   parseWatchlist,
+  reinsertWatchlistItem,
+  removeWatchlistItem,
   toggleWatchlistItem,
   WATCHLIST_STORAGE_KEY,
   type WatchlistItem,
@@ -71,6 +73,10 @@ export interface Watchlist {
   clear: () => void;
   /** Volta a lista a um estado anterior (o "Desfazer" do aviso). */
   restore: (items: readonly WatchlistItem[]) => void;
+  /** Remove um título; devolve o item e a posição dele, para o "Desfazer" (D-67). */
+  remove: (mediaType: MediaType, id: number) => { item: WatchlistItem; index: number } | null;
+  /** Devolve só aquele título, na posição em que estava (D-67). */
+  reinsert: (item: WatchlistItem, index: number) => void;
 }
 
 export function useWatchlist(): Watchlist {
@@ -91,5 +97,17 @@ export function useWatchlist(): Watchlist {
     write(previous);
   }, []);
 
-  return { items, has, toggle, clear, restore };
+  const remove = useCallback((mediaType: MediaType, id: number) => {
+    const current = getSnapshot();
+    const { items: next, index } = removeWatchlistItem(current, mediaType, id);
+    const item = current[index];
+    if (!item) return null;
+    write(next);
+    return { item, index };
+  }, []);
+  const reinsert = useCallback((item: WatchlistItem, index: number) => {
+    write(reinsertWatchlistItem(getSnapshot(), item, index));
+  }, []);
+
+  return { items, has, toggle, clear, restore, remove, reinsert };
 }
