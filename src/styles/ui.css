@@ -201,24 +201,37 @@
   }
 
   /* Cabeçalho de seção numerado ------------------------------------------- */
+  /* Ritmo entre seções: mais compacto no celular, mais amplo nas telas grandes (D-64). */
   .section {
-    margin-block: var(--space-8);
+    margin-block: var(--section-gap);
   }
 
+  /* Filete que esmaece em vez de linha sólida: separa sem cortar a página. */
   .section-head {
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
     gap: var(--space-4);
     margin-bottom: var(--space-5);
-    padding-top: var(--space-4);
-    border-top: 1px solid var(--color-border);
+    padding-top: var(--space-5);
+    background: linear-gradient(90deg, var(--glass-border-strong), transparent 85%) top left / 100%
+      var(--border-width) no-repeat;
   }
 
   .section-head__index {
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
     margin-bottom: var(--space-2);
     color: var(--color-accent-default);
+  }
+
+  .section-head__index::before {
+    width: var(--space-5);
+    height: var(--border-width-strong);
+    border-radius: var(--radius-full);
+    background: var(--gradient-accent);
+    content: "";
   }
 
   .section-head__title {
