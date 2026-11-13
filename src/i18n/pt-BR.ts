@@ -516,6 +516,15 @@ export const ptBR = {
     partsSubtitle: "Em ordem de lançamento.",
     partsLabel: "Filmes da coleção",
     noOverview: "Esta coleção ainda não tem descrição em português.",
+    upcoming: "Em breve",
+    emptyTitle: "Esta coleção ainda não tem filmes",
+    emptyMessage: "O TMDB ainda não lista filmes para esta franquia.",
+    notFoundTitle: "Coleção não encontrada",
+    notFoundMessage:
+      "Este endereço não corresponde a nenhuma coleção do TMDB. Ela pode ter sido removida ou unida a outra.",
+    errorTitle: "Não foi possível abrir esta coleção",
+    errorGeneric: "O serviço de filmes não respondeu como esperado. Tente de novo em instantes.",
+    discover: "Descobrir filmes",
   },
 
   people: {

@@ -1,25 +1,22 @@
 @layer pages {
-  /* Cabeçalho da coleção: painel com a imagem de fundo e o texto por cima. */
+  /*
+   * Cabeçalho editorial da coleção (D-68): sem painel. A imagem de fundo ocupa a largura
+   * e esmaece na página.
+   *   celular: a imagem é uma faixa no topo e o texto fica abaixo dela, sobre o fundo
+   *            sólido; o contraste não depende da imagem
+   *   900 px+: o texto fica sobre a imagem, com um véu escuro forte atrás da coluna de texto
+   */
   .collection-hero {
     position: relative;
     display: grid;
-    width: min(100% - 2 * var(--gutter), var(--container-max));
-    min-height: min(56svh, 460px);
-    margin: var(--space-5) auto 0;
-    align-items: end;
-    overflow: hidden;
     isolation: isolate;
-    border: var(--border-width) solid var(--glass-border-strong);
-    border-radius: var(--radius-lg);
-    background: var(--gradient-panel);
-    box-shadow: var(--glass-highlight), var(--glass-shadow);
   }
 
   .collection-hero__media {
-    position: absolute;
-    inset: 0;
-    z-index: var(--layer-behind);
-    border-radius: 0;
+    position: relative;
+    aspect-ratio: 16 / 9;
+    max-height: 46svh;
+    overflow: hidden;
   }
 
   .collection-hero__media img {
@@ -29,23 +26,30 @@
     object-position: center 25%;
   }
 
+  /* A imagem esmaece no fundo da página, sem linha de corte. */
   .collection-hero__media::after {
     position: absolute;
     inset: 0;
-    background: var(--gradient-hero-scrim);
+    background: var(--gradient-backdrop-scrim);
     content: "";
   }
 
   .collection-hero__content {
     display: grid;
     justify-items: start;
-    gap: var(--space-3);
-    padding: var(--space-7) var(--space-5) var(--space-5);
+    gap: var(--space-2);
+    padding-block: var(--space-4) var(--space-2);
   }
 
   .collection-hero__title {
     font-size: var(--text-3xl);
+    overflow-wrap: anywhere;
     text-wrap: balance;
+  }
+
+  /* Nomes longos usam uma escala menor: no máximo três linhas a 320 px, sem cortar. */
+  .collection-hero__title--long {
+    font-size: clamp(1.75rem, 1.2rem + 2.6vw, 3.25rem);
   }
 
   .collection-hero__title-skeleton {
@@ -53,15 +57,119 @@
     height: clamp(2.2rem, 5vw, 3.5rem);
   }
 
-  .collection-hero__overview {
+  .collection-hero__facts {
+    color: var(--color-text-secondary);
+  }
+
+  .collection-hero__actions {
+    margin-top: var(--space-2);
+  }
+
+  /* Sem imagem de fundo: cabeçalho compacto com a luz dourada sutil das pessoas (D-66). */
+  .collection-hero--plain::before {
+    position: absolute;
+    inset: -4rem 0 0;
+    z-index: var(--layer-behind);
+    background: var(--gradient-spotlight);
+    content: "";
+    pointer-events: none;
+  }
+
+  .collection-hero--plain .collection-hero__content {
+    padding-top: var(--space-6);
+  }
+
+  /* Descrição como abertura editorial, abaixo do cabeçalho em todas as larguras. */
+  .collection-overview {
     max-width: var(--measure-prose);
+    margin-top: var(--space-5);
     color: var(--color-text-secondary);
     font-size: var(--text-lg);
+    line-height: var(--leading-relaxed);
+  }
+
+  /* No celular, a descrição longa em corpo normal: menos altura antes dos filmes. */
+  @media (max-width: 599px) {
+    .collection-overview {
+      margin-top: var(--space-4);
+      font-size: var(--text-md);
+      line-height: var(--leading-body);
+    }
+  }
+
+  .collection-overview--empty {
+    color: var(--color-text-tertiary);
+    font-size: var(--text-md);
+  }
+
+  /* Filmes em sequência: número de ordem acima de cada card. */
+  .collection-parts {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .collection-part {
+    position: relative;
+    display: grid;
+    align-content: start;
+    gap: var(--space-2);
+  }
+
+  .collection-part__number {
+    color: var(--color-text-tertiary);
+    font-size: var(--text-lg);
+    font-variant-numeric: lining-nums tabular-nums;
+    line-height: var(--leading-none);
+  }
+
+  .collection-part__badge {
+    position: absolute;
+    top: calc(var(--text-lg) + var(--space-2) + var(--space-4));
+    left: var(--space-4);
+    z-index: 1;
+    pointer-events: none;
   }
 
   @media (min-width: 900px) {
+    .collection-hero {
+      min-height: min(62svh, 520px);
+      align-items: end;
+    }
+
+    .collection-hero__media {
+      position: absolute;
+      inset: 0;
+      z-index: var(--layer-behind);
+      max-height: none;
+      aspect-ratio: auto;
+    }
+
+    /* Véu forte atrás da coluna de texto (à esquerda e embaixo): contraste AA sobre
+       qualquer imagem, inclusive as claras. */
+    .collection-hero__media::after {
+      background:
+        linear-gradient(
+          90deg,
+          rgb(var(--rgb-ink) / 94%) 0%,
+          rgb(var(--rgb-ink) / 86%) 38%,
+          rgb(var(--rgb-ink) / 20%) 72%,
+          rgb(var(--rgb-ink) / 0%) 100%
+        ),
+        var(--gradient-backdrop-scrim);
+    }
+
     .collection-hero__content {
-      padding: var(--space-8) var(--space-7) var(--space-7);
+      max-width: min(var(--container-max), 100% - 2 * var(--gutter));
+      padding-block: var(--space-8) var(--space-6);
+    }
+
+    .collection-hero__content > * {
+      max-width: 38rem;
+    }
+
+    .collection-hero--plain {
+      min-height: 0;
     }
   }
 }

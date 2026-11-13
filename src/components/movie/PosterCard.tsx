@@ -63,10 +63,12 @@ interface PosterCardProps {
   movie: MovieSummary;
   eager?: boolean | undefined;
   priority?: boolean | undefined;
+  /** Texto abaixo do título no lugar do ano (ex.: "Em breve" na coleção, D-68). */
+  meta?: string | undefined;
 }
 
 /** Card de filme: o pôster é o protagonista; o card inteiro é um link. */
-const PosterCard = ({ movie, eager = false, priority = false }: PosterCardProps) => {
+const PosterCard = ({ movie, eager = false, priority = false, meta }: PosterCardProps) => {
   const title = getMovieTitle(movie);
   const year = getReleaseYear(movie.release_date);
 
@@ -82,7 +84,7 @@ const PosterCard = ({ movie, eager = false, priority = false }: PosterCardProps)
         <Rating value={movie.vote_average} className="poster-card__rating" />
       </div>
       <h3 className="poster-card__title">{title}</h3>
-      <p className="poster-card__meta mono">{year ?? messages.common.noDate}</p>
+      <p className="poster-card__meta mono">{meta ?? year ?? messages.common.noDate}</p>
     </Link>
   );
 };
