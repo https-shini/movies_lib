@@ -158,7 +158,7 @@
     }
 
     /* Texto recortado no gradiente da marca: volta à cor sólida do sistema (D-64, D-66). */
-    :is(.ranked__number, .person-head__monogram) {
+    :is(.ranked__number, .person-head__monogram, .watchlist__total-number) {
       background: none;
       color: CanvasText;
     }

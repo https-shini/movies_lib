@@ -46,7 +46,7 @@ test.describe("Minha lista", () => {
     await page.getByRole("banner").getByRole("link", { name: "Minha lista" }).click();
     await expect(page).toHaveURL("/minha-lista");
     await expect(page).toHaveTitle("Minha lista · Cinelux");
-    await expect(page.getByText("1 título", { exact: true })).toBeVisible();
+    await expect(page.locator(".watchlist__total")).toHaveText("1 título salvo");
     const list = page.getByRole("list", { name: "Títulos salvos" });
     await expect(list.getByRole("link", { name: /Clube da Luta/ })).toHaveAttribute(
       "href",
@@ -70,7 +70,7 @@ test.describe("Minha lista", () => {
     await page.goto("/serie/1396");
     await page.getByRole("button", { name: "Salvar na lista" }).click();
     await page.goto("/minha-lista");
-    await expect(page.getByText("2 títulos", { exact: true })).toBeVisible();
+    await expect(page.locator(".watchlist__total")).toHaveText("2 títulos salvos");
     await expect(list.getByRole("listitem").first()).toContainText("Breaking Bad");
     await expect(list.getByRole("listitem").first()).toContainText("Série");
 
@@ -78,7 +78,7 @@ test.describe("Minha lista", () => {
     await page.goto("/serie/1396");
     await page.getByRole("button", { name: "Na sua lista" }).click();
     await page.goto("/minha-lista");
-    await expect(page.getByText("1 título", { exact: true })).toBeVisible();
+    await expect(page.locator(".watchlist__total")).toHaveText("1 título salvo");
 
     // Limpar pede confirmação; cancelar mantém a lista.
     await page.getByRole("button", { name: "Limpar lista" }).click();
@@ -92,6 +92,11 @@ test.describe("Minha lista", () => {
     await expect(page.getByRole("link", { name: "Descobrir filmes" })).toHaveAttribute(
       "href",
       "/discover",
+    );
+    // A lista também guarda séries: a lista vazia oferece os dois caminhos (D-67).
+    await expect(page.getByRole("link", { name: "Descobrir séries" })).toHaveAttribute(
+      "href",
+      "/discover?tipo=series",
     );
     expect(await page.evaluate((key) => window.localStorage.getItem(key), STORAGE_KEY)).toBeNull();
   });
