@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { PersonCredit } from "../types/tmdb";
-import { buildFilmography, getAge, pickKnownFor } from "./person";
+import { buildFilmography, getAge, getInitials, pickKnownFor } from "./person";
 
 const credit = (overrides: Partial<PersonCredit>): PersonCredit => ({
   id: 1,
@@ -126,5 +126,22 @@ describe("pickKnownFor", () => {
     );
 
     expect(picked.map((entry) => entry.id)).toEqual([2]);
+  });
+});
+
+describe("getInitials", () => {
+  it.each([
+    ["Brad Pitt", "BP"],
+    ["William Bradley Pitt", "WP"],
+    ["Zendaya", "Z"],
+    ["  joão   da silva ", "JS"],
+    ["Ólafur Darri Ólafsson", "ÓÓ"],
+    ['"Weird Al" Yankovic', "WY"],
+    ["朱江", "朱"],
+    ["รชานันท์ มหาวรรณ์", "รม"],
+    ["", ""],
+    [null, ""],
+  ])("%s → %s", (name, expected) => {
+    expect(getInitials(name)).toBe(expected);
   });
 });
