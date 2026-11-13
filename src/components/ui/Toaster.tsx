@@ -2,7 +2,11 @@ import { useSyncExternalStore } from "react";
 import { PiCheckCircle, PiInfo, PiWarningCircle, PiX } from "react-icons/pi";
 import { messages } from "../../i18n";
 import { dismissToast, getToasts, subscribeToasts, type ToastTone } from "../../lib/toast";
-import "./Toaster.css";
+import toasterStyles from "./Toaster.css?url";
+import { loadStylesheet } from "../../lib/stylesheet";
+
+// Fora do CSS global: os avisos só aparecem depois de uma ação (D-63).
+void loadStylesheet(toasterStyles);
 
 const icons: Record<ToastTone, typeof PiInfo | null> = {
   neutral: null,

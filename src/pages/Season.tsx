@@ -20,7 +20,8 @@ import SectionHeader from "../components/ui/SectionHeader";
 import StateMessage from "../components/ui/StateMessage";
 import type { Episode } from "../types/tmdb";
 import NotFound from "./NotFound";
-import "./Season.css";
+import seasonStyles from "./Season.css?url";
+import { loadStylesheet } from "../lib/stylesheet";
 
 const text = messages.season;
 
@@ -276,6 +277,12 @@ const SeasonDetailsPage = ({ id, number }: { id: string; number: string }) => {
     </main>
   );
 };
+
+/**
+ * Estilos da página fora do CSS global (D-63). O carregamento da rota espera por eles,
+ * então a página nunca aparece sem estilo.
+ */
+export const styles = (): Promise<void> => loadStylesheet(seasonStyles);
 
 const Season = () => {
   const { id, season } = useParams();

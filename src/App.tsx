@@ -4,10 +4,11 @@ import { messages } from "./i18n";
 import AppHeader from "./components/layout/AppHeader";
 import MobileTabBar from "./components/layout/MobileTabBar";
 import SiteFooter from "./components/layout/SiteFooter";
-import Toaster from "./components/ui/Toaster";
 
 // Estatísticas fora do pacote principal: carregam depois da página (D-41).
 const Observability = lazy(() => import("./components/layout/Observability"));
+// Avisos também fora do pacote principal: só aparecem depois de uma ação (D-63).
+const Toaster = lazy(() => import("./components/ui/Toaster"));
 
 function App() {
   return (
@@ -21,10 +22,10 @@ function App() {
       </div>
       <SiteFooter />
       <MobileTabBar />
-      <Toaster />
       <ScrollRestoration />
       <Suspense fallback={null}>
         <Observability />
+        <Toaster />
       </Suspense>
     </div>
   );

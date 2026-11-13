@@ -51,6 +51,31 @@ test.describe("Temporada", () => {
     expect(tmdb.unknown).toEqual([]);
   });
 
+  test("o CSS da temporada só é baixado na rota, e a página já abre estilizada", async ({
+    page,
+  }) => {
+    const stylesheets: string[] = [];
+    page.on("request", (request) => {
+      if (request.resourceType() === "stylesheet")
+        stylesheets.push(new URL(request.url()).pathname);
+    });
+    await page.goto("/serie/1396");
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    expect(stylesheets.some((path) => /\/Season-[^/]*\.css$/.test(path))).toBe(false);
+
+    await page
+      .getByRole("list", { name: "Temporadas da série" })
+      .getByRole("link", { name: /Temporada 1/ })
+      .click();
+    const heading = page.getByRole("heading", { level: 1, name: "Temporada 1" });
+    await expect(heading).toBeVisible();
+    expect(stylesheets.some((path) => /\/Season-[^/]*\.css$/.test(path))).toBe(true);
+    // No primeiro quadro em que o título existe, a grade do cabeçalho já está aplicada.
+    expect(
+      await page.locator(".season-hero__body").evaluate((el) => getComputedStyle(el).display),
+    ).toBe("grid");
+  });
+
   test("marca episódios inéditos", async ({ page, tmdb }) => {
     const future = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
     tmdb.on("tv/1396/season/1", {
