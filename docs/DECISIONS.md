@@ -525,3 +525,11 @@ Cada decisão tem: contexto, decisão e consequência. As decisões D-01 a D-11 
 - **Comparativa:** o job `visual` captura a base do PR com a suíte da branch e compara a branch com ela, no mesmo container (imagem oficial do Playwright). 15 páginas inteiras em 5 larguras, com as fixtures do E2E.
 - **Informativa, não bloqueante:** um redesign muda o visual de propósito. As telas alteradas vão para o resumo da execução e as imagens (referência, atual e diferença) para o artefato `visual-diff`. Validado localmente contra `0715b02`: só mudaram série, temporada e as telas com o selo "Série", exatamente as mudanças desta entrega.
 - **Local:** `npm run test:visual:baseline` numa versão de referência e `npm run test:visual` na versão a comparar (`VISUAL_SNAPSHOT_DIR` aponta a pasta).
+
+## D-63. CSS de rota e de interação fora do arquivo global
+
+- **Regressão medida após o merge do PR #24:** Lighthouse celular, deployments antigo e novo medidos em sequência pelo mesmo caminho. Início caiu de 88–89 para 86–87 e Filme de 88 para 85–86; a primeira pintura subiu de 2,09 s para 2,29 s. A comparação local anterior (servidor próprio, sem a latência simulada da CDN) não tinha mostrado a diferença.
+- **Causa:** o CSS global foi de 10,2 para 12,4 KB e o JS de entrada de 10,1 para 11,8 KB (gzip), com a página de temporada e os avisos, que todas as páginas passaram a baixar antes de pintar.
+- **Decisão:** `lib/stylesheet.ts` carrega folhas de estilo sob demanda. O CSS da temporada é baixado na rota, e o carregamento da rota espera por ele (a página nunca aparece sem estilo). Os avisos (JS e CSS) carregam depois da página, como as estatísticas. As camadas já declaradas pelo CSS global (D-58) garantem que a ordem da cascata não depende de quando a folha chega.
+- **Resultado no build:** CSS global de 11,5 KB e JS de entrada de 10,4 KB (gzip). Ficam no global os tokens, o selo e a trilha de navegação, que a segunda parte do redesign usa em todas as páginas.
+- **Testes:** o Início não baixa o CSS da temporada; a temporada abre já com a grade aplicada; o carregador não duplica folhas e não trava a página quando uma falha.

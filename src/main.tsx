@@ -34,9 +34,12 @@ import {
  * Início e 404 ficam no pacote principal; as demais páginas são carregadas sob demanda
  * (D-41). Os loaders só disparam o pré-carregamento dos dados e devolvem null na hora.
  */
-const page = (load: () => Promise<{ default: ComponentType }>) => async () => ({
-  Component: (await load()).default,
-});
+const page =
+  (load: () => Promise<{ default: ComponentType; styles?: () => Promise<void> }>) => async () => {
+    const module = await load();
+    await module.styles?.();
+    return { Component: module.default };
+  };
 
 const router = createBrowserRouter([
   {
