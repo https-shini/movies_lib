@@ -64,6 +64,7 @@ Todo o código (dados, componentes, páginas, proxy e testes) está em TypeScrip
 | `/search?q=`    | Search     | Categorias em `tipo` (filmes, `series`, `pessoas`), com `page` na URL     |
 | `/movie/:id`    | Movie      | IDs não numéricos mostram a página 404 sem consultar a API               |
 | `/serie/:id`    | Tv         | Mesma estrutura do filme, com temporadas                                 |
+| `/serie/:id/temporada/:season` | Season | Episódios da temporada, trilha e seletor de temporadas (D-61) |
 | `/pessoa/:id`   | Person     | Perfil, principais trabalhos, filmografia por área e fotos               |
 | `/pessoas`      | People     | Pessoas populares, com `page` na URL                                     |
 | `/colecao/:id`  | Collection | Filmes da franquia em ordem de lançamento                                |
@@ -114,6 +115,7 @@ Requisições canceladas (`AbortError`) são repassadas sem conversão.
 | Início    | Na abertura: `movie/popular` e `genre/movie/list`. Ao rolar, uma vez cada: `tv/popular`, `movie/top_rated`, `movie/now_playing` e `person/popular` (D-57) |
 | Filme     | `movie/{id}` com os complementos: 1 requisição                                      |
 | Série     | `tv/{id}` com os complementos: 1 requisição                                         |
+| Temporada | `tv/{id}/season/{n}`; `tv/{id}` vem do cache quando se chega pela série (D-61)       |
 | Pessoa    | `person/{id}`: 1 requisição (2 quando a biografia só existe em inglês)             |
 | Coleção   | `collection/{id}`: 1 requisição                                                     |
 | Pessoas   | `person/popular`                                                                   |
@@ -153,7 +155,7 @@ Os tokens `--glass-*` e `--surface-*` de `tokens.css` definem as superfícies tr
 | --------------------------------------------------------------------- | ------------------------------------------------------- |
 | `genre/movie/list`, `genre/tv/list`                                   | 24 h                                                    |
 | `movie/popular`, `top_rated`, `now_playing`, `tv/popular`, `person/popular`, `discover/movie`, `discover/tv` | 1 h              |
-| `movie/{id}`, `movie/{id}/watch/providers`, `tv/{id}`, `person/{id}`, `collection/{id}` | 6 h                                  |
+| `movie/{id}`, `movie/{id}/watch/providers`, `tv/{id}`, `tv/{id}/season/{n}`, `person/{id}`, `collection/{id}` | 6 h                                  |
 | `search/movie`, `search/tv`, `search/person`                          | 10 min                                                  |
 
 - O navegador recebe `max-age=60`; a Vercel consome o `s-maxage` (D-19).

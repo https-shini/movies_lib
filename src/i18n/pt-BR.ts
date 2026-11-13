@@ -437,6 +437,31 @@ export const ptBR = {
     episodesIn: "{count} ep.",
     providersSubtitle: "Streaming, aluguel e compra no Brasil.",
     relatedTitle: "Séries parecidas",
+    seasonLink: "Ver episódios",
+  },
+
+  season: {
+    loading: "Carregando temporada",
+    loadingTitle: "Carregando temporada",
+    fallbackTitle: "Temporada",
+    documentTitle: "{season} · {show}",
+    error: "Não foi possível abrir esta temporada",
+    notFound: "Temporada não encontrada.",
+    backToShow: "Voltar para {show}",
+    backToSeries: "Voltar para a série",
+    breadcrumbLabel: "Você está em",
+    switcherLabel: "Outras temporadas",
+    episodesTitle: "Episódios",
+    episodesSubtitle: "Sinopse, data de exibição e duração de cada episódio.",
+    episodesLabel: "Episódios da temporada",
+    episodeNumber: "Episódio {number}",
+    episodeShort: "E{number}",
+    noOverview: "O TMDB ainda não tem sinopse em português para este episódio.",
+    noEpisodes: "O TMDB ainda não lista os episódios desta temporada.",
+    upcoming: "Inédito",
+    finale: "Final da temporada",
+    premiere: "Estreia",
+    totalRuntime: "{runtime} no total",
   },
 
   person: {
@@ -511,6 +536,8 @@ export const ptBR = {
     lede: "Filmes e séries que você salvou para ver depois. A lista fica só neste navegador, sem cadastro.",
     save: "Salvar na lista",
     saved: "Na sua lista",
+    added: "{title} entrou na sua lista",
+    removed: "{title} saiu da sua lista",
     navLabel: "Minha lista",
     count: { one: "{count} título", other: "{count} títulos" },
     listLabel: "Títulos salvos",
@@ -522,6 +549,12 @@ export const ptBR = {
     clearDescription: "Os títulos salvos neste navegador serão removidos. Não é possível desfazer.",
     clearConfirm: "Limpar tudo",
     clearCancel: "Cancelar",
+  },
+
+  toast: {
+    region: "Avisos",
+    dismiss: "Fechar aviso",
+    undo: "Desfazer",
   },
 
   share: {

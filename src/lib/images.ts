@@ -9,8 +9,9 @@ export type PosterSize = "w92" | "w185" | "w342" | "w500" | "w780" | "original";
 export type BackdropSize = "w300" | "w780" | "w1280" | "original";
 export type ProfileSize = "w185" | "h632" | "original";
 export type LogoSize = "w92" | "w185" | "original";
+export type StillSize = "w92" | "w185" | "w300" | "original";
 
-type ImageSize = PosterSize | BackdropSize | ProfileSize | LogoSize;
+type ImageSize = PosterSize | BackdropSize | ProfileSize | LogoSize | StillSize;
 
 function buildImageUrl(path: string | null | undefined, size: ImageSize): string | null {
   if (typeof path !== "string" || path.trim() === "") return null;
@@ -36,6 +37,21 @@ export function getProfileUrl(
   size: ProfileSize = "w185",
 ): string | null {
   return buildImageUrl(path, size);
+}
+
+/** Quadro de episódio (16:9). */
+export function getStillUrl(
+  path: string | null | undefined,
+  size: StillSize = "w300",
+): string | null {
+  return buildImageUrl(path, size);
+}
+
+/** `srcset` dos quadros de episódio: 185 px no celular, 300 px nas demais telas. */
+export function stillSrcSet(path: string | null | undefined): string | undefined {
+  const small = getStillUrl(path, "w185");
+  const large = getStillUrl(path, "w300");
+  return small && large ? `${small} 185w, ${large} 300w` : undefined;
 }
 
 export function getLogoUrl(path: string | null | undefined, size: LogoSize = "w92"): string | null {

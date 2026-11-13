@@ -28,5 +28,8 @@ export function mediaPath(mediaType: MediaType | undefined, id: number | string)
   return mediaType === "tv" ? `/serie/${String(id)}` : `/movie/${String(id)}`;
 }
 
+export const seasonPath = (showId: number | string, season: number | string): string =>
+  `/serie/${String(showId)}/temporada/${String(season)}`;
+
 export const personPath = (id: number | string): string => `/pessoa/${String(id)}`;
 export const collectionPath = (id: number | string): string => `/colecao/${String(id)}`;

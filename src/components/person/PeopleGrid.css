@@ -1,12 +1,14 @@
-.people-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(132px, 42vw), 1fr));
-  gap: var(--space-6) var(--space-4);
-}
-
-@media (min-width: 1024px) {
+@layer components {
   .people-grid {
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: var(--space-7) var(--space-5);
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(132px, 42vw), 1fr));
+    gap: var(--space-6) var(--space-4);
+  }
+
+  @media (min-width: 1024px) {
+    .people-grid {
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: var(--space-7) var(--space-5);
+    }
   }
 }

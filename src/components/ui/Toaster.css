@@ -1,0 +1,113 @@
+@layer components {
+  /* Avisos temporários: vidro flutuante, acima da barra inferior no celular (D-60). */
+  .toaster {
+    position: fixed;
+    right: 0;
+    bottom: calc(var(--space-4) + env(safe-area-inset-bottom));
+    left: 0;
+    z-index: var(--layer-toast);
+    display: grid;
+    justify-items: center;
+    padding-inline: var(--gutter);
+    pointer-events: none;
+  }
+
+  .toaster__list {
+    display: grid;
+    width: min(100%, 26rem);
+    gap: var(--space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .toast {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    min-height: 52px;
+    padding: var(--space-1) var(--space-1) var(--space-1) var(--space-4);
+    border: var(--border-width) solid var(--glass-border-strong);
+    border-radius: var(--radius-md);
+    color: var(--color-text-primary);
+    background: var(--surface-floating);
+    box-shadow: var(--glass-highlight), var(--elevation-3);
+    backdrop-filter: var(--glass-filter);
+    font-size: var(--text-sm);
+    pointer-events: auto;
+    animation: toast-in var(--duration-slow) var(--ease-emphasized);
+  }
+
+  .toast--success {
+    border-color: var(--color-success-border);
+  }
+
+  .toast--danger {
+    border-color: var(--color-danger-border);
+  }
+
+  .toast--info {
+    border-color: var(--color-info-border);
+  }
+
+  .toast__icon {
+    flex: none;
+    font-size: var(--icon-md);
+  }
+
+  .toast--success .toast__icon {
+    color: var(--color-success);
+  }
+
+  .toast--danger .toast__icon {
+    color: var(--color-danger);
+  }
+
+  .toast--info .toast__icon {
+    color: var(--color-info);
+  }
+
+  .toast__message {
+    flex: 1;
+    min-width: 0;
+    margin: 0;
+    padding-block: var(--space-2);
+  }
+
+  .toast__action {
+    min-height: var(--tap-target);
+    padding: 0 var(--space-3);
+    border: 0;
+    border-radius: var(--radius-sm);
+    color: var(--color-accent-default);
+    background: none;
+    font-weight: var(--weight-bold);
+    cursor: pointer;
+  }
+
+  .toast__action:hover {
+    background: var(--color-hover-tint);
+  }
+
+  .toast__close.icon-btn {
+    border-color: transparent;
+    background: none;
+    box-shadow: none;
+  }
+
+  /* Abaixo de 900 px a barra inferior ocupa o rodapé da tela. */
+  @media (max-width: 899px) {
+    .toaster {
+      bottom: calc(
+        var(--tabbar-h) + 2 * var(--tabbar-inset) + var(--space-2) + env(safe-area-inset-bottom)
+      );
+    }
+  }
+
+  @keyframes toast-in {
+    from {
+      opacity: 0;
+      transform: translateY(12px) scale(0.98);
+    }
+  }
+}

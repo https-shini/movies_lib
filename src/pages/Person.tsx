@@ -187,7 +187,7 @@ const Filmography = ({ groups, index }: FilmographyProps) => {
                 </span>
                 <span className="filmography__aside">
                   {entry.mediaType === "tv" && (
-                    <span className="filmography__badge mono">{messages.title.seriesBadge}</span>
+                    <span className="badge badge--outline">{messages.title.seriesBadge}</span>
                   )}
                   {entry.voteCount > 0 && <Rating value={entry.voteAverage} />}
                 </span>

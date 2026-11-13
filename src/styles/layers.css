@@ -1,0 +1,15 @@
+/*
+ * Ordem da cascata (D-58). Declarada antes de qualquer outra regra: uma camada posterior
+ * vence uma anterior independentemente da especificidade ou da ordem dos imports.
+ *
+ *   tokens      variáveis do sistema visual
+ *   base        reset, fontes, elementos HTML
+ *   typography  classes de texto (.display, .mono)
+ *   primitives  botões, chips, campos, esqueletos (ui.css)
+ *   layout      contêiner, cabeçalho de página, grades estruturais
+ *   components  CSS de cada componente
+ *   pages       ajustes específicos de cada página
+ *   utilities   classes utilitárias de propósito único
+ *   overrides   preferências do sistema: alto contraste e movimento reduzido
+ */
+@layer tokens, base, typography, primitives, layout, components, pages, utilities, overrides;

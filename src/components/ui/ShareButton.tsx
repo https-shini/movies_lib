@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { PiCheck, PiShareNetwork } from "react-icons/pi";
 import { messages } from "../../i18n";
+import { showToast } from "../../lib/toast";
 
 const text = messages.share;
 
@@ -35,10 +36,12 @@ const ShareButton = ({ title }: { title: string }) => {
       }
       await navigator.clipboard.writeText(url);
       setState("copied");
+      showToast(text.copied, { tone: "success" });
     } catch (error) {
       // Fechar a folha de compartilhamento não é erro.
       if (error instanceof DOMException && error.name === "AbortError") return;
       setState("failed");
+      showToast(text.failed, { tone: "danger" });
     }
   };
 
@@ -60,9 +63,6 @@ const ShareButton = ({ title }: { title: string }) => {
         )}
         {label}
       </button>
-      <span className="sr-only" role="status">
-        {state === "idle" ? "" : label}
-      </span>
     </>
   );
 };

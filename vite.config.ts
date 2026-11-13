@@ -1,6 +1,7 @@
 import react from "@vitejs/plugin-react";
 import { loadEnv } from "vite";
 import { defineConfig } from "vitest/config";
+import { cssLayerOrder } from "./build/cssLayerOrder.ts";
 import { securityHeaders } from "./server/securityHeaders.ts";
 import { tmdbDevProxy } from "./server/viteTmdbProxy.ts";
 
@@ -9,7 +10,11 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
 
   return {
-    plugins: [react(), tmdbDevProxy({ apiKey: env.TMDB_API_KEY ?? process.env.TMDB_API_KEY })],
+    plugins: [
+      react(),
+      cssLayerOrder(),
+      tmdbDevProxy({ apiKey: env.TMDB_API_KEY ?? process.env.TMDB_API_KEY }),
+    ],
     // Mesmos cabeçalhos de segurança da Vercel, inclusive a CSP (testes E2E rodam no preview).
     preview: { headers: securityHeaders() },
     build: {
@@ -32,7 +37,12 @@ export default defineConfig(({ mode }) => {
     test: {
       environment: "jsdom",
       setupFiles: ["./vitest.setup.ts"],
-      include: ["src/**/*.test.{ts,tsx}", "server/**/*.test.ts", "api/**/*.test.ts"],
+      include: [
+        "src/**/*.test.{ts,tsx}",
+        "server/**/*.test.ts",
+        "api/**/*.test.ts",
+        "build/**/*.test.ts",
+      ],
       clearMocks: true,
       restoreMocks: true,
     },

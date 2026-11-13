@@ -81,3 +81,78 @@ jobs:
             playwright-report/
             test-results/
           retention-days: 7
+
+  # Regressão visual comparativa (D-62): captura a base do PR e compara a branch com ela,
+  # no mesmo container. É informativa: um redesign muda o visual de propósito, então as
+  # páginas alteradas vão para o resumo da execução e as imagens (referência, atual e
+  # diferença) para um artefato, sem bloquear o merge.
+  visual:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    container:
+      image: mcr.microsoft.com/playwright:v1.63.0-noble
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Capture the base of the pull request
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          VISUAL_SNAPSHOT_DIR: ${{ github.workspace }}/visual-baseline
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git worktree add ../visual-base "$BASE_SHA"
+          rm -rf ../visual-base/e2e/visual
+          cp -r e2e/visual ../visual-base/e2e/visual
+          cd ../visual-base
+          npm ci
+          npx playwright test -c e2e/visual/visual.config.ts --update-snapshots --reporter=line
+      - name: Compare this branch with the base
+        id: compare
+        env:
+          VISUAL_SNAPSHOT_DIR: ${{ github.workspace }}/visual-baseline
+          PLAYWRIGHT_JSON_OUTPUT_NAME: visual-results.json
+        run: |
+          if npx playwright test -c e2e/visual/visual.config.ts --reporter=line,json; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Summarize changed screens
+        if: always()
+        run: |
+          node -e '
+            const fs = require("node:fs");
+            if (!fs.existsSync("visual-results.json")) process.exit(0);
+            const report = JSON.parse(fs.readFileSync("visual-results.json", "utf8"));
+            const changed = [];
+            const walk = (suite) => {
+              for (const spec of suite.specs ?? [])
+                for (const t of spec.tests ?? [])
+                  if (t.results.some((r) => r.status !== "passed")) changed.push(`${spec.title} (${t.projectName})`);
+              for (const child of suite.suites ?? []) walk(child);
+            };
+            for (const suite of report.suites) walk(suite);
+            const lines = changed.length
+              ? ["### Telas com diferença visual", "", ...changed.map((c) => `- ${c}`), "", "Imagens no artefato visual-diff."]
+              : ["### Nenhuma diferença visual em relação à base"];
+            fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, lines.join("\n") + "\n");
+          '
+      - name: Upload visual differences
+        if: steps.compare.outputs.changed == 'true'
+        uses: actions/upload-artifact@v7
+        with:
+          name: visual-diff
+          path: |
+            visual-results/
+            visual-report/
+          retention-days: 7

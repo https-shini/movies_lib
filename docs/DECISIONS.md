@@ -489,3 +489,39 @@ Cada decisão tem: contexto, decisão e consequência. As decisões D-01 a D-11 
 - **Build:** `cssCodeSplit: false` (uma folha de cerca de 10 KB com gzip) e as bibliotecas num único pacote, com as estatísticas da Vercel fora dele (D-41).
 - **Descartado:** um grupo de pacote para o código compartilhado da aplicação. Ele mudava a ordem das regras no CSS único, e o ícone de busca do cabeçalho reaparecia no desktop; os testes E2E acusaram. A ordem atual ainda depende da ordem de importação dos módulos: se um dia isso incomodar, a saída robusta são camadas de cascata (`@layer`).
 - **Testes:** os testes genéricos (nome acessível, alvos de toque, rolagem horizontal) percorrem a página inteira antes de verificar (`loadWholePage`). Novos: nenhuma consulta das seções adiadas na primeira tela, uma única consulta de cada ao percorrer a página, nenhuma repetição ao voltar, e erro com nova tentativa numa seção adiada.
+
+## D-58. Cascata em camadas (`@layer`)
+
+- **Problema:** a precedência das regras dependia da ordem de importação dos módulos (D-57). No build, o CSS de todos os módulos é concatenado num arquivo, e a ordem segue o grafo de módulos, não os imports de `main.tsx`: o CSS de `StateMessage` chegava antes dos tokens e da base.
+- **Decisão:** `src/styles/layers.css` declara `tokens, base, typography, primitives, layout, components, pages, utilities, overrides`, e cada folha de estilo vive na sua camada. Uma camada posterior vence a anterior independentemente da especificidade ou da ordem.
+- **Plugin `cssLayerOrder` (`build/`):** o minificador mescla blocos da mesma camada e descarta a declaração isolada, e a primeira aparição define a ordem. O plugin lê a declaração de `layers.css` (fonte única) e a põe no início de cada CSS emitido. Testes unitários cobrem o caso real (um bloco de componente chegando primeiro).
+- **Alto contraste e movimento reduzido** ficam em `overrides`; o prefixo `:root` usado só para ganhar especificidade (D-52) saiu. Não há `!important` fora do bloco de movimento reduzido, então a inversão de precedência dos importantes entre camadas não afeta nada.
+- **Verificação:** capturas de 14 páginas em 7 larguras antes e depois, pixel a pixel. A única diferença foi o selo "Série": `.mono` sobrescrevia o tamanho declarado no componente por acidente de ordem; agora vale o que o código declara.
+
+## D-59. Paleta expandida e tokens complementares
+
+- **Paleta:** o grafite e o dourado continuam como base. Entram um azul de lente (secundária, informação), uma brasa (terciária, alerta e "em alta") e um violeta de projeção (destaques editoriais, uso raro), cada um com tom de texto (300), de preenchimento (500), fundo suave e borda. Estados semânticos completos: sucesso, erro, alerta e informação.
+- **Tokens novos:** gradientes de marca, contêineres (`--container-prose`, `-narrow`, `-wide`), espaçamento entre seções, escala de elevação 1 a 4, desfoque (`--blur-*`), opacidades, camadas de menu e de avisos, curvas e durações de movimento.
+- **Contraste verificado por teste:** `build/tokensContrast.test.ts` lê `tokens.css`, resolve as variáveis e exige 4,5:1 para cada cor de texto sobre cada superfície, e para o texto escuro sobre os preenchimentos fortes (56 combinações).
+- **Primitivo `.badge`** com variantes por papel (destaque, contorno, informação, alerta, sucesso, erro, editorial), no lugar de dois estilos isolados.
+
+## D-60. Avisos temporários (toasts)
+
+- **Store mínimo** em `lib/toast.ts`, lido com `useSyncExternalStore`, sem dependência. No máximo três avisos; os com ação ficam 6,5 s, os demais 3,5 s.
+- **Acessibilidade:** a região (`role="status"`) fica sempre no DOM, para que leitores de tela a conheçam antes do primeiro aviso; cada aviso tem botão de fechar com nome. No celular, os avisos ficam acima da barra inferior.
+- **Uso:** salvar e remover da Minha lista (remover oferece "Desfazer", que devolve a lista exatamente como estava, na mesma ordem) e Compartilhar (link copiado ou falha). A região anterior do Compartilhar saiu, para não anunciar duas vezes.
+
+## D-61. Temporadas e episódios
+
+- **Rota** `/serie/:id/temporada/:numero` (0 = especiais), com carregamento antecipado da série e da temporada. Os cards de temporada da série viraram links.
+- **Proxy:** só `tv/{id}/season/{n}`, com até 3 dígitos e sem subcaminhos (episódio isolado, estados da conta). Cache de detalhes (6 h).
+- **Página:** trilha de navegação, pôster da temporada sobre o fundo da série, ano, número de episódios e duração total; seletor entre temporadas; para cada episódio, quadro, número, título, data, duração, nota e sinopse. Episódios futuros recebem "Inédito"; o último, "Final da temporada" quando o TMDB marca. Sem sinopse ou sem imagem, a página diz isso em vez de deixar um vazio.
+- **Requisições:** chegando pela série, os detalhes dela já estão no cache do cliente; só a temporada é pedida. Episódios usam `content-visibility: auto`, para temporadas longas não pesarem fora da tela.
+- **`Breadcrumbs`:** componente novo de trilha, com área de toque de 44 px.
+
+## D-62. Regressão visual no CI
+
+- **Sem imagens de referência no repositório:** capturas geradas noutro ambiente diferem por antialiasing e dariam falsos alarmes, e as 98 capturas locais somavam 31 MB.
+- **Comparativa:** o job `visual` captura a base do PR com a suíte da branch e compara a branch com ela, no mesmo container (imagem oficial do Playwright). 15 páginas inteiras em 5 larguras, com as fixtures do E2E.
+- **Informativa, não bloqueante:** um redesign muda o visual de propósito. As telas alteradas vão para o resumo da execução e as imagens (referência, atual e diferença) para o artefato `visual-diff`. Validado localmente contra `0715b02`: só mudaram série, temporada e as telas com o selo "Série", exatamente as mudanças desta entrega.
+- **Local:** `npm run test:visual:baseline` numa versão de referência e `npm run test:visual` na versão a comparar (`VISUAL_SNAPSHOT_DIR` aponta a pasta).

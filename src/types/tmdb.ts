@@ -177,6 +177,33 @@ export interface EpisodeSummary {
   season_number: number;
 }
 
+/** Episódio como vem na temporada (`tv/{id}/season/{n}`). */
+export interface Episode {
+  id: number;
+  name: string;
+  overview?: string;
+  episode_number: number;
+  season_number: number;
+  air_date?: string | null;
+  runtime?: number | null;
+  still_path: string | null;
+  vote_average?: number;
+  vote_count?: number;
+  episode_type?: string;
+}
+
+/** Temporada completa, com todos os episódios. */
+export interface SeasonDetails {
+  id: number;
+  name: string;
+  overview?: string;
+  season_number: number;
+  air_date?: string | null;
+  poster_path: string | null;
+  vote_average?: number;
+  episodes: Episode[];
+}
+
 /** Elenco somado de todas as temporadas (`aggregate_credits`). */
 export interface AggregateCastMember {
   id: number;

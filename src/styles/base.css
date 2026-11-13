@@ -1,172 +1,175 @@
-@import "./tokens.css";
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
+  html {
+    min-width: 320px;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    scroll-padding-top: calc(var(--header-h) + var(--space-4));
+  }
 
-html {
-  min-width: 320px;
-  -webkit-text-size-adjust: 100%;
-  text-size-adjust: 100%;
-  scroll-padding-top: calc(var(--header-h) + var(--space-4));
-}
+  /* Luz ambiente fixa: dá ao vidro algo para refratar, sem competir com o conteúdo. */
+  body::before {
+    position: fixed;
+    inset: 0;
+    z-index: var(--layer-behind);
+    background: var(--gradient-ambient);
+    content: "";
+    pointer-events: none;
+  }
 
-/* Luz ambiente fixa: dá ao vidro algo para refratar, sem competir com o conteúdo. */
-body::before {
-  position: fixed;
-  inset: 0;
-  z-index: var(--layer-behind);
-  background: var(--gradient-ambient);
-  content: "";
-  pointer-events: none;
-}
+  html:has(dialog[open]) {
+    overflow: hidden;
+  }
 
-html:has(dialog[open]) {
-  overflow: hidden;
-}
+  body {
+    min-height: 100dvh;
+    margin: 0;
+    color: var(--color-text-primary);
+    background: var(--color-bg);
+    font-family: var(--font-sans);
+    font-size: var(--text-md);
+    line-height: var(--leading-body);
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
 
-body {
-  min-height: 100dvh;
-  margin: 0;
-  color: var(--color-text-primary);
-  background: var(--color-bg);
-  font-family: var(--font-sans);
-  font-size: var(--text-md);
-  line-height: var(--leading-body);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -webkit-tap-highlight-color: transparent;
-}
+  :where(h1, h2, h3, h4, p, dl, dd, figure, ol, ul) {
+    margin: 0;
+  }
 
-:where(h1, h2, h3, h4, p, dl, dd, figure, ol, ul) {
-  margin: 0;
-}
+  /* :where() zera a especificidade para que classes de componentes prevaleçam. */
+  :where(ol, ul)[role="list"] {
+    padding: 0;
+    list-style: none;
+  }
 
-/* :where() zera a especificidade para que classes de componentes prevaleçam. */
-:where(ol, ul)[role="list"] {
-  padding: 0;
-  list-style: none;
-}
+  img,
+  svg,
+  iframe {
+    display: block;
+    max-width: 100%;
+  }
 
-img,
-svg,
-iframe {
-  display: block;
-  max-width: 100%;
-}
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+    color: inherit;
+  }
 
-button,
-input,
-select,
-textarea {
-  font: inherit;
-  color: inherit;
-}
+  button {
+    cursor: pointer;
+  }
 
-button {
-  cursor: pointer;
-}
+  button:disabled {
+    cursor: not-allowed;
+  }
 
-button:disabled {
-  cursor: not-allowed;
-}
+  :focus-visible {
+    outline: var(--border-width-strong) solid var(--color-accent-default);
+    outline-offset: 3px;
+    border-radius: var(--radius-xs);
+  }
 
-:focus-visible {
-  outline: var(--border-width-strong) solid var(--color-accent-default);
-  outline-offset: 3px;
-  border-radius: var(--radius-xs);
-}
+  ::selection {
+    color: var(--color-accent-on);
+    background: var(--color-accent-default);
+  }
 
-::selection {
-  color: var(--color-accent-on);
-  background: var(--color-accent-default);
-}
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
 
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
+  /* Contêiner principal das páginas */
+  .shell {
+    width: min(100% - 2 * var(--gutter), var(--container-max));
+    margin-inline: auto;
+  }
 
-/* Contêiner principal das páginas */
-.shell {
-  width: min(100% - 2 * var(--gutter), var(--container-max));
-  margin-inline: auto;
-}
-
-/*
+  /*
  * Área de toque mínima de 44 × 44 px (seção 11 da identidade) para controles que são
  * visualmente menores. A camada invisível aumenta só a área que recebe o toque ou o
  * clique; o tamanho e o espaçamento visíveis continuam os mesmos.
  */
-.chip::before,
-.search-box__clear::before,
-.app-header__link::before,
-.hit-area::before {
-  position: absolute;
-  inset: min(0px, calc((100% - var(--tap-target)) / 2));
-  content: "";
+  .chip::before,
+  .search-box__clear::before,
+  .app-header__link::before,
+  .breadcrumbs__link::before,
+  .hit-area::before {
+    position: absolute;
+    inset: min(0px, calc((100% - var(--tap-target)) / 2));
+    content: "";
+  }
+
+  .hit-area {
+    position: relative;
+  }
 }
 
-.hit-area {
-  position: relative;
-}
-
-/*
+@layer overrides {
+  /*
  * Alto contraste do sistema (forced-colors). O navegador troca as cores por cores do
  * sistema; aqui garantimos que estados indicados só por cor continuem visíveis.
  */
-@media (forced-colors: active) {
-  :focus-visible {
-    outline-color: Highlight;
+  @media (forced-colors: active) {
+    :focus-visible {
+      outline-color: Highlight;
+    }
+
+    :is(.btn, .icon-btn, .chip, .input, .select) {
+      border: var(--border-width) solid ButtonText;
+    }
+
+    :is(.chip[aria-pressed="true"], .chip[aria-current="page"], .chip--active, .count-badge),
+    .app-header__link.active::after {
+      forced-color-adjust: none;
+      border-color: Highlight;
+      color: HighlightText;
+      background: Highlight;
+    }
+
+    :is(.tabbar__item[aria-current="page"], .app-header__link.active) {
+      color: Highlight;
+    }
+
+    .skeleton {
+      border: var(--border-width) dashed GrayText;
+    }
+
+    :is(.poster-card, .ranked__item):focus-visible {
+      outline: var(--border-width-strong) solid Highlight;
+    }
   }
 
-  :root :is(.btn, .icon-btn, .chip, .input, .select) {
-    border: var(--border-width) solid ButtonText;
-  }
-
-  :root :is(.chip[aria-pressed="true"], .chip[aria-current="page"], .chip--active, .count-badge),
-  :root .app-header__link.active::after {
-    forced-color-adjust: none;
-    border-color: Highlight;
-    color: HighlightText;
-    background: Highlight;
-  }
-
-  :root :is(.tabbar__item[aria-current="page"], .app-header__link.active) {
-    color: Highlight;
-  }
-
-  :root .skeleton {
-    border: var(--border-width) dashed GrayText;
-  }
-
-  :root :is(.poster-card, .ranked__item):focus-visible {
-    outline: var(--border-width-strong) solid Highlight;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }

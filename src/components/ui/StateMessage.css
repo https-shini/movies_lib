@@ -1,64 +1,66 @@
-.state {
-  display: grid;
-  justify-items: center;
-  gap: var(--space-4);
-  padding: var(--space-7) var(--space-5);
-  border: 1px dashed var(--color-border-strong);
-  border-radius: var(--radius-md);
-  text-align: center;
-}
+@layer components {
+  .state {
+    display: grid;
+    justify-items: center;
+    gap: var(--space-4);
+    padding: var(--space-7) var(--space-5);
+    border: 1px dashed var(--color-border-strong);
+    border-radius: var(--radius-md);
+    text-align: center;
+  }
 
-.state__icon {
-  color: var(--color-text-tertiary);
-  font-size: var(--icon-xl);
-}
+  .state__icon {
+    color: var(--color-text-tertiary);
+    font-size: var(--icon-xl);
+  }
 
-.state--error .state__icon {
-  color: var(--color-danger);
-}
+  .state--error .state__icon {
+    color: var(--color-danger);
+  }
 
-.state__body {
-  display: grid;
-  max-width: 46ch;
-  gap: var(--space-2);
-}
+  .state__body {
+    display: grid;
+    max-width: 46ch;
+    gap: var(--space-2);
+  }
 
-.state__title {
-  font-family: var(--font-display);
-  font-size: var(--text-xl);
-  font-weight: var(--weight-semibold);
-  letter-spacing: var(--tracking-snug);
-}
+  .state__title {
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-snug);
+  }
 
-.state__message {
-  color: var(--color-text-secondary);
-  font-size: var(--text-sm);
-}
+  .state__message {
+    color: var(--color-text-secondary);
+    font-size: var(--text-sm);
+  }
 
-.state__actions {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: var(--space-3);
-}
+  .state__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-3);
+  }
 
-.state--compact {
-  grid-template-columns: auto 1fr;
-  justify-items: start;
-  align-items: center;
-  gap: var(--space-3);
-  padding: var(--space-4);
-  text-align: left;
-}
+  .state--compact {
+    grid-template-columns: auto 1fr;
+    justify-items: start;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    text-align: left;
+  }
 
-.state--compact .state__icon {
-  font-size: var(--icon-lg);
-}
+  .state--compact .state__icon {
+    font-size: var(--icon-lg);
+  }
 
-.state--compact .state__title {
-  font-size: var(--text-md);
-}
+  .state--compact .state__title {
+    font-size: var(--text-md);
+  }
 
-.state--compact .state__actions {
-  grid-column: 1 / -1;
+  .state--compact .state__actions {
+    grid-column: 1 / -1;
+  }
 }

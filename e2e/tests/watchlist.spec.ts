@@ -3,6 +3,35 @@ import { expect, isDesktopLayout, test } from "../helpers/test.ts";
 const STORAGE_KEY = "cinelux:minha-lista:v1";
 
 test.describe("Minha lista", () => {
+  test("avisa ao salvar e ao remover, e o Desfazer devolve o título", async ({ page }) => {
+    await page.goto("/movie/550");
+    const toasts = page.getByRole("region", { name: "Avisos" });
+
+    await page.getByRole("button", { name: "Salvar na lista" }).click();
+    await expect(toasts.getByRole("listitem")).toHaveText(/Clube da Luta entrou na sua lista/);
+
+    await page.getByRole("button", { name: "Na sua lista" }).click();
+    await expect(toasts.getByText("Clube da Luta saiu da sua lista")).toBeVisible();
+    await expect(page.getByRole("button", { name: "Salvar na lista" })).toBeVisible();
+
+    await toasts.getByRole("button", { name: "Desfazer" }).click();
+    await expect(page.getByRole("button", { name: "Na sua lista" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    await expect(toasts.getByText("Clube da Luta saiu da sua lista")).toBeHidden();
+
+    // O aviso fica acima da barra inferior no celular, sem cobrir a navegação.
+    if (!isDesktopLayout(page)) {
+      await page.getByRole("button", { name: "Na sua lista" }).click();
+      const toastBox = await toasts.getByRole("listitem").first().boundingBox();
+      const tabBox = await page
+        .getByRole("navigation", { name: "Navegação principal" })
+        .boundingBox();
+      expect(toastBox && tabBox && toastBox.y + toastBox.height <= tabBox.y).toBe(true);
+    }
+  });
+
   test("salva filme e série, mantém ao recarregar e limpa com confirmação", async ({ page }) => {
     await page.goto("/movie/550");
 

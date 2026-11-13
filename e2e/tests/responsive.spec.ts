@@ -18,6 +18,7 @@ test.describe("Responsividade", () => {
     "/search?q=duna",
     "/movie/550",
     "/serie/1396",
+    "/serie/1396/temporada/1",
     "/pessoa/287",
     "/pessoas",
     "/colecao/2344",

@@ -18,3 +18,11 @@ Thumbs.db
 playwright-report/
 test-results/
 blob-report/
+
+# Cache do tsc -b
+*.tsbuildinfo
+
+# Regressão visual (D-62): referências e relatórios gerados localmente ou no CI
+visual-baseline/
+visual-report/
+visual-results/

@@ -69,6 +69,8 @@ export interface Watchlist {
   /** Salva ou remove; `addedAt` é preenchido aqui. */
   toggle: (item: Omit<WatchlistItem, "addedAt">) => void;
   clear: () => void;
+  /** Volta a lista a um estado anterior (o "Desfazer" do aviso). */
+  restore: (items: readonly WatchlistItem[]) => void;
 }
 
 export function useWatchlist(): Watchlist {
@@ -85,5 +87,9 @@ export function useWatchlist(): Watchlist {
     write([]);
   }, []);
 
-  return { items, has, toggle, clear };
+  const restore = useCallback((previous: readonly WatchlistItem[]) => {
+    write(previous);
+  }, []);
+
+  return { items, has, toggle, clear, restore };
 }
