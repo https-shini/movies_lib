@@ -576,3 +576,21 @@ Cada decisão tem: contexto, decisão e consequência. As decisões D-01 a D-11 
 - **"Desfazer" de um título só:** restaurar uma cópia da lista inteira desfaria também remoções feitas depois. `reinsertWatchlistItem` devolve só aquele título, no lugar pela data de inclusão (`addedAt`). A primeira versão usava a posição numérica de origem, que muda com remoções seguidas; o E2E pegou (a tela parecia certa porque ordena por data, mas o armazenamento ficava fora de ordem) e um teste unitário reproduz o caso. A posição numérica só vale para itens antigos sem data de inclusão.
 - **Foco:** depois de remover, o foco vai para o título vizinho; se a lista esvaziar, para "Descobrir filmes".
 - **Armazenamento inalterado:** mesmo formato e chave (`cinelux:minha-lista:v1`); a ordenação nunca grava nada.
+
+## D-68. Redesign: coleções (`/colecao/:id`)
+
+- **Diagnóstico** (produção, dados reais: James Bond com 27 filmes, Matrix com descrição longa, Encanto, Os Fantasmas se Divertem sem pôster/data/descrição, Jujutsu Kaisen sem imagem de fundo, Star Trek com nome longo, coleção inexistente e identificador inválido; 8 larguras, 64 combinações): sem rolagem horizontal, cortes ou saltos de título. Os problemas: texto do cabeçalho com contraste abaixo de 4,5:1 sobre a imagem (medido pixel a pixel: 1,07 a 3,13 nos piores trechos no celular; o Lighthouse não mede contraste sobre imagem); cabeçalho em painel de vidro, com até 764 px no celular; painel vazio quando não há imagem; nome longo em 4 linhas; sem período, numeração ou compartilhar; filme anunciado como "Sem data"; e o estado de erro sem `h1`, mostrando a mensagem técnica do serviço (por exemplo, sobre a chave do TMDB).
+- **Aprovado e feito (A1–A5, B1):**
+  - cabeçalho editorial sem painel: no celular a imagem é uma faixa no topo e o texto fica abaixo dela, sobre o fundo sólido; a partir de 900 px o texto fica sobre a imagem, com um véu escuro forte atrás da coluna de texto. Pior contraste medido depois: 9,19:1 (antes 1,07:1);
+  - sem imagem: cabeçalho compacto com a luz dourada das pessoas (D-66);
+  - nomes acima de 28 caracteres usam escala menor (no máximo três linhas a 320 px, sem cortar);
+  - período e quantidade ("1962–2021 · 27 filmes"), lista ordenada com o número de cada filme na sequência (visual; a posição é anunciada pela própria lista) e "Em breve" para filmes sem data;
+  - erro com `h1` em todos os estados: inexistente ("Coleção não encontrada", sem nova tentativa, com caminho para descobrir), falha temporária (mensagem do serviço e "Tentar novamente") e falha técnica (mensagem genérica, sem detalhes do servidor); identificador inválido continua na 404 do site;
+  - botão Compartilhar, o mesmo de filme, série e pessoa;
+  - descrição sempre abaixo do cabeçalho, como abertura.
+- **Regras em `lib/collection.ts`** (antes dentro do componente): ordem de lançamento (sem data por último; empate pelo título e pela ordem do TMDB), período, numeração e nome longo, com testes unitários.
+- **Componente compartilhado:** `PosterCard` ganhou o parâmetro opcional `meta` (texto abaixo do título no lugar do ano). Sem ele, nada muda; o teste visual confirmou que só as telas de coleção mudaram.
+- **Desempenho:** o primeiro pôster só recebe prioridade alta quando não há imagem de fundo; com ela, a imagem é o maior elemento e o pôster não disputa a banda.
+- **Efeito colateral aceito:** no celular, o primeiro filme desceu em coleções com descrição longa (Matrix: de y ≈ 922 para 966 px), porque a descrição saiu de cima da imagem, onde era ilegível, e o Compartilhar ocupa uma linha. A descrição usa corpo normal no celular para atenuar.
+- **Não feito, por decisão do proprietário:** alternar a ordem (B2) e tirar o CSS da coleção do arquivo global (C1, para uma etapa de desempenho).
+- **Testes:** 8 unitários e 19 E2E novos (nas 7 larguras), incluindo um teste de contraste que serve uma imagem de fundo branca (o pior caso) e mede os pixels sob o texto. Contraprovas: contraste, nome longo, numeração, filme sem data, erro sem `h1` e compartilhar, cada uma fazendo pelo menos um teste falhar.

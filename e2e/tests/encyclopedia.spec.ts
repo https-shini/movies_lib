@@ -227,7 +227,8 @@ test.describe("Navegação entre conteúdos", () => {
     await page.getByRole("link", { name: /Parte da coleção.*Matrix: Coleção/ }).click();
     await expect(page).toHaveURL("/colecao/2344");
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(collection2344.name);
-    await expect(page.getByText("Coleção · 3 filmes")).toBeVisible();
+    // Período e quantidade da franquia (D-68).
+    await expect(page.getByText("1999–2003 · 3 filmes")).toBeVisible();
 
     const parts = page.getByRole("list", { name: "Filmes da coleção" }).getByRole("listitem");
     await expect(parts).toHaveText([/Matrix\s*1999/, /Matrix Reloaded/, /Matrix Revolutions/]);
