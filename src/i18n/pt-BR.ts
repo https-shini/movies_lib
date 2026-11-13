@@ -495,6 +495,7 @@ export const ptBR = {
     filterMovies: "Filmes",
     filterSeries: "Séries",
     upcoming: "Em breve",
+    showAll: "Mostrar todos ({count})",
     episodes: { one: "{count} episódio", other: "{count} episódios" },
     noRole: "Papel não informado",
     emptyFilter: "Nenhum crédito neste filtro.",

@@ -152,3 +152,21 @@ export function pickKnownFor(
     .sort((a, b) => b.voteCount - a.voteCount)
     .slice(0, limit);
 }
+
+/**
+ * Iniciais para o monograma de quem não tem foto (D-66): primeira letra do primeiro e do
+ * último nome. Conta caracteres pelo Unicode (nomes em chinês, tailandês, coreano), e
+ * nomes de uma palavra só, ou escritos sem espaços, dão uma inicial.
+ */
+export function getInitials(name: string | null | undefined): string {
+  const words = (name ?? "")
+    .trim()
+    .split(/\s+/)
+    .map((word) => word.replace(/^[^\p{L}\p{N}]+/u, ""))
+    .filter(Boolean);
+  const first = words[0];
+  if (!first) return "";
+  const initial = (word: string) => Array.from(word)[0]?.toLocaleUpperCase("pt-BR") ?? "";
+  const last = words.length > 1 ? words[words.length - 1] : undefined;
+  return initial(first) + (last ? initial(last) : "");
+}

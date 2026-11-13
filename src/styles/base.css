@@ -157,6 +157,12 @@
       border: var(--border-width) dashed GrayText;
     }
 
+    /* Texto recortado no gradiente da marca: volta à cor sólida do sistema (D-64, D-66). */
+    :is(.ranked__number, .person-head__monogram) {
+      background: none;
+      color: CanvasText;
+    }
+
     :is(.poster-card, .ranked__item):focus-visible {
       outline: var(--border-width-strong) solid Highlight;
     }

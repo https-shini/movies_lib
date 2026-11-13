@@ -1,11 +1,16 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router";
-import { PiUser } from "react-icons/pi";
 import { interpolate, locale, messages, plural } from "../i18n";
 import { formatReleaseDate, textOr } from "../lib/format";
 import { getProfileUrl, pickGalleryImages } from "../lib/images";
 import { mediaPath, type MediaType } from "../lib/media";
-import { buildFilmography, getAge, pickKnownFor, type FilmographyEntry } from "../lib/person";
+import {
+  buildFilmography,
+  getAge,
+  getInitials,
+  pickKnownFor,
+  type FilmographyEntry,
+} from "../lib/person";
 import { sectionCounter } from "../lib/sections";
 import { usePerson } from "../hooks/usePerson";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
@@ -27,15 +32,25 @@ const text = messages.person;
 /** Biografias mais longas que isto começam recolhidas. */
 const BIOGRAPHY_PREVIEW = 700;
 
+/** Primeiro parágrafo com até isto de caracteres vira abertura editorial (D-66). */
+const BIOGRAPHY_LEAD_MAX = 320;
+
+/** Créditos visíveis antes de "Mostrar todos" (D-66). */
+export const FILMOGRAPHY_PAGE = 30;
+
+/** Mesma grade do cabeçalho final: a página não salta quando os dados chegam (D-66). */
 const PersonSkeleton = () => (
   <main className="page person" aria-busy="true" aria-label={text.loading}>
     <div className="shell">
       <div className="person-head">
         <div className="person-head__photo skeleton" />
-        <div className="person-head__info">
+        <div className="person-head__intro">
           <span className="skeleton skeleton--text" style={{ width: "8rem" }} />
           <span className="skeleton person-head__title-skeleton" />
+        </div>
+        <div className="person-head__facts">
           <span className="skeleton skeleton--text" style={{ width: "min(26rem, 90%)" }} />
+          <span className="skeleton skeleton--text" style={{ width: "min(18rem, 70%)" }} />
         </div>
       </div>
     </div>
@@ -58,6 +73,13 @@ const Biography = ({ biography, inEnglish }: { biography: string; inEnglish: boo
     .map((paragraph) => paragraph.trim())
     .filter(Boolean);
   const isLong = biography.length > BIOGRAPHY_PREVIEW;
+  // Abertura editorial só quando o primeiro parágrafo é curto e há outros depois dele: um
+  // parágrafo único e longo inteiro em fonte de título pesaria demais (D-66).
+  const first = paragraphs[0] ?? "";
+  const leadClass =
+    paragraphs.length > 1 && first.length <= BIOGRAPHY_LEAD_MAX
+      ? "person-bio__lead"
+      : "person-bio__first";
 
   if (!paragraphs.length) return <p className="person-bio__missing">{text.biographyMissing}</p>;
 
@@ -69,8 +91,10 @@ const Biography = ({ biography, inEnglish }: { biography: string; inEnglish: boo
         className={`person-bio__text ${isLong && !expanded ? "person-bio__text--clamped" : ""}`}
         lang={inEnglish ? "en" : undefined}
       >
-        {paragraphs.map((paragraph) => (
-          <p key={paragraph.slice(0, 40)}>{paragraph}</p>
+        {paragraphs.map((paragraph, index) => (
+          <p key={paragraph.slice(0, 40)} className={index === 0 ? leadClass : undefined}>
+            {paragraph}
+          </p>
         ))}
       </div>
       {isLong && (
@@ -106,10 +130,30 @@ interface FilmographyProps {
 const Filmography = ({ groups, index }: FilmographyProps) => {
   const [department, setDepartment] = useState(groups[0]?.department ?? "");
   const [media, setMedia] = useState<MediaFilter>("all");
+  // Exibição progressiva (D-66): volta aos primeiros créditos a cada troca de filtro.
+  const [limit, setLimit] = useState(FILMOGRAPHY_PAGE);
+  const [revealFrom, setRevealFrom] = useState<number | null>(null);
+  const firstRevealed = useRef<HTMLAnchorElement>(null);
+
+  // Ao mostrar todos, o foco vai para o primeiro crédito revelado: o botão some, e quem
+  // navega pelo teclado continua de onde parou.
+  useEffect(() => {
+    if (revealFrom !== null) firstRevealed.current?.focus();
+  }, [revealFrom]);
+
   const active = groups.find((group) => group.department === department) ?? groups[0];
   if (!active) return null;
 
   const entries = active.entries.filter((entry) => media === "all" || entry.mediaType === media);
+  const visible = entries.slice(0, limit);
+  const hidden = entries.length - visible.length;
+  const listId = "filmography-list";
+
+  const changeFilter = (apply: () => void) => {
+    apply();
+    setLimit(FILMOGRAPHY_PAGE);
+    setRevealFrom(null);
+  };
 
   return (
     <section id="filmography" className="section" aria-labelledby="filmography-title">
@@ -130,7 +174,9 @@ const Filmography = ({ groups, index }: FilmographyProps) => {
                   className="chip"
                   aria-pressed={group.department === active.department}
                   onClick={() => {
-                    setDepartment(group.department);
+                    changeFilter(() => {
+                      setDepartment(group.department);
+                    });
                   }}
                 >
                   {interpolate(text.departmentCount, {
@@ -142,7 +188,7 @@ const Filmography = ({ groups, index }: FilmographyProps) => {
             ))}
           </ul>
         )}
-        <ul className="filmography__chips" role="list" aria-label={text.mediaFilterLabel}>
+        <ul className="filmography__media segmented" role="list" aria-label={text.mediaFilterLabel}>
           {MEDIA_FILTERS.map(({ value, label }) => (
             <li key={value}>
               <button
@@ -150,7 +196,9 @@ const Filmography = ({ groups, index }: FilmographyProps) => {
                 className="chip"
                 aria-pressed={media === value}
                 onClick={() => {
-                  setMedia(value);
+                  changeFilter(() => {
+                    setMedia(value);
+                  });
                 }}
               >
                 {label}
@@ -161,40 +209,66 @@ const Filmography = ({ groups, index }: FilmographyProps) => {
       </div>
 
       {entries.length ? (
-        <ol
-          className="filmography"
-          role="list"
-          aria-label={interpolate(text.creditsLabel, {
-            department: departmentLabel(active.department),
-          })}
-        >
-          {entries.map((entry) => (
-            <li key={`${entry.mediaType}-${String(entry.id)}`}>
-              <Link to={mediaPath(entry.mediaType, entry.id)} className="filmography__row">
-                <span className="filmography__year mono">{entry.year ?? text.upcoming}</span>
-                <span className="filmography__body">
-                  <span className="filmography__title">{entry.title}</span>
-                  <span className="filmography__role">
-                    {[
-                      entry.roles.join(", ") || text.noRole,
-                      entry.mediaType === "tv" && entry.episodeCount
-                        ? plural(text.episodes, entry.episodeCount)
-                        : null,
-                    ]
-                      .filter(Boolean)
-                      .join(" · ")}
+        <>
+          <ol
+            id={listId}
+            className="filmography"
+            role="list"
+            aria-label={interpolate(text.creditsLabel, {
+              department: departmentLabel(active.department),
+            })}
+          >
+            {visible.map((entry, index) => (
+              <li key={`${entry.mediaType}-${String(entry.id)}`}>
+                <Link
+                  to={mediaPath(entry.mediaType, entry.id)}
+                  className="filmography__row"
+                  ref={index === revealFrom ? firstRevealed : undefined}
+                >
+                  <span
+                    className="filmography__year mono"
+                    aria-hidden={entry.year ? undefined : true}
+                  >
+                    {entry.year ?? "—"}
                   </span>
-                </span>
-                <span className="filmography__aside">
-                  {entry.mediaType === "tv" && (
-                    <span className="badge badge--outline">{messages.title.seriesBadge}</span>
-                  )}
-                  {entry.voteCount > 0 && <Rating value={entry.voteAverage} />}
-                </span>
-              </Link>
-            </li>
-          ))}
-        </ol>
+                  <span className="filmography__body">
+                    <span className="filmography__title">{entry.title}</span>
+                    <span className="filmography__role">
+                      {[
+                        entry.roles.join(", ") || text.noRole,
+                        entry.mediaType === "tv" && entry.episodeCount
+                          ? plural(text.episodes, entry.episodeCount)
+                          : null,
+                      ]
+                        .filter(Boolean)
+                        .join(" · ")}
+                    </span>
+                  </span>
+                  <span className="filmography__aside">
+                    {!entry.year && <span className="badge badge--info">{text.upcoming}</span>}
+                    {entry.mediaType === "tv" && (
+                      <span className="badge badge--outline">{messages.title.seriesBadge}</span>
+                    )}
+                    {entry.voteCount > 0 && <Rating value={entry.voteAverage} />}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ol>
+          {hidden > 0 && (
+            <button
+              type="button"
+              className="btn btn--ghost filmography__more"
+              aria-controls={listId}
+              onClick={() => {
+                setRevealFrom(visible.length);
+                setLimit(entries.length);
+              }}
+            >
+              {interpolate(text.showAll, { count: entries.length.toLocaleString(locale) })}
+            </button>
+          )}
+        </>
       ) : (
         <StateMessage compact title={text.emptyFilter} />
       )}
@@ -283,30 +357,34 @@ const PersonProfile = ({ id }: { id: string }) => {
     <main className="page person">
       <div className="shell">
         <header className="person-head reveal">
-          <div className="person-head__photo">
+          <div className={`person-head__photo ${photo ? "" : "person-head__photo--empty"}`}>
             {photo ? (
               <img src={photo} alt="" fetchPriority="high" />
             ) : (
-              <PiUser aria-hidden="true" />
+              <span className="person-head__monogram display" aria-hidden="true">
+                {getInitials(person.name)}
+              </span>
             )}
           </div>
-          <div className="person-head__info">
+          <div className="person-head__intro">
             <p className="page-head__kicker mono">
               {[text.kicker, department ? departmentLabel(department) : null]
                 .filter(Boolean)
                 .join(" · ")}
             </p>
             <h1 className="person-head__title display">{person.name}</h1>
-            {facts.length > 0 && (
-              <dl className="person-facts">
-                {facts.map(({ label, value }) => (
-                  <div key={label} className="person-facts__row">
-                    <dt>{label}</dt>
-                    <dd>{value}</dd>
-                  </div>
-                ))}
-              </dl>
-            )}
+          </div>
+          {facts.length > 0 && (
+            <dl className="person-head__facts person-facts">
+              {facts.map(({ label, value }) => (
+                <div key={label} className="person-facts__row">
+                  <dt>{label}</dt>
+                  <dd>{value}</dd>
+                </div>
+              ))}
+            </dl>
+          )}
+          <div className="person-head__actions">
             <ExternalLinks ids={person.external_ids} homepage={person.homepage} imdb="name" />
             <ShareButton title={person.name} />
           </div>
