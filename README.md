@@ -13,6 +13,7 @@ O projeto nasceu como MoviesLib e está sendo refeito como Cinelux em fases e bl
 - **Buscar (`/search?q=`):** resultados por categoria (filmes, séries e pessoas), com a contagem de cada uma, paginação e sugestões quando não há termo.
 - **Filme (`/movie/:id`):** sinopse, nota, gêneros clicáveis, ficha técnica com a classificação indicativa do Brasil, trailer na própria página (YouTube em modo de privacidade aprimorada), onde assistir no Brasil (dados do JustWatch), elenco com link para cada perfil, elenco e equipe completos, galeria de vídeos e de imagens, links oficiais, coleção e recomendações, com atalhos para cada seção.
 - **Série (`/serie/:id`):** a mesma estrutura do filme, com criação, emissora, situação, temporadas e elenco de todas as temporadas.
+- **Temporada (`/serie/:id/temporada/:numero`):** episódios com imagem, sinopse, data, duração e nota, trilha de navegação e seletor entre temporadas.
 - **Pessoa (`/pessoa/:id`) e Pessoas (`/pessoas`):** biografia (em inglês, com aviso, quando falta a tradução), principais trabalhos, filmografia completa por área de atuação com filtro de filmes e séries, fotos e perfis oficiais; e a lista das pessoas mais procuradas.
 - **Coleção (`/colecao/:id`):** os filmes de uma franquia em ordem de lançamento.
 - **Minha lista (`/minha-lista`):** filmes e séries salvos para ver depois, guardados só no navegador, sem cadastro. Cada página de filme, série e pessoa tem um botão de compartilhar.
@@ -73,6 +74,7 @@ O projeto nasceu como MoviesLib e está sendo refeito como Cinelux em fases e bl
 | `npm run test:watch`   | Testes em modo de observação                 |
 | `npm run test:e2e`     | Testes de interface (Playwright)             |
 | `npm run test:e2e:ui`  | Testes de interface no modo visual           |
+| `npm run test:visual`  | Regressão visual contra uma referência (D-62) |
 | `npm run format`       | Formata o projeto com o Prettier             |
 | `npm run format:check` | Confere a formatação                         |
 | `npm run check`        | Lint, tipos, testes e build                  |
