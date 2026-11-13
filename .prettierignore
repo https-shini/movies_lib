@@ -8,3 +8,6 @@ docs/
 playwright-report/
 test-results/
 blob-report/
+visual-baseline/
+visual-report/
+visual-results/

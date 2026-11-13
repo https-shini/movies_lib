@@ -14,6 +14,9 @@ export default defineConfig([
     ".vercel/",
     "playwright-report/",
     "test-results/",
+    "visual-baseline/",
+    "visual-report/",
+    "visual-results/",
   ]),
 
   js.configs.recommended,
