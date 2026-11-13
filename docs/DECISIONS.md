@@ -543,3 +543,13 @@ Cada decisão tem: contexto, decisão e consequência. As decisões D-01 a D-11 
 - **Ações do título no celular:** a principal (trailer) ocupa a linha inteira e as secundárias ficam em duas colunas; uma que sobra sozinha ocupa a linha. Abaixo de 360 px, uma coluna. Medido de 360 a 420 px: nenhum rótulo cortado. O conteúdo da página sobe cerca de 60 px.
 - **Frase de efeito:** citação editorial em Space Grotesk, com filete dourado.
 - **Peso:** só CSS; o arquivo global cresce cerca de 0,3 KB (gzip).
+
+## D-65. Redesign: Descobrir e Busca
+
+- **Diagnóstico em produção** (dados reais; 320, 360, 375, 390, 420 e 1440 px): sem rolagem horizontal; filtros, chips ativos, contagem por categoria, sugestões e estado vazio funcionavam. Os pontos reais: a troca filmes/séries usava os mesmos chips dos gêneros (duas fileiras iguais com papéis diferentes); a faixa de gêneros no celular não indicava que rola; a barra de ordenação ainda tinha a linha sólida que a D-64 substituiu; as categorias da busca quebravam em duas linhas no celular; a ordenação mostrava opções cortadas abaixo de 390 px ("Mais popul" a 320 px); e as páginas pulavam do `h1` para o `h3` dos cards (acessibilidade 99 no Lighthouse).
+- **Controle segmentado (`.segmented`)**: trilho de vidro com chips dentro, para troca de catálogo ou categoria, distinto dos chips de filtro. `.segmented--fill` ocupa a largura no celular; abaixo de 375 px quebra em duas linhas em vez de esconder um item. Só os itens não selecionados perdem o preenchimento: na primeira versão o selecionado ficava transparente, com texto escuro (invisível); um teste E2E agora cobre isso.
+- **`--rule-fade`**: o filete que esmaece virou token, usado pelo cabeçalho de seção e pela barra de ordenação.
+- **Gêneros no celular** esmaecem na borda direita (`mask-image`).
+- **Ordenação sem corte:** abaixo de 390 px o botão Filtros mostra só o ícone e o contador (o rótulo continua para leitores de tela), e a 320 px a reserva da seta do `select` cai de 48 para 40 px. Um teste E2E mede o texto de cada opção contra a largura disponível nas sete larguras.
+- **Títulos:** um `h2` visível só para leitores de tela antes da grade de resultados, em Descobrir e na Busca.
+- **Peso:** CSS global de 11,77 para 12,11 KB (gzip).

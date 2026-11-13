@@ -1,8 +1,6 @@
 @layer pages {
   /* Alternância entre filmes e séries. */
   .media-switch {
-    display: flex;
-    gap: var(--space-2);
     margin-bottom: var(--space-4);
   }
 
@@ -22,6 +20,13 @@
 
   .genre-bar__list::-webkit-scrollbar {
     display: none;
+  }
+
+  /* No celular, os gêneros esmaecem na borda direita: sinal de que a faixa rola (D-65). */
+  @media (max-width: 899px) {
+    .genre-bar__list {
+      mask-image: linear-gradient(90deg, #000 calc(100% - 3rem), transparent);
+    }
   }
 
   .genre-bar__list .chip {
@@ -59,7 +64,7 @@
     align-items: flex-end;
     gap: var(--space-3);
     padding-bottom: var(--space-4);
-    border-bottom: 1px solid var(--color-border);
+    background: var(--rule-fade) bottom left / 100% var(--border-width) no-repeat;
   }
 
   .discover-toolbar__sort {
@@ -90,10 +95,10 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: var(--space-3);
-    min-height: 60px;
-    margin-bottom: var(--space-5);
-    padding-block: var(--space-3);
+    gap: var(--space-2) var(--space-3);
+    min-height: 52px;
+    margin-bottom: var(--space-4);
+    padding-block: var(--space-2);
   }
 
   .discover-status__count {
@@ -108,6 +113,7 @@
 
   .discover-status__clear {
     margin-left: auto;
+    padding-inline: var(--space-2);
   }
 
   .advanced-filters {
@@ -118,6 +124,34 @@
   @media (max-width: 420px) {
     .discover-toolbar__filters {
       padding-inline: var(--space-4);
+    }
+  }
+
+  /*
+   * Abaixo de 390 px, o rótulo "Filtros" sai da tela (continua para leitores de tela) e o
+   * espaço vai para a ordenação: com ele, as opções mais longas apareciam cortadas (D-65).
+   */
+  @media (max-width: 389px) {
+    .discover-toolbar__filters {
+      min-width: 48px;
+      padding-inline: var(--space-3);
+    }
+
+    .discover-toolbar {
+      gap: var(--space-2);
+    }
+
+    .discover-toolbar .select {
+      padding-right: 40px;
+    }
+
+    .discover-toolbar__filters-label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
     }
   }
 }
