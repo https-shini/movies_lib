@@ -214,8 +214,7 @@
     gap: var(--space-4);
     margin-bottom: var(--space-5);
     padding-top: var(--space-5);
-    background: linear-gradient(90deg, var(--glass-border-strong), transparent 85%) top left / 100%
-      var(--border-width) no-repeat;
+    background: var(--rule-fade) top left / 100% var(--border-width) no-repeat;
   }
 
   .section-head__index {
@@ -390,5 +389,71 @@
     border-color: rgb(var(--rgb-violet) / 40%);
     color: var(--color-editorial);
     background: var(--color-editorial-subtle);
+  }
+}
+
+@layer primitives {
+  /*
+   * Controle segmentado (D-65): troca de catálogo ou de categoria, não um filtro. Os itens
+   * são chips (mesmos estados e alvos de toque) dentro de um trilho de vidro, para não se
+   * confundirem com as fileiras de chips de filtro.
+   */
+  .segmented {
+    display: inline-flex;
+    max-width: 100%;
+    gap: var(--space-1);
+    margin: 0;
+    padding: var(--space-1);
+    overflow-x: auto;
+    border: var(--border-width) solid var(--glass-border);
+    border-radius: var(--radius-full);
+    background: var(--glass-tint-subtle);
+    box-shadow: var(--glass-highlight);
+    list-style: none;
+    scrollbar-width: none;
+  }
+
+  .segmented::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* No celular, o trilho ocupa a largura e divide o espaço entre os itens. */
+  @media (max-width: 599px) {
+    .segmented--fill {
+      display: flex;
+      width: 100%;
+    }
+
+    .segmented--fill .chip {
+      flex: 1 1 auto;
+      gap: var(--space-1);
+      padding-inline: var(--space-2);
+    }
+  }
+
+  /* Abaixo de 375 px, o trilho quebra em duas linhas em vez de esconder um item. */
+  @media (max-width: 374px) {
+    .segmented--fill {
+      flex-wrap: wrap;
+      border-radius: var(--radius-lg);
+    }
+  }
+
+  .segmented .chip {
+    flex: none;
+    justify-content: center;
+    padding-inline: var(--space-3);
+  }
+
+  /* Só os itens não selecionados perdem o preenchimento: o selecionado mantém o dourado. */
+  .segmented .chip:not([aria-current="page"], [aria-pressed="true"]) {
+    border-color: transparent;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .segmented .chip:hover:not([aria-current="page"], [aria-pressed="true"]) {
+    color: var(--color-text-primary);
+    background: var(--color-hover-tint);
   }
 }

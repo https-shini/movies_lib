@@ -176,6 +176,8 @@
       transparent 70%
     );
     --gradient-fade-end: linear-gradient(90deg, transparent, var(--color-bg));
+    /* Filete que esmaece: separa blocos sem cortar a página (D-64, D-65). */
+    --rule-fade: linear-gradient(90deg, var(--glass-border-strong), transparent 85%);
 
     /* 2. Tipografia e pesos ----------------------------------------------------- */
 

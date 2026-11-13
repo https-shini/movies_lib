@@ -141,3 +141,27 @@ test.describe("Busca", () => {
     await expect(page.getByRole("button", { name: "Assistir trailer" })).toHaveCount(0);
   });
 });
+
+test.describe("Busca: apresentação (D-65)", () => {
+  test("as categorias cabem no trilho e a selecionada mantém o destaque", async ({ page }) => {
+    await page.goto("/search?q=duna");
+    const categories = page.getByRole("navigation", { name: "Categorias da busca" });
+    const track = categories.getByRole("list");
+    await expect(track.getByRole("link")).toHaveCount(3);
+    // Nenhum item escondido fora do trilho: no celular estreito ele quebra em duas linhas.
+    expect(await track.evaluate((list) => list.scrollWidth - list.clientWidth)).toBeLessThanOrEqual(
+      0,
+    );
+    const selected = track.locator('[aria-current="page"]');
+    expect(await selected.evaluate((link) => getComputedStyle(link).backgroundColor)).not.toBe(
+      "rgba(0, 0, 0, 0)",
+    );
+  });
+
+  test("os resultados têm um título de seção antes dos títulos dos cards", async ({ page }) => {
+    await page.goto("/search?q=duna");
+    await expect(
+      page.getByRole("heading", { level: 2, name: "Resultados da busca" }),
+    ).toBeAttached();
+  });
+});

@@ -189,7 +189,7 @@ const Discover = () => {
           <p className="page-head__lede">{isTv ? text.ledeSeries : text.lede}</p>
         </header>
 
-        <nav className="media-switch" aria-label={text.mediaLabel}>
+        <nav className="media-switch segmented" aria-label={text.mediaLabel}>
           <Link to="/discover" className="chip" aria-current={isTv ? undefined : "page"}>
             {text.mediaMovies}
           </Link>
@@ -276,7 +276,7 @@ const Discover = () => {
             }}
           >
             <PiSlidersHorizontal aria-hidden="true" />
-            {text.filters}
+            <span className="discover-toolbar__filters-label">{text.filters}</span>
             {advancedCount > 0 && (
               <span
                 className="count-badge"
@@ -327,6 +327,8 @@ const Discover = () => {
           )}
         </div>
 
+        {/* Título da seção de resultados para leitores de tela: os cards usam h3 (D-65). */}
+        <h2 className="sr-only">{isTv ? text.resultsLabelSeries : text.resultsLabel}</h2>
         <PosterGrid
           label={isTv ? text.resultsLabelSeries : text.resultsLabel}
           movies={movies}

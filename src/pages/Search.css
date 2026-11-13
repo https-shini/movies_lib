@@ -77,14 +77,8 @@
     margin-bottom: var(--space-4);
   }
 
-  .search__category-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2);
-  }
-
   .search__category-count {
-    padding: 1px 7px;
+    padding: 1px 6px;
     border-radius: var(--radius-full);
     color: var(--color-text-secondary);
     background: var(--color-surface-raised);

@@ -207,7 +207,7 @@ const Search = () => {
         {query ? (
           <div className="search__results">
             <nav className="search__categories" aria-label={text.categoriesLabel}>
-              <ul className="search__category-list" role="list">
+              <ul className="search__category-list segmented segmented--fill" role="list">
                 {categories.map(({ key, label, count }) => (
                   <li key={key}>
                     <Link
@@ -242,6 +242,15 @@ const Search = () => {
                   ? ""
                   : interpolate(text.results, { count: active.total.toLocaleString(locale) })}
             </p>
+
+            {/* Título da seção de resultados para leitores de tela: os cards usam h3 (D-65). */}
+            <h2 className="sr-only">
+              {category === "people"
+                ? text.peopleLabel
+                : category === "series"
+                  ? text.seriesLabel
+                  : text.resultsLabel}
+            </h2>
 
             {category === "people" ? (
               <PeopleGrid

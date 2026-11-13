@@ -129,3 +129,53 @@ test.describe("Descobrir", () => {
     await expect(page).toHaveURL("/discover");
   });
 });
+
+test.describe("Descobrir: apresentação (D-65)", () => {
+  test("a opção selecionada de filmes ou séries mantém o preenchimento de destaque", async ({
+    page,
+  }) => {
+    await page.goto("/discover?tipo=series");
+    const switcher = page.getByRole("navigation", { name: "Tipo de obra" });
+    const selected = switcher.getByRole("link", { name: "Séries" });
+    await expect(selected).toHaveAttribute("aria-current", "page");
+    const [background, color] = await selected.evaluate((element) => {
+      const style = getComputedStyle(element);
+      return [style.backgroundColor, style.color];
+    });
+    // Sem a correção, o trilho deixava o item selecionado transparente, com texto escuro.
+    expect(background).not.toBe("rgba(0, 0, 0, 0)");
+    expect(background).not.toBe(color);
+  });
+
+  test("nenhuma opção de ordenação aparece cortada", async ({ page }) => {
+    await page.goto("/discover");
+    const cut = await page.locator("#discover-sort").evaluate((select: HTMLSelectElement) => {
+      const style = getComputedStyle(select);
+      const context = document.createElement("canvas").getContext("2d");
+      if (!context) return ["sem canvas"];
+      context.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+      const available =
+        select.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+      return [...select.options]
+        .filter((option) => context.measureText(option.text).width > available)
+        .map((option) => option.text);
+    });
+    expect(cut).toEqual([]);
+    // O botão de filtros mantém o nome acessível mesmo quando mostra só o ícone.
+    await expect(page.getByRole("button", { name: /^Filtros/ })).toBeVisible();
+  });
+
+  test("os resultados têm um título de seção antes dos títulos dos cards", async ({ page }) => {
+    await page.goto("/discover");
+    await expect(page.getByRole("list", { name: "Filmes encontrados" })).toBeVisible();
+    const levels = await page
+      .locator("main")
+      .evaluate((main) =>
+        [...main.querySelectorAll("h1, h2, h3")].map((heading) => Number(heading.tagName[1])),
+      );
+    const jumps = levels.filter(
+      (level, index) => index > 0 && level - (levels[index - 1] ?? 0) > 1,
+    );
+    expect(jumps).toEqual([]);
+  });
+});
