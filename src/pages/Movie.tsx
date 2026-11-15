@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useParams } from "react-router";
+import { useParams } from "react-router";
 import {
   PiArrowDown,
   PiCalendarBlank,
@@ -54,38 +54,32 @@ import TitleHero, { TitleHeroSkeleton } from "../components/title/TitleHero";
 import VideoGallery from "../components/title/VideoGallery";
 import SectionHeader from "../components/ui/SectionHeader";
 import ShareButton from "../components/ui/ShareButton";
-import StateMessage from "../components/ui/StateMessage";
+import PageError, { pageErrorTitle } from "../components/ui/PageError";
 import NotFound from "./NotFound";
 import "./Movie.css";
 
 const text = messages.movie;
+
+/** Textos do erro de página (D-69). */
+const errorTexts = {
+  kicker: text.fallbackTitle,
+  notFoundTitle: text.notFoundTitle,
+  notFoundMessage: text.notFoundMessage,
+  errorTitle: text.error,
+};
 const titleText = messages.title;
 
 const MovieDetails = ({ id }: { id: string }) => {
   const [trailerOpen, setTrailerOpen] = useState(false);
-  const { data: movie, isLoading, error, reload } = useMovie(id);
-  useDocumentTitle(textOr(movie?.title, isLoading ? text.loadingTitle : text.fallbackTitle));
+  const { data: movie, isLoading, error, errorCode, reload } = useMovie(id);
+  useDocumentTitle(
+    textOr(movie?.title, isLoading ? text.loadingTitle : pageErrorTitle(errorCode, errorTexts)),
+  );
 
   if (isLoading) return <TitleHeroSkeleton label={text.loading} />;
 
   if (error || !movie) {
-    return (
-      <main className="page">
-        <div className="shell">
-          <StateMessage
-            tone="error"
-            title={text.error}
-            message={error || text.notFound}
-            onRetry={reload}
-            action={
-              <Link to="/" className="btn btn--quiet">
-                {messages.common.backHome}
-              </Link>
-            }
-          />
-        </div>
-      </main>
-    );
+    return <PageError texts={errorTexts} code={errorCode} message={error} onRetry={reload} />;
   }
 
   const title = textOr(movie.title, messages.common.untitled);

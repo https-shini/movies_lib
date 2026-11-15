@@ -23,11 +23,20 @@ import SectionNav from "../components/title/SectionNav";
 import Rating from "../components/ui/Rating";
 import SectionHeader from "../components/ui/SectionHeader";
 import ShareButton from "../components/ui/ShareButton";
+import PageError, { pageErrorTitle } from "../components/ui/PageError";
 import StateMessage from "../components/ui/StateMessage";
 import NotFound from "./NotFound";
 import "./Person.css";
 
 const text = messages.person;
+
+/** Textos do erro de página (D-69). */
+const errorTexts = {
+  kicker: text.kicker,
+  notFoundTitle: text.notFoundTitle,
+  notFoundMessage: text.notFoundMessage,
+  errorTitle: text.error,
+};
 
 /** Biografias mais longas que isto começam recolhidas. */
 const BIOGRAPHY_PREVIEW = 700;
@@ -277,29 +286,15 @@ const Filmography = ({ groups, index }: FilmographyProps) => {
 };
 
 const PersonProfile = ({ id }: { id: string }) => {
-  const { data: person, isLoading, error, reload } = usePerson(id);
-  useDocumentTitle(textOr(person?.name, isLoading ? text.loadingTitle : text.fallbackTitle));
+  const { data: person, isLoading, error, errorCode, reload } = usePerson(id);
+  useDocumentTitle(
+    textOr(person?.name, isLoading ? text.loadingTitle : pageErrorTitle(errorCode, errorTexts)),
+  );
 
   if (isLoading) return <PersonSkeleton />;
 
   if (error || !person) {
-    return (
-      <main className="page">
-        <div className="shell">
-          <StateMessage
-            tone="error"
-            title={text.error}
-            message={error || text.notFound}
-            onRetry={reload}
-            action={
-              <Link to="/" className="btn btn--quiet">
-                {messages.common.backHome}
-              </Link>
-            }
-          />
-        </div>
-      </main>
-    );
+    return <PageError texts={errorTexts} code={errorCode} message={error} onRetry={reload} />;
   }
 
   const photo = getProfileUrl(person.profile_path, "h632");

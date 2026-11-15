@@ -206,6 +206,10 @@ export const ptBR = {
     position: "{position}º lugar",
   },
 
+  pageError: {
+    generic: "O serviço de filmes não respondeu como esperado. Tente de novo em instantes.",
+  },
+
   status: {
     notFoundTitle: "Página não encontrada",
     notFoundCode: "404",
@@ -321,6 +325,9 @@ export const ptBR = {
     loading: "Carregando filme",
     error: "Não foi possível abrir este filme",
     notFound: "Filme não encontrado.",
+    notFoundTitle: "Filme não encontrado",
+    notFoundMessage:
+      "Este endereço não corresponde a nenhum filme do TMDB. Ele pode ter sido removido ou o endereço está incorreto.",
     genresLabel: "Gêneros",
     originalTitle: "Título original: {title}",
     votes: "{count} votos no TMDB",
@@ -412,6 +419,9 @@ export const ptBR = {
     fallbackTitle: "Série",
     error: "Não foi possível abrir esta série",
     notFound: "Série não encontrada.",
+    notFoundTitle: "Série não encontrada",
+    notFoundMessage:
+      "Este endereço não corresponde a nenhuma série do TMDB. Ela pode ter sido removida ou o endereço está incorreto.",
     seasonsCount: { one: "{count} temporada", other: "{count} temporadas" },
     episodesCount: { one: "{count} episódio", other: "{count} episódios" },
     createdBy: "Criação",
@@ -447,6 +457,9 @@ export const ptBR = {
     documentTitle: "{season} · {show}",
     error: "Não foi possível abrir esta temporada",
     notFound: "Temporada não encontrada.",
+    notFoundTitle: "Temporada não encontrada",
+    notFoundMessage:
+      "Esta série não tem uma temporada com este número no TMDB. Veja as temporadas disponíveis na página da série.",
     backToShow: "Voltar para {show}",
     backToSeries: "Voltar para a série",
     breadcrumbLabel: "Você está em",
@@ -470,6 +483,9 @@ export const ptBR = {
     fallbackTitle: "Pessoa",
     error: "Não foi possível abrir este perfil",
     notFound: "Pessoa não encontrada.",
+    notFoundTitle: "Pessoa não encontrada",
+    notFoundMessage:
+      "Este endereço não corresponde a nenhum perfil do TMDB. Ele pode ter sido removido ou o endereço está incorreto.",
     kicker: "Perfil",
     born: "Nascimento",
     died: "Falecimento",
@@ -523,7 +539,6 @@ export const ptBR = {
     notFoundMessage:
       "Este endereço não corresponde a nenhuma coleção do TMDB. Ela pode ter sido removida ou unida a outra.",
     errorTitle: "Não foi possível abrir esta coleção",
-    errorGeneric: "O serviço de filmes não respondeu como esperado. Tente de novo em instantes.",
     discover: "Descobrir filmes",
   },
 
