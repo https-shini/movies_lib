@@ -100,11 +100,16 @@ test.describe("Temporada", () => {
   }) => {
     consoleErrors.allow(/404/);
     await page.goto("/serie/1396/temporada/9");
-    await expect(page.getByRole("alert")).toContainText("Não foi possível abrir esta temporada");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Temporada não encontrada");
+    await expect(page.getByRole("alert")).toContainText("não tem uma temporada com este número");
     await expect(page.getByRole("link", { name: "Voltar para a série" })).toHaveAttribute(
       "href",
       "/serie/1396",
     );
+    // Inexistente: sem nova tentativa, com os caminhos padrão e noindex (D-69).
+    await expect(page.getByRole("button", { name: "Tentar novamente" })).toHaveCount(0);
+    await expect(page.getByRole("link", { name: "Descobrir filmes" }).first()).toBeVisible();
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", "noindex");
   });
 
   test("número de temporada inválido mostra a página 404 sem chamar o TMDB", async ({

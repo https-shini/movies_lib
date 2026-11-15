@@ -63,15 +63,22 @@ test.describe("Série", () => {
     );
   });
 
-  test("mostra erro com nova tentativa quando a série não existe", async ({
+  test("série inexistente: título próprio, caminhos de volta e sem nova tentativa", async ({
     page,
     consoleErrors,
   }) => {
     consoleErrors.allow(/404/);
     await page.goto("/serie/999999");
 
-    await expect(page.getByRole("alert")).toContainText("Não foi possível abrir esta série");
-    await expect(page.getByRole("button", { name: "Tentar novamente" })).toBeVisible();
+    // Tentar de novo não resolve um conteúdo que não existe (D-69).
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Série não encontrada");
+    await expect(page).toHaveTitle("Série não encontrada · Cinelux");
+    await expect(page.getByRole("alert")).toContainText("nenhuma série do TMDB");
+    await expect(page.getByRole("button", { name: "Tentar novamente" })).toHaveCount(0);
+    await expect(
+      page.getByRole("alert").getByRole("link", { name: "Descobrir filmes" }),
+    ).toBeVisible();
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", "noindex");
   });
 });
 

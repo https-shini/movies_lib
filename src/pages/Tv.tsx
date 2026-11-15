@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useParams } from "react-router";
+import { useParams } from "react-router";
 import {
   PiArrowDown,
   PiBroadcast,
@@ -45,11 +45,19 @@ import TitleHero, { TitleHeroSkeleton } from "../components/title/TitleHero";
 import VideoGallery from "../components/title/VideoGallery";
 import SectionHeader from "../components/ui/SectionHeader";
 import ShareButton from "../components/ui/ShareButton";
-import StateMessage from "../components/ui/StateMessage";
+import PageError, { pageErrorTitle } from "../components/ui/PageError";
 import NotFound from "./NotFound";
 import "./Movie.css";
 
 const text = messages.tv;
+
+/** Textos do erro de página (D-69). */
+const errorTexts = {
+  kicker: text.fallbackTitle,
+  notFoundTitle: text.notFoundTitle,
+  notFoundMessage: text.notFoundMessage,
+  errorTitle: text.error,
+};
 const movieText = messages.movie;
 const titleText = messages.title;
 
@@ -58,29 +66,15 @@ const MAX_RELATED = 6;
 
 const TvDetailsPage = ({ id }: { id: string }) => {
   const [trailerOpen, setTrailerOpen] = useState(false);
-  const { data: show, isLoading, error, reload } = useTv(id);
-  useDocumentTitle(textOr(show?.name, isLoading ? text.loadingTitle : text.fallbackTitle));
+  const { data: show, isLoading, error, errorCode, reload } = useTv(id);
+  useDocumentTitle(
+    textOr(show?.name, isLoading ? text.loadingTitle : pageErrorTitle(errorCode, errorTexts)),
+  );
 
   if (isLoading) return <TitleHeroSkeleton label={text.loading} />;
 
   if (error || !show) {
-    return (
-      <main className="page">
-        <div className="shell">
-          <StateMessage
-            tone="error"
-            title={text.error}
-            message={error || text.notFound}
-            onRetry={reload}
-            action={
-              <Link to="/" className="btn btn--quiet">
-                {messages.common.backHome}
-              </Link>
-            }
-          />
-        </div>
-      </main>
-    );
+    return <PageError texts={errorTexts} code={errorCode} message={error} onRetry={reload} />;
   }
 
   const title = textOr(show.name, messages.common.untitled);

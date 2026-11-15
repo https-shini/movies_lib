@@ -12,10 +12,19 @@
     gap: var(--space-4);
   }
 
+  /* Código ("404", "Ops") no gradiente da marca, como os algarismos do ranking (D-69). */
   .status-screen__code {
     color: var(--color-accent-default);
     font-size: clamp(5rem, 3rem + 14vw, 12rem);
     line-height: var(--leading-numeral);
+  }
+
+  @supports (background-clip: text) {
+    .status-screen__code {
+      background: var(--gradient-accent-text);
+      background-clip: text;
+      color: transparent;
+    }
   }
 
   .status-screen__title {

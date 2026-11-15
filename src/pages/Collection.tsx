@@ -10,9 +10,9 @@ import { textOr } from "../lib/format";
 import { backdropSrcSet, getBackdropUrl } from "../lib/images";
 import { useCollection } from "../hooks/useCollection";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
-import type { TmdbErrorCode } from "../services/tmdb";
 import PosterCard from "../components/movie/PosterCard";
 import SectionHeader from "../components/ui/SectionHeader";
+import PageError, { pageErrorTitle } from "../components/ui/PageError";
 import ShareButton from "../components/ui/ShareButton";
 import StateMessage from "../components/ui/StateMessage";
 import NotFound from "./NotFound";
@@ -20,17 +20,13 @@ import "./Collection.css";
 
 const text = messages.collection;
 
-/**
- * Falhas que a pessoa entende e que uma nova tentativa pode resolver. As demais (chave do
- * servidor, resposta inesperada...) são detalhes técnicos: a página mostra uma mensagem
- * genérica no lugar (D-68).
- */
-const FRIENDLY_ERRORS: readonly TmdbErrorCode[] = [
-  "network",
-  "rateLimited",
-  "upstream",
-  "unavailable",
-];
+/** Textos do erro de página (D-68, D-69). */
+const errorTexts = {
+  kicker: text.kicker,
+  notFoundTitle: text.notFoundTitle,
+  notFoundMessage: text.notFoundMessage,
+  errorTitle: text.errorTitle,
+};
 
 /** Mesma grade do cabeçalho final: a página não salta quando os dados chegam (D-68). */
 const CollectionSkeleton = () => (
@@ -46,64 +42,16 @@ const CollectionSkeleton = () => (
   </main>
 );
 
-/** Erro com título de página: inexistente não oferece nova tentativa (D-68). */
-const CollectionError = ({
-  code,
-  message,
-  onRetry,
-}: {
-  code: TmdbErrorCode | null;
-  message: string;
-  onRetry: () => void;
-}) => {
-  const notFound = code === "notFound";
-  const friendly = code !== null && FRIENDLY_ERRORS.includes(code);
-
-  return (
-    <main className="page collection-error">
-      <div className="shell">
-        <header className="page-head">
-          <p className="page-head__kicker mono">{text.kicker}</p>
-          <h1 className="page-head__title display">
-            {notFound ? text.notFoundTitle : text.errorTitle}
-          </h1>
-        </header>
-        <StateMessage
-          tone="error"
-          message={notFound ? text.notFoundMessage : friendly ? message : text.errorGeneric}
-          onRetry={notFound ? undefined : onRetry}
-          action={
-            <>
-              {notFound && (
-                <Link to="/discover" className="btn btn--ghost">
-                  {text.discover}
-                </Link>
-              )}
-              <Link to="/" className="btn btn--quiet">
-                {messages.common.backHome}
-              </Link>
-            </>
-          }
-        />
-      </div>
-    </main>
-  );
-};
-
 const CollectionDetails = ({ id }: { id: string }) => {
   const { data: collection, isLoading, error, errorCode, reload } = useCollection(id);
-  const notFound = errorCode === "notFound";
   useDocumentTitle(
-    textOr(
-      collection?.name,
-      isLoading ? text.loadingTitle : notFound ? text.notFoundTitle : text.fallbackTitle,
-    ),
+    textOr(collection?.name, isLoading ? text.loadingTitle : pageErrorTitle(errorCode, errorTexts)),
   );
 
   if (isLoading) return <CollectionSkeleton />;
 
   if (error || !collection) {
-    return <CollectionError code={errorCode} message={error} onRetry={reload} />;
+    return <PageError texts={errorTexts} code={errorCode} message={error} onRetry={reload} />;
   }
 
   const parts = sortCollectionParts(collection.parts);

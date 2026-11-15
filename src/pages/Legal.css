@@ -9,7 +9,7 @@
     justify-items: start;
     gap: var(--space-3);
     padding-block: var(--space-6);
-    border-top: 1px solid var(--color-border);
+    background: var(--rule-fade) top left / 100% var(--border-width) no-repeat;
   }
 
   .legal__title {
@@ -34,13 +34,14 @@
     height: 18px;
   }
 
+  /* Aviso do TMDB como citação editorial, no padrão da frase de efeito (D-64, D-69):
+     filete dourado, sem caixa. */
   .legal__notice {
     display: grid;
     gap: var(--space-2);
     margin: var(--space-2) 0;
-    padding: var(--space-4);
-    border-left: 2px solid var(--color-accent-default);
-    background: var(--surface-card);
+    padding-left: var(--space-4);
+    border-left: var(--border-width-strong) solid var(--color-accent-default);
   }
 
   .legal__notice figcaption {
@@ -53,13 +54,17 @@
   }
 
   .legal__notice blockquote p {
-    color: var(--color-text-primary);
+    color: var(--color-text-heading);
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
     font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-tight);
+    line-height: var(--leading-title);
   }
 
   .legal__footer {
     padding-top: var(--space-5);
-    border-top: 1px solid var(--color-border);
+    background: var(--rule-fade) top left / 100% var(--border-width) no-repeat;
     color: var(--color-text-tertiary);
   }
 }

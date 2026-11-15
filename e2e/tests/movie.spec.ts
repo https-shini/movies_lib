@@ -105,18 +105,26 @@ test.describe("Filme", () => {
     ).toContainText("Não informada");
   });
 
-  test("mostra erro com nova tentativa quando o filme não existe no TMDB", async ({
+  test("filme inexistente no TMDB: título próprio, caminhos de volta e sem nova tentativa", async ({
     page,
     consoleErrors,
   }) => {
     consoleErrors.allow(/status of 404/);
     await page.goto("/movie/999999");
 
+    // Tentar de novo não resolve um conteúdo que não existe (D-69).
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Filme não encontrado");
+    await expect(page).toHaveTitle("Filme não encontrado · Cinelux");
     const alert = page.getByRole("alert");
-    await expect(alert).toContainText("Não foi possível abrir este filme");
-    await expect(alert).toContainText("Não encontramos este conteúdo.");
-    await expect(alert.getByRole("button", { name: "Tentar novamente" })).toBeVisible();
+    await expect(alert).toContainText("nenhum filme do TMDB");
+    await expect(alert.getByRole("button", { name: "Tentar novamente" })).toHaveCount(0);
+    await expect(alert.getByRole("link", { name: "Descobrir filmes" })).toHaveAttribute(
+      "href",
+      "/discover",
+    );
     await alert.getByRole("link", { name: "Voltar ao início" }).click();
     await expect(page).toHaveURL("/");
+    // A página inicial é válida: o noindex do erro não fica para trás.
+    await expect(page.locator('meta[name="robots"]')).toHaveCount(0);
   });
 });

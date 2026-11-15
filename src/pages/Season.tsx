@@ -17,6 +17,7 @@ import { isSeasonNumber } from "../services/prefetch";
 import Breadcrumbs from "../components/layout/Breadcrumbs";
 import { Poster } from "../components/movie/PosterCard";
 import SectionHeader from "../components/ui/SectionHeader";
+import PageError, { pageErrorTitle } from "../components/ui/PageError";
 import StateMessage from "../components/ui/StateMessage";
 import type { Episode } from "../types/tmdb";
 import NotFound from "./NotFound";
@@ -24,6 +25,14 @@ import seasonStyles from "./Season.css?url";
 import { loadStylesheet } from "../lib/stylesheet";
 
 const text = messages.season;
+
+/** Textos do erro de página (D-69). */
+const errorTexts = {
+  kicker: text.fallbackTitle,
+  notFoundTitle: text.notFoundTitle,
+  notFoundMessage: text.notFoundMessage,
+  errorTitle: text.error,
+};
 
 /** Hoje no formato do TMDB (AAAA-MM-DD), no fuso de quem está vendo. */
 function today(): string {
@@ -120,7 +129,7 @@ const EpisodeCard = ({ episode, upcoming }: { episode: Episode; upcoming: boolea
 };
 
 const SeasonDetailsPage = ({ id, number }: { id: string; number: string }) => {
-  const { data, isLoading, error, reload } = useSeason(id, number);
+  const { data, isLoading, error, errorCode, reload } = useSeason(id, number);
   const showName = textOr(data?.show.name, messages.tv.fallbackTitle);
   const seasonName = textOr(data?.season.name, text.fallbackTitle);
   useDocumentTitle(
@@ -128,28 +137,24 @@ const SeasonDetailsPage = ({ id, number }: { id: string; number: string }) => {
       ? interpolate(text.documentTitle, { season: seasonName, show: showName })
       : isLoading
         ? text.loadingTitle
-        : text.fallbackTitle,
+        : pageErrorTitle(errorCode, errorTexts),
   );
 
   if (isLoading) return <SeasonSkeleton />;
 
   if (error || !data) {
     return (
-      <main className="page">
-        <div className="shell">
-          <StateMessage
-            tone="error"
-            title={text.error}
-            message={error || text.notFound}
-            onRetry={reload}
-            action={
-              <Link to={mediaPath("tv", id)} className="btn btn--quiet">
-                {text.backToSeries}
-              </Link>
-            }
-          />
-        </div>
-      </main>
+      <PageError
+        texts={errorTexts}
+        code={errorCode}
+        message={error}
+        onRetry={reload}
+        extraAction={
+          <Link to={mediaPath("tv", id)} className="btn btn--ghost">
+            {text.backToSeries}
+          </Link>
+        }
+      />
     );
   }
 
