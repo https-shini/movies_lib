@@ -609,3 +609,9 @@ Cada decisão tem: contexto, decisão e consequência. As decisões D-01 a D-11 
 - **Custo:** o `PageError` vira um pacote de 1 KB, baixado só quando uma página de erro aparece; CSS global de 13,03 para 13,04 KB (gzip).
 - **Testes:** 7 unitários (`useNoIndex` e `RouteError`, inclusive erro de renderização) e 25 E2E novos por largura (175 nas 7 larguras): os cinco tipos de inexistente, falha temporária com recuperação, falha técnica, `noindex` ao abrir direto, recarregar, voltar pelo histórico e sair para uma página válida, ausência de `noindex` em 12 páginas válidas, teclado e foco, alto contraste e as páginas de texto. Contraprova com oito defeitos reintroduzidos (tag que não sai, nova tentativa no inexistente, 404 sem `noindex`, erro sem `h1`, mensagem técnica, alto contraste, linha sólida e `noindex` no erro inesperado), cada um fazendo testes falharem.
 - **Lighthouse** (build da `main` e desta versão, servidos igualmente, com a API de produção): desempenho igual dentro de ±1 ponto e acessibilidade 100 em todas. O SEO da 404 e do erro de filme cai para 63 porque a auditoria "a página pode ser indexada" reprova páginas com `noindex`, que é o efeito pretendido; Sobre e Privacidade seguem com 100.
+
+## D-70. Domínio próprio `cinelux.gcruz.dev.br`
+
+- **Decisão:** o Cinelux passa a ser publicado em `https://cinelux.gcruz.dev.br`, um subdomínio do portfólio, em vez de `cinelux.app` (D-20), que não foi registrado. O domínio foi adicionado ao projeto `cinelux` na Vercel e já responde; o DNS do `gcruz.dev.br` fica na Cloudflare.
+- **Feito:** `sitemap.xml`, `robots.txt` e o link do README apontam para o domínio novo. As URLs `cinelux.app` dos testes são só exemplos de origem e não mudam.
+- **Endereço antigo:** `movies-lib-vite.vercel.app` continua funcionando. Redirecioná-lo para o domínio novo é uma configuração do painel da Vercel (Settings → Domains), sem mudança de código.

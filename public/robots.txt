@@ -3,4 +3,4 @@ User-agent: *
 Allow: /
 Disallow: /api/
 
-Sitemap: https://movies-lib-vite.vercel.app/sitemap.xml
+Sitemap: https://cinelux.gcruz.dev.br/sitemap.xml
