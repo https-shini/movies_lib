@@ -2,7 +2,7 @@
 
 Acervo de cinema para encontrar um filme, entender do que se trata e decidir se vale assistir. Os dados e as imagens vêm da API do [The Movie Database (TMDB)](https://www.themoviedb.org/).
 
-**Aplicação publicada:** https://movies-lib-vite.vercel.app
+**Aplicação publicada:** https://cinelux.gcruz.dev.br
 
 O projeto nasceu como MoviesLib e está sendo refeito como Cinelux em fases e blocos registrados em [docs/DECISIONS.md](./docs/DECISIONS.md). O repositório e o projeto na Vercel ainda usam o nome antigo (`movies_lib` e `movies-lib`).
 

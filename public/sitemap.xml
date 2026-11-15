@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Rotas fixas do Cinelux. Trocar o domínio quando cinelux.app estiver ativo (docs/DECISIONS.md, D-20). -->
+<!-- Rotas fixas do Cinelux, no domínio próprio cinelux.gcruz.dev.br (docs/DECISIONS.md, D-20 e D-70). -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://movies-lib-vite.vercel.app/</loc>
+    <loc>https://cinelux.gcruz.dev.br/</loc>
   </url>
   <url>
-    <loc>https://movies-lib-vite.vercel.app/discover</loc>
+    <loc>https://cinelux.gcruz.dev.br/discover</loc>
   </url>
   <url>
-    <loc>https://movies-lib-vite.vercel.app/discover?tipo=series</loc>
+    <loc>https://cinelux.gcruz.dev.br/discover?tipo=series</loc>
   </url>
   <url>
-    <loc>https://movies-lib-vite.vercel.app/pessoas</loc>
+    <loc>https://cinelux.gcruz.dev.br/pessoas</loc>
   </url>
   <url>
-    <loc>https://movies-lib-vite.vercel.app/search</loc>
+    <loc>https://cinelux.gcruz.dev.br/search</loc>
   </url>
   <url>
-    <loc>https://movies-lib-vite.vercel.app/sobre</loc>
+    <loc>https://cinelux.gcruz.dev.br/sobre</loc>
   </url>
   <url>
-    <loc>https://movies-lib-vite.vercel.app/privacidade</loc>
+    <loc>https://cinelux.gcruz.dev.br/privacidade</loc>
   </url>
 </urlset>
