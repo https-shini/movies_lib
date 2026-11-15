@@ -614,4 +614,4 @@ Cada decisão tem: contexto, decisão e consequência. As decisões D-01 a D-11 
 
 - **Decisão:** o Cinelux passa a ser publicado em `https://cinelux.gcruz.dev.br`, um subdomínio do portfólio, em vez de `cinelux.app` (D-20), que não foi registrado. O domínio foi adicionado ao projeto `cinelux` na Vercel e já responde; o DNS do `gcruz.dev.br` fica na Cloudflare.
 - **Feito:** `sitemap.xml`, `robots.txt` e o link do README apontam para o domínio novo. As URLs `cinelux.app` dos testes são só exemplos de origem e não mudam.
-- **Endereço antigo:** `movies-lib-vite.vercel.app` continua funcionando. Redirecioná-lo para o domínio novo é uma configuração do painel da Vercel (Settings → Domains), sem mudança de código.
+- **Endereço antigo:** `movies-lib-vite.vercel.app` redireciona (308) para o mesmo caminho em `https://cinelux.gcruz.dev.br`, por uma regra `redirects` com condição de host no `vercel.json`. A regra só vale para esse host: as URLs de preview da Vercel continuam servindo o site normalmente.
