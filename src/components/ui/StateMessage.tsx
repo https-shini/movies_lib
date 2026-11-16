@@ -17,7 +17,10 @@ interface StateMessageProps {
   compact?: boolean | undefined;
 }
 
-/** Estados de erro e vazio com mensagem clara e ação opcional. */
+/**
+ * Estados de erro e vazio de uma seção, com mensagem clara e ação opcional (D-71).
+ * Erros de página inteira usam PageError.
+ */
 const StateMessage = ({
   tone = "empty",
   title,
@@ -33,7 +36,9 @@ const StateMessage = ({
       className={`state ${compact ? "state--compact" : ""} state--${tone}`}
       role={tone === "error" ? "alert" : "status"}
     >
-      <Icon className="state__icon" aria-hidden="true" />
+      <span className="state__mark" aria-hidden="true">
+        <Icon className="state__icon" />
+      </span>
       <div className="state__body">
         {title && <p className="state__title">{title}</p>}
         {message && <p className="state__message">{message}</p>}
