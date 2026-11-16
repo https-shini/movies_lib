@@ -21,6 +21,14 @@ describe("StateMessage", () => {
     expect(screen.queryByRole("button")).not.toBeInTheDocument();
   });
 
+  it("esconde o ícone decorativo dos leitores de tela", () => {
+    const { container } = render(<StateMessage tone="error" title="Falhou" />);
+
+    const mark = container.querySelector(".state__mark");
+    expect(mark).toHaveAttribute("aria-hidden", "true");
+    expect(mark?.querySelector("svg")).not.toBeNull();
+  });
+
   it("aceita uma ação própria", () => {
     render(<StateMessage title="Vazio" action={<button type="button">Limpar filtros</button>} />);
 
